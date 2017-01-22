@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_login_page_2"
+    tools:context="com.eranewgames.shiners.Auth.Splash">
+
+    <Button
+        android:text="Tap here to LOG IN"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_marginEnd="64dp"
+        android:alpha="0.9"
+        android:textColor="#fff"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="64dp"
+        android:layout_marginStart="64dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="64dp"
+        android:backgroundTint="#53ADEB"
+        style="@android:style/Widget.Button"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/tabLayout"/>
+
+    <TextView
+        android:text="Let,s begin\nSign up to create post"
+        android:layout_width="wrap_content"
+        android:textColor="#fff"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintRight_toRightOf="@+id/button"
+        app:layout_constraintLeft_toLeftOf="@+id/button"
+        android:textAlignment="center"
+        android:textSize="16sp"/>
+
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        tools:layout_editor_absoluteX="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tabTextColor="#5AB1E7"
+        app:tabTextAppearance="@style/MineCustomTabText"
+        app:tabSelectedTextColor="#5AB1E7"
+        android:background="#666B71"
+        android:id="@+id/tabLayout">
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/home3x"
+            android:text="Posts"/>
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/shiners_add3x"/>
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/settings3x"
+            android:text="Settings"/>
+    </android.support.design.widget.TabLayout>
+
+    <TextView
+        android:text="Don,t have an account? Register here "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintRight_toRightOf="@+id/tabLayout"
+        app:layout_constraintLeft_toLeftOf="@+id/tabLayout"
+        android:textColor="#fff"/>
+</android.support.constraint.ConstraintLayout>

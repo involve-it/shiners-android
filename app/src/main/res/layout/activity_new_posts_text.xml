@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_new_posts_text"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.eranewgames.shiners.NewPosts.NewPostsText">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:gravity="top"
+        android:hint="Tap here to give post a title?"
+        android:id="@+id/editText1"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:gravity="top"
+        android:lines="6"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:hint="Optional: Provide more details"
+        android:id="@+id/editText2"/>
+    <android.support.v7.widget.AppCompatSpinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"/>
+</LinearLayout>

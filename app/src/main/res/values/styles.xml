@@ -1,11 +1,48 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Стиль SupportActionBar. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorPrimary">#F9F9F9</item>
+        <item name="colorAccent">#5AB1E7</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="actionMenuTextColor">#5AB1E7</item>
+        <item name="android:actionMenuTextColor">#5AB1E7</item>
+    </style>
+
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="titleTextStyle">@style/MyTitleTextStyle</item>
+
+    </style>
+
+    <style name="MyTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#5AB1E7</item>
+    </style>
+
+    <!--Для окон Авторизации-->
+    <style name="AppThemeAuth" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">#45A2DF</item>
+        <item name="colorPrimary">#45A2DF</item>
+        <item name="colorAccent">#5AB1E7</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoTitile" parent="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <!--Размер TabItem-->
+    <style name="MineCustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">10sp</item>
     </style>
 
 </resources>

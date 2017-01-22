@@ -1,0 +1,56 @@
+package com.eranewgames.shiners.Auth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.eranewgames.shiners.App;
+import com.eranewgames.shiners.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import im.delight.android.ddp.ResultListener;
+
+public class Register extends AppCompatActivity {
+    @BindView(R.id.editText1) EditText editText1;
+    @BindView(R.id.editText2) EditText editText2;
+    @BindView(R.id.editText3) EditText editText3;
+    @BindView(R.id.editText4) EditText editText4;
+    @BindView(R.id.button4) Button button4;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.button4)
+    public void onClick() {
+        if (editText3.getText().toString().equals(editText4.getText().toString())){
+            App.meteor.registerAndLogin(editText1.getText().toString(),
+                editText2.getText().toString(), editText3.getText().toString(), new ResultListener() {
+
+                    @Override
+                    public void onSuccess(String result) {
+                        System.out.println("Successfully registered: "+result);
+                        Toast.makeText(Register.this, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Register.this, LogIn.class));
+                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(String error, String reason, String details) {
+                        System.out.println("Could not register: "+error+" / "+reason+" / "+details);
+                        Toast.makeText(Register.this, "Введите корректные данные", Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+        }
+    }
+}

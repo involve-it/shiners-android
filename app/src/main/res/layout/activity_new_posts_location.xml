@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_new_posts_location"
+    android:layout_width="match_parent"
+    android:background="#EBEBEB"
+    android:layout_height="match_parent"
+    tools:context="com.eranewgames.shiners.NewPosts.NewPostsLocation"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/fragment"/>
+        <SearchView
+            android:layout_width="match_parent"
+            tools:layout_editor_absoluteY="8dp"
+            tools:layout_editor_absoluteX="8dp"
+            android:background="#fff"
+            android:layout_gravity="top"
+            android:layout_margin="10dp"
+            android:layout_height="50dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:text="asdadasdda"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:background="#fff"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:id="@+id/textView9"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="#fff"
+        android:layout_margin="10dp"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:text="Select location:"
+                android:padding="15dp"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:background="#EBEBEB"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:srcCompat="@drawable/postcell_dynamic3x"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Dynamic post"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textSize="11sp"
+                    android:text="adasddasdasdasdd\nasdasadadasdsad"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <Switch
+                android:layout_width="wrap_content"
+                android:id="@+id/switchDynamic"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:background="#EBEBEB"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:srcCompat="@drawable/posttype_static3x"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Dynamic post"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textSize="11sp"
+                    android:text="adasddasdasdasdd\nasdasadadasdsad"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <Switch
+                android:layout_width="wrap_content"
+                android:id="@+id/switchStatic"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+
+</LinearLayout>

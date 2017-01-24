@@ -10,6 +10,12 @@ import android.widget.TextView;
 
 import com.eranewgames.shiners.App;
 import com.eranewgames.shiners.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +23,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewPostsLocation extends AppCompatActivity {
+public class NewPostsLocation extends AppCompatActivity implements OnMapReadyCallback{
 
     @BindView(R.id.textView9) TextView textView9;
     @BindView(R.id.switchDynamic) Switch switchDynamic;
@@ -30,6 +36,8 @@ public class NewPostsLocation extends AppCompatActivity {
         ButterKnife.bind(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+        SupportMapFragment supportMapFragment= (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        supportMapFragment.getMapAsync(this);
     }
 
     @Override
@@ -38,8 +46,13 @@ public class NewPostsLocation extends AppCompatActivity {
             onBackPressed();
         }
         if (item.getItemId() == R.id.next) {
-//            App.keyArray.add(String.valueOf(switchDynamic.isChecked()));
-//            App.keyArray.add(String.valueOf(switchStatic.isChecked()));
+
+//            switchDynamic.isChecked();
+//            switchStatic.isChecked();
+//
+//            Map<String,Object> keyPresences=new HashMap<>()
+//            App.keyMap.put()
+
             Map<String,Object> keyLocations=new HashMap<>();
             keyLocations.put("lat",0);
             keyLocations.put("lng",0);
@@ -54,5 +67,17 @@ public class NewPostsLocation extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.m_new_posts_text, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        LatLng sydney = new LatLng(App.locationLat,App.locationLng);
+
+        googleMap.setMyLocationEnabled(true);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
+
+        googleMap.addMarker(new MarkerOptions()
+                .title("Мое местоположение")
+                .position(sydney));
     }
 }

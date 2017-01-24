@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
 
 import com.eranewgames.shiners.Fragments.FragmentMe;
 import com.eranewgames.shiners.Fragments.FragmentPosts;
@@ -14,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class Home extends AppCompatActivity {
-
     @BindView(R.id.tabLayout) TabLayout tabLayout;
 
     @Override
@@ -22,7 +22,7 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         ButterKnife.bind(this);
-        displayView(0);
+        displayView(getIntent().getIntExtra(App.homePositionFragment,0));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -42,11 +42,13 @@ public class Home extends AppCompatActivity {
 
             }
         });
+        ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(2).setEnabled(false);
     }
 
     private void displayView(int position) {
         String actionBarTitle[]={"Posts","Me","","Messages","Settings"};
         Fragment fragment = null;
+        tabLayout.getTabAt(position).select();
 
         switch (position) {
             case 0: fragment = new FragmentPosts(); break;

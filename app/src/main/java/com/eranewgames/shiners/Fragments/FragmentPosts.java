@@ -127,12 +127,16 @@ public class FragmentPosts extends Fragment {
                     lng=jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("locations").getJSONObject(0).getJSONObject("coords").getDouble("lng");
                     Location locationA=new Location("A");
                     Location locationB=new Location("B");
-                    locationA.setLatitude(testLat);
-                    locationA.setLongitude(testLong);
+                    locationA.setLatitude(App.locationLat);
+                    locationA.setLongitude(App.locationLng);
                     locationB.setLatitude(lat);
                     locationB.setLongitude(lng);
-                    float distance=locationA.distanceTo(locationB);
-                    distanceView.setText(Float.toString(distance));
+                    long distance=(int)locationA.distanceTo(locationB);
+                    if (distance<5280){
+                        distanceView.setText(distance+" ft");
+                    }else {
+                        distanceView.setText(distance/5280+" mi");
+                    }
 
                     titleView.setText(jsonArray.getJSONObject(position).getJSONObject("details").getString("title"));
                     descView.setText(Html.fromHtml(jsonArray.getJSONObject(position).getJSONObject("details").getString("description")));
@@ -168,8 +172,13 @@ public class FragmentPosts extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), PostsItem.class).putExtra("position",position));
-                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                try{
+                    startActivity(new Intent(getActivity(), PostsItem.class)
+                            .putExtra("position",jsonArray.getJSONObject(position).getString("_id")));
+                    getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

@@ -1,7 +1,9 @@
 package com.eranewgames.shiners.NewPosts;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -66,6 +68,7 @@ public class NewPostsPhoto extends AppCompatActivity {
             });
 
             startActivity(new Intent(NewPostsPhoto.this, Home.class)
+                    .putExtra(App.homePositionFragment,1)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
@@ -98,23 +101,49 @@ public class NewPostsPhoto extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==1){
             if (resultCode == RESULT_OK) {
-                final File file=new File(data.getData().getPath());
+                File file=new File(data.getData().getPath());
+                new Async(file).execute();
                 imageView.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials("AKIAJUHRBKTJ4FBPKQ6Q","m1c/Q80xbc+urqhZk6AeBymsK6rGF2TX6V0KVPfa"));
-                        s3Client.putObject(new PutObjectRequest("shiners/v1.0/public/images", "AKIAJUHRBKTJ4FBPKQ6Q", new File(file.getPath())).withCannedAcl(CannedAccessControlList.PublicRead));
-                        String resp=s3Client.getResourceUrl("shiners/v1.0/public/images", "AKIAJUHRBKTJ4FBPKQ6Q");
-                        Log.e("NewPostsPhoto=onActivityResult", resp);
-                        ArrayList arrayListPhotos=new ArrayList();
-                        Map<String,Object> keyPhotos=new HashMap<String, Object>();
-                        keyPhotos.put("data",resp);
-                        arrayListPhotos.add(keyPhotos);
-                        keyDetails.put("photos",arrayListPhotos);
-                    }
-                }).start();
             }
+        }
+    }
+
+    class Async extends AsyncTask {
+        File file;
+        ProgressDialog progressDialog;
+
+        Async(File file){
+            this.file=file;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(NewPostsPhoto.this);
+            progressDialog.setMessage("Загрузка данных");
+            progressDialog.show();
+            progressDialog.setCancelable(false);
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials("AKIAJUHRBKTJ4FBPKQ6Q","m1c/Q80xbc+urqhZk6AeBymsK6rGF2TX6V0KVPfa"));
+            s3Client.putObject(new PutObjectRequest("shiners/v1.0/public/images", "AKIAJUHRBKTJ4FBPKQ6Q", new File(file.getPath())).withCannedAcl(CannedAccessControlList.PublicRead));
+            String resp=s3Client.getResourceUrl("shiners/v1.0/public/images", "AKIAJUHRBKTJ4FBPKQ6Q");
+            Log.e("NewPostsPhoto=onActivityResult", resp);
+            ArrayList arrayListPhotos=new ArrayList();
+            Map<String,Object> keyPhotos=new HashMap<String, Object>();
+            keyPhotos.put("data",resp);
+            arrayListPhotos.add(keyPhotos);
+            keyDetails.put("photos",arrayListPhotos);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            progressDialog.dismiss();
         }
     }
 }

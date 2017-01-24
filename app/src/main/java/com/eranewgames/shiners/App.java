@@ -12,7 +12,6 @@ import im.delight.android.ddp.Meteor;
  */
 
 public class App extends Application {
-    public static String TestingHUB="adsaddsadasd";
     public static Meteor meteor;
     public static String homePositionFragment="homePositionFragment";
     public static double locationLat=55.75222,locationLng=37.61556;

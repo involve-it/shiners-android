@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.eranewgames.shiners.Home;
@@ -46,14 +47,17 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
+
             }
         });
+
+        ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(1).setEnabled(false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        tabLayout.getTabAt(1).select();
+        tabLayout.getTabAt(2).select();
     }
 
     @OnClick(R.id.button)

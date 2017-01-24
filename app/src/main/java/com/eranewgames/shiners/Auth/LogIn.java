@@ -40,7 +40,8 @@ public class LogIn extends AppCompatActivity {
                     public void onSuccess(String result) {
                         System.out.println("Successfully logged in: " + result);
                         Toast.makeText(LogIn.this, "Авторизация прошла успешно!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LogIn.this, Home.class));
+                        startActivity(new Intent(LogIn.this, Home.class)
+                            .putExtra(App.homePositionFragment,1));
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         finish();
                     }

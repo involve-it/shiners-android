@@ -43,15 +43,17 @@
         android:textSize="16sp"/>
 
     <android.support.design.widget.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        tools:layout_editor_absoluteX="8dp"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tabTextColor="#5AB1E7"
         app:tabTextAppearance="@style/MineCustomTabText"
         app:tabSelectedTextColor="#5AB1E7"
         android:background="#666B71"
-        android:id="@+id/tabLayout">
+        android:id="@+id/tabLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

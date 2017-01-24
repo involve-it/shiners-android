@@ -1,13 +1,18 @@
 package com.eranewgames.shiners;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
 import im.delight.android.ddp.MeteorCallback;
 
-public class ServiceMeteor extends Service implements MeteorCallback {
+public class ServiceMeteor extends Service implements MeteorCallback{
     public ServiceMeteor() {
     }
 
@@ -22,6 +27,24 @@ public class ServiceMeteor extends Service implements MeteorCallback {
         super.onCreate();
         App.meteor.addCallback(this);
         App.meteor.connect();
+        locationPosition();
+    }
+
+    public void locationPosition(){
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                App.locationLat=location.getLatitude();
+                App.locationLng=location.getLongitude();
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, getMainLooper());
     }
 
     @Override

@@ -84,10 +84,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView7"
         android:layout_marginStart="8dp"
-        app:layout_constraintLeft_toRightOf="@+id/icon2"
+        app:layout_constraintLeft_toRightOf="@+id/icon1"
         android:layout_marginLeft="8dp"
-        app:layout_constraintTop_toTopOf="@+id/icon2"
-        app:layout_constraintBottom_toBottomOf="@+id/icon2"/>
+        app:layout_constraintTop_toTopOf="@+id/icon1"
+        app:layout_constraintBottom_toBottomOf="@+id/icon1"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -100,16 +100,5 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="16dp"
         tools:ignore="VectorDrawableCompat"/>
-
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:id="@+id/icon2"
-        app:srcCompat="@drawable/posttype_static3x"
-        android:layout_marginStart="8dp"
-        app:layout_constraintLeft_toRightOf="@+id/icon1"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintTop_toTopOf="@+id/icon1"
-        app:layout_constraintBottom_toBottomOf="@+id/icon1"/>
 
 </android.support.constraint.ConstraintLayout>

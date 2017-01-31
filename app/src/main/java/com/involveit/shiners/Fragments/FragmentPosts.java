@@ -151,13 +151,14 @@ public class FragmentPosts extends Fragment {
 
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
-                convertView=getActivity().getLayoutInflater(). inflate(R.layout.fragment_posts_adap,parent,false);
+                if (convertView == null) {
+                    convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_posts_adap, parent, false);
+                }
                 TextView titleView= (TextView) convertView.findViewById(R.id.textView2);
                 TextView descView= (TextView) convertView.findViewById(R.id.textView3);
                 TextView dateView= (TextView) convertView.findViewById(R.id.textView);
                 TextView distanceView= (TextView) convertView.findViewById(R.id.textView4);
                 ImageView icon1= (ImageView) convertView.findViewById(R.id.icon1);
-                ImageView icon2= (ImageView) convertView.findViewById(R.id.icon2);
                 final ImageView imageView= (ImageView) convertView.findViewById(R.id.imageView);
                 Post post = posts.get(position);
 
@@ -173,7 +174,11 @@ public class FragmentPosts extends Fragment {
                 }
 
                 titleView.setText(post.details.title);
-                descView.setText(Html.fromHtml(post.details.description));
+                if (post.details.description != null) {
+                    descView.setText(Html.fromHtml(post.details.description));
+                } else {
+                    descView.setText("");
+                }
 
                 if (post.isLive()){
                     if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
@@ -183,9 +188,9 @@ public class FragmentPosts extends Fragment {
                     }
                 } else {
                     if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
-                        icon2.setImageResource(R.drawable.postcell_dynamic3x);
+                        icon1.setImageResource(R.drawable.postcell_dynamic3x);
                     } else {
-                        icon2.setImageResource(R.drawable.posttype_static3x);
+                        icon1.setImageResource(R.drawable.posttype_static3x);
                     }
                 }
 

@@ -1,4 +1,4 @@
-package com.involveit.shiners.Logic;
+package com.involveit.shiners.logic;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
-import static com.involveit.shiners.Logic.MeteorCallbackHandler.CONNECTED;
-import static com.involveit.shiners.Logic.MeteorCallbackHandler.DISCONNECTED;
+import static com.involveit.shiners.logic.MeteorCallbackHandler.CONNECTED;
+import static com.involveit.shiners.logic.MeteorCallbackHandler.DISCONNECTED;
 
 /**
  * Created by yury on 1/30/17.

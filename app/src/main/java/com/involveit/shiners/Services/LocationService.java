@@ -1,4 +1,4 @@
-package com.involveit.shiners.Services;
+package com.involveit.shiners.services;
 
 import android.app.Service;
 import android.content.Context;
@@ -8,13 +8,15 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.widget.Toast;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.involveit.shiners.App;
-
-import im.delight.android.ddp.MeteorCallback;
+import com.involveit.shiners.logic.LocationHandler;
 
 public class LocationService extends Service{
+    public static final String BROADCAST_LOCATION_REPORTED = "com.involveit.shiners.LocationService.BROADCAST_LOCATION_REPORTED";
+    public static final String EXTRA_LOCATION = "com.involveit.shiners.LocationService.extra.EXTRA_LOCATION";
+
     public LocationService() {
     }
 
@@ -34,8 +36,10 @@ public class LocationService extends Service{
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                App.locationLat=location.getLatitude();
-                App.locationLng=location.getLongitude();
+                LocationHandler.setLatestReportedLocation(LocationService.this, location);
+                Intent intent = new Intent(BROADCAST_LOCATION_REPORTED);
+                intent.putExtra(EXTRA_LOCATION, location);
+                LocalBroadcastManager.getInstance(LocationService.this).sendBroadcast(intent);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}

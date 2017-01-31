@@ -1,8 +1,13 @@
-package com.involveit.shiners;
+package com.involveit.shiners.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.icu.text.DateFormat;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -12,14 +17,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.involveit.shiners.Logic.Objects.Post;
+import com.involveit.shiners.R;
+import com.involveit.shiners.logic.LocationHandler;
+import com.involveit.shiners.logic.objects.Post;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.involveit.shiners.services.LocationService;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -48,6 +55,18 @@ public class PostDetails extends AppCompatActivity implements OnMapReadyCallback
     @BindView(R.id.toolBar) Toolbar toolBar;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(this.locationBroadcastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.locationBroadcastReceiver, new IntentFilter(LocationService.BROADCAST_LOCATION_REPORTED));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts_item);
@@ -55,7 +74,7 @@ public class PostDetails extends AppCompatActivity implements OnMapReadyCallback
         setSupportActionBar(toolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
-        Post post = getIntent().getParcelableExtra(EXTRA_POST);
+        post = getIntent().getParcelableExtra(EXTRA_POST);
 
         //Title
         textTitle.setText(post.details.title);
@@ -76,25 +95,14 @@ public class PostDetails extends AppCompatActivity implements OnMapReadyCallback
         textLocation.setText(post.details.locations.get(0).name);
         locationDesc.setText(Html.fromHtml(post.details.description));
 
-        //Расчет дистанции для Locations
-        Location locationA = new Location("A");
-        Location locationB = new Location("B");
-        locationA.setLatitude(post.details.locations.get(0).coords.lat);
-        locationA.setLongitude(post.details.locations.get(0).coords.lng);
-        locationB.setLatitude(App.locationLat);
-        locationB.setLongitude(App.locationLng);
-        long distance = (int) locationA.distanceTo(locationB);
-        if (distance < 5280) {
-            textNear.setText(distance + " ft");
-        } else {
-            textNear.setText(distance / 5280 + " mi");
-        }
+        textNear.setText(R.string.message_na);
+
+        recalculateDistances();
 
         ((TextView)toolBar.getChildAt(0)).setText(post.details.title);
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMaps);
         supportMapFragment.getMapAsync(PostDetails.this);
-
     }
 
     @Override
@@ -126,4 +134,26 @@ public class PostDetails extends AppCompatActivity implements OnMapReadyCallback
                 break;
         }
     }
+
+    private void recalculateDistances(){
+        Location currentLocation = LocationHandler.getLatestReportedLocation();
+        if (currentLocation != null && post != null) {
+            com.involveit.shiners.logic.objects.Location location = post.getLocation();
+            if (location != null) {
+                float distance = location.distanceFrom(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+                textNear.setText(LocationHandler.distanceFormatted(this, distance));
+            }
+        }
+    }
+
+    private BroadcastReceiver locationBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (LocationService.BROADCAST_LOCATION_REPORTED.equals(action)){
+                recalculateDistances();
+            }
+        }
+    };
 }

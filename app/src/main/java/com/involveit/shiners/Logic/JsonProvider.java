@@ -1,4 +1,4 @@
-package com.involveit.shiners.Logic;
+package com.involveit.shiners.logic;
 
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;

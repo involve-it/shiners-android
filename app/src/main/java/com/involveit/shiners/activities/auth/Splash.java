@@ -1,4 +1,4 @@
-package com.involveit.shiners.Auth;
+package com.involveit.shiners.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,9 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.involveit.shiners.Home;
+import com.involveit.shiners.activities.Home;
 import com.involveit.shiners.R;
-import com.involveit.shiners.Services.LocationService;
+import com.involveit.shiners.services.LocationService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

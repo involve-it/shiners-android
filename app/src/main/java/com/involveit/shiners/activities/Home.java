@@ -1,4 +1,4 @@
-package com.involveit.shiners;
+package com.involveit.shiners.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,8 +8,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
-import com.involveit.shiners.Fragments.FragmentMe;
-import com.involveit.shiners.Fragments.FragmentPosts;
+import com.involveit.shiners.App;
+import com.involveit.shiners.R;
+import com.involveit.shiners.fragments.FragmentMe;
+import com.involveit.shiners.fragments.FragmentPosts;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

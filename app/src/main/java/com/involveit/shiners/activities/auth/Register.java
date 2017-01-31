@@ -1,4 +1,4 @@
-package com.involveit.shiners.Auth;
+package com.involveit.shiners.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.involveit.shiners.App;
 import com.involveit.shiners.R;
 
 import butterknife.BindView;

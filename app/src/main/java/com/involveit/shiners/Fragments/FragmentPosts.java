@@ -1,12 +1,16 @@
-package com.involveit.shiners.Fragments;
+package com.involveit.shiners.fragments;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.icu.text.DateFormat;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,14 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.involveit.shiners.App;
-import com.involveit.shiners.Logic.JsonProvider;
-import com.involveit.shiners.Logic.MeteorBroadcastReceiver;
-import com.involveit.shiners.Logic.MeteorCallbackHandler;
-import com.involveit.shiners.Logic.Objects.GetPostsResponse;
-import com.involveit.shiners.Logic.Objects.Photo;
-import com.involveit.shiners.Logic.Objects.Post;
-import com.involveit.shiners.PostDetails;
+import com.involveit.shiners.logic.JsonProvider;
+import com.involveit.shiners.logic.LocationHandler;
+import com.involveit.shiners.logic.MeteorBroadcastReceiver;
+import com.involveit.shiners.logic.objects.GetPostsResponse;
+import com.involveit.shiners.logic.objects.Photo;
+import com.involveit.shiners.logic.objects.Post;
+import com.involveit.shiners.activities.PostDetails;
 import com.involveit.shiners.R;
+import com.involveit.shiners.services.LocationService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,26 +47,10 @@ public class FragmentPosts extends Fragment {
     TabLayout tabLayout;
     ListView listView;
     View view;
-    double testLat=37.890568,testLong=-122.205730;
     ArrayList<Post> posts;
 
     Boolean postsPending = true;
     ProgressDialog progressDialog;
-
-    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
-        @Override
-        public void connected() {
-            if (postsPending){
-                getNearbyPostsTest();
-                postsPending = false;
-            }
-        }
-
-        @Override
-        public void disconnected() {
-
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,11 +61,11 @@ public class FragmentPosts extends Fragment {
         listView= (ListView) view.findViewById(R.id.listView);
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Загрузка данных");
+        progressDialog.setMessage(getResources().getText(R.string.message_loading_posts));
         progressDialog.show();
         progressDialog.setCancelable(false);
 
-        if (MeteorSingleton.getInstance().isConnected()){
+        if (MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null){
             getNearbyPostsTest();
         }
 
@@ -87,18 +76,21 @@ public class FragmentPosts extends Fragment {
     public void onResume() {
         super.onResume();
         this.meteorBroadcastReceiver.register(getActivity());
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(this.locationBroadcastReceiver, new IntentFilter(LocationService.BROADCAST_LOCATION_REPORTED));
     }
 
     @Override
     public void onPause() {
         super.onPause();
         this.meteorBroadcastReceiver.unregister(getActivity());
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this.locationBroadcastReceiver);
     }
 
     public void getNearbyPostsTest(){
+        Location currentLocation = LocationHandler.getLatestReportedLocation();
         Map<String,Object> map = new HashMap<>();
-        map.put("lat", testLat);
-        map.put("lng", testLong);
+        map.put("lat", currentLocation.getLatitude());
+        map.put("lng", currentLocation.getLongitude());
         map.put("radius", 10000);
         map.put("take", 10);
 
@@ -169,30 +161,28 @@ public class FragmentPosts extends Fragment {
                 final ImageView imageView= (ImageView) convertView.findViewById(R.id.imageView);
                 Post post = posts.get(position);
 
-                com.involveit.shiners.Logic.Objects.Location location = post.getLocation();
-                if (location != null){
-                    float distance = location.distanceFrom(App.locationLat, App.locationLng);
+                distanceView.setText(R.string.message_na);
+                Location currentLocation = LocationHandler.getLatestReportedLocation();
+                if (currentLocation != null) {
+                    com.involveit.shiners.logic.objects.Location location = post.getLocation();
+                    if (location != null) {
+                        float distance = location.distanceFrom(currentLocation.getLatitude(), currentLocation.getLongitude());
 
-                    if (distance<5280){
-                        distanceView.setText(distance+" ft");
-                    }else {
-                        distanceView.setText(distance/5280+" mi");
+                        distanceView.setText(LocationHandler.distanceFormatted(getActivity(), distance));
                     }
-                } else {
-                    distanceView.setText("N/A");
                 }
 
                 titleView.setText(post.details.title);
                 descView.setText(Html.fromHtml(post.details.description));
 
                 if (post.isLive()){
-                    if (com.involveit.shiners.Logic.Objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
+                    if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
                         icon1.setImageResource(R.drawable.postcell_dynamic_live3x);
                     } else {
                         icon1.setImageResource(R.drawable.posttype_static_live3x);
                     }
                 } else {
-                    if (com.involveit.shiners.Logic.Objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
+                    if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
                         icon2.setImageResource(R.drawable.postcell_dynamic3x);
                     } else {
                         icon2.setImageResource(R.drawable.posttype_static3x);
@@ -218,4 +208,38 @@ public class FragmentPosts extends Fragment {
             }
         });
     }
+
+    private void recalculateDistances(){
+        listView.invalidateViews();
+    }
+
+    private BroadcastReceiver locationBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (LocationService.BROADCAST_LOCATION_REPORTED.equals(action)){
+                if (postsPending && LocationHandler.getLatestReportedLocation() != null){
+                    getNearbyPostsTest();
+                    postsPending = false;
+                } else {
+                    recalculateDistances();
+                }
+            }
+        }
+    };
+
+    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
+        @Override
+        public void connected() {
+            if (postsPending && LocationHandler.getLatestReportedLocation() != null){
+                getNearbyPostsTest();
+                postsPending = false;
+            }
+        }
+
+        @Override
+        public void disconnected() {
+
+        }
+    };
 }

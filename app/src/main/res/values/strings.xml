@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Shiners</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message_na">…</string>
+
+    <string name="message_connected">Connected</string>
+    <string name="message_disconnected">Disconnected</string>
+    <string name="message_loading_posts">Loading posts</string>
+
+    <string name="units_km">km</string>
+    <string name="units_m">m</string>
+    <string name="units_ft">ft</string>
+    <string name="units_mi">mi</string>
+
+    <string name="label_current_location">Current location</string>
 </resources>

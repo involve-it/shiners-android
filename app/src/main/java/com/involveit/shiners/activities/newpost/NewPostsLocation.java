@@ -1,6 +1,7 @@
-package com.involveit.shiners.NewPosts;
+package com.involveit.shiners.activities.newpost;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.involveit.shiners.logic.LocationHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,13 +73,16 @@ public class NewPostsLocation extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng sydney = new LatLng(App.locationLat,App.locationLng);
+        Location currentLocation = LocationHandler.getLatestReportedLocation();
+        if (currentLocation != null) {
+            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
-        googleMap.setMyLocationEnabled(true);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
+            googleMap.setMyLocationEnabled(true);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
 
-        googleMap.addMarker(new MarkerOptions()
-                .title("Мое местоположение")
-                .position(sydney));
+            googleMap.addMarker(new MarkerOptions()
+                    .title(getResources().getString(R.string.label_current_location))
+                    .position(latLng));
+        }
     }
 }

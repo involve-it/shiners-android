@@ -1,4 +1,4 @@
-package com.involveit.shiners.NewPosts;
+package com.involveit.shiners.activities.newpost;
 
 import android.content.Intent;
 import android.os.Bundle;

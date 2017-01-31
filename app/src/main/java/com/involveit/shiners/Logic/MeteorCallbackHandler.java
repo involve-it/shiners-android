@@ -1,11 +1,11 @@
-package com.involveit.shiners.Logic;
+package com.involveit.shiners.logic;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
+
+import com.involveit.shiners.R;
 
 import im.delight.android.ddp.MeteorCallback;
 
@@ -26,14 +26,14 @@ public class MeteorCallbackHandler implements MeteorCallback {
     public void onConnect(boolean signedInAutomatically) {
         Intent intent = new Intent(CONNECTED);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-        Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.message_connected, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDisconnect() {
         Intent intent = new Intent(DISCONNECTED);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-        Toast.makeText(context, "Disconnected", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.message_disconnected, Toast.LENGTH_SHORT).show();
     }
 
     @Override

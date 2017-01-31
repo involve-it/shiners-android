@@ -1,4 +1,4 @@
-package com.involveit.shiners.Fragments;
+package com.involveit.shiners.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,8 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.involveit.shiners.App;
-import com.involveit.shiners.NewPosts.NewPostsText;
+import com.involveit.shiners.activities.newpost.NewPostsText;
 import com.involveit.shiners.R;
 import com.squareup.picasso.Picasso;
 

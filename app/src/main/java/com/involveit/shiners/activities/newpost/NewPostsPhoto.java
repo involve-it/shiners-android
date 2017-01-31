@@ -1,4 +1,4 @@
-package com.involveit.shiners.NewPosts;
+package com.involveit.shiners.activities.newpost;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,7 +17,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.involveit.shiners.App;
-import com.involveit.shiners.Home;
+import com.involveit.shiners.activities.Home;
 import com.involveit.shiners.R;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class NewPostsPhoto extends AppCompatActivity {
             MeteorSingleton.getInstance().call("addPost", new Object[]{keyMap}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
-                    Log.e("NewPostsPhoto=onSuccess", result);
+                    Log.d("NewPostsPhoto=onSuccess", result);
                 }
 
                 @Override
@@ -131,7 +131,7 @@ public class NewPostsPhoto extends AppCompatActivity {
             AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials("AKIAJUHRBKTJ4FBPKQ6Q","m1c/Q80xbc+urqhZk6AeBymsK6rGF2TX6V0KVPfa"));
             s3Client.putObject(new PutObjectRequest("shiners/v1.0/public/images", "AKIAJUHRBKTJ4FBPKQ6Q", new File(file.getPath())).withCannedAcl(CannedAccessControlList.PublicRead));
             String resp=s3Client.getResourceUrl("shiners/v1.0/public/images", "AKIAJUHRBKTJ4FBPKQ6Q");
-            Log.e("NewPostsPhoto=onActivityResult", resp);
+            Log.d("NewPostsPhoto=onActivityResult", resp);
             ArrayList arrayListPhotos=new ArrayList();
             Map<String,Object> keyPhotos=new HashMap<String, Object>();
             keyPhotos.put("data",resp);

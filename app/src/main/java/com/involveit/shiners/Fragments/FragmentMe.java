@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class FragmentMe extends Fragment {
@@ -54,7 +55,7 @@ public class FragmentMe extends Fragment {
         progressDialog.show();
         progressDialog.setCancelable(false);
 
-        App.meteor.call("getMyPosts", new Object[]{map}, new ResultListener() {
+        MeteorSingleton.getInstance().call("getMyPosts", new Object[]{map}, new ResultListener() {
 
             @Override
             public void onSuccess(String result) {

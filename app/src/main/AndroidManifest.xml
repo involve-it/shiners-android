@@ -41,7 +41,7 @@
             android:theme="@style/AppThemeAuth" />
 
         <service
-            android:name="com.involveit.shiners.ServiceMeteor"
+            android:name="com.involveit.shiners.Services.LocationService"
             android:enabled="true"
             android:exported="true" />
 

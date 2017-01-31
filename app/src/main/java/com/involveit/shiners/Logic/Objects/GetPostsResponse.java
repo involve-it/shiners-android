@@ -1,4 +1,4 @@
-package com.involveit.shiners.Objects;
+package com.involveit.shiners.Logic.Objects;
 
 import java.util.ArrayList;
 

@@ -14,6 +14,7 @@ import com.involveit.shiners.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import im.delight.android.ddp.MeteorSingleton;
 
 import static com.involveit.shiners.App.keyMap;
 
@@ -42,7 +43,7 @@ public class NewPostsText extends AppCompatActivity {
 
         if (item.getItemId()==R.id.next){
             keyMap.clear();
-            keyMap.put("userId",App.meteor.getUserId());
+            keyMap.put("userId", MeteorSingleton.getInstance().getUserId());
             keyMap.put("type","all");
             App.keyDetails.put("title",editText1.getText().toString());
             App.keyDetails.put("description",editText2.getText().toString());

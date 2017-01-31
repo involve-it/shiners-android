@@ -1,4 +1,4 @@
-package com.involveit.shiners.Objects;
+package com.involveit.shiners.Logic.Objects;
 
 /**
  * Created by yury on 1/30/17.

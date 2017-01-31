@@ -13,6 +13,7 @@ import com.involveit.shiners.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class Register extends AppCompatActivity {
@@ -32,7 +33,7 @@ public class Register extends AppCompatActivity {
     @OnClick(R.id.button4)
     public void onClick() {
         if (editText3.getText().toString().equals(editText4.getText().toString())){
-            App.meteor.registerAndLogin(editText1.getText().toString(),
+            MeteorSingleton.getInstance().registerAndLogin(editText1.getText().toString(),
                 editText2.getText().toString(), editText3.getText().toString(), new ResultListener() {
 
                     @Override

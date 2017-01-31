@@ -1,4 +1,4 @@
-package com.involveit.shiners.Objects;
+package com.involveit.shiners.Logic.Objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;

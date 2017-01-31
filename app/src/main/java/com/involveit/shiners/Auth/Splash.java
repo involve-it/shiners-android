@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.involveit.shiners.Home;
 import com.involveit.shiners.R;
-import com.involveit.shiners.ServiceMeteor;
+import com.involveit.shiners.Services.LocationService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +25,7 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        startService(new Intent(Splash.this, ServiceMeteor.class));
+        startService(new Intent(Splash.this, LocationService.class));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

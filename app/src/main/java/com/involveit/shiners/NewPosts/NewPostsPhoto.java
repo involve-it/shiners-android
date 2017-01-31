@@ -28,6 +28,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 import static com.involveit.shiners.App.keyDetails;
@@ -55,7 +56,7 @@ public class NewPostsPhoto extends AppCompatActivity {
         if (item.getItemId() == R.id.next) {
             keyMap.put("details", keyDetails);
 
-            App.meteor.call("addPost", new Object[]{keyMap}, new ResultListener() {
+            MeteorSingleton.getInstance().call("addPost", new Object[]{keyMap}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     Log.e("NewPostsPhoto=onSuccess", result);

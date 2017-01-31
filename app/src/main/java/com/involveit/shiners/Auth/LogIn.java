@@ -15,6 +15,7 @@ import com.involveit.shiners.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class LogIn extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class LogIn extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button2:
-                App.meteor.loginWithUsername(editTextLogin.getText().toString(), editTextPass.getText().toString(), new ResultListener() {
+                MeteorSingleton.getInstance().loginWithUsername(editTextLogin.getText().toString(), editTextPass.getText().toString(), new ResultListener() {
                     @Override
                     public void onSuccess(String result) {
                         System.out.println("Successfully logged in: " + result);

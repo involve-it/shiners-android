@@ -37,8 +37,5 @@ public class App extends Application {
         MeteorSingleton.getInstance().addCallback(this.meteorCallbackHandler);
 
         MeteorSingleton.getInstance().connect();
-
-        Intent intent = new Intent(this, LocationService.class);
-        startService(intent);
     }
 }

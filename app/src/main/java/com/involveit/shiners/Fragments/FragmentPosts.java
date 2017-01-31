@@ -109,9 +109,13 @@ public class FragmentPosts extends Fragment {
                 //Type typeToken = new TypeToken<ResultBase<ArrayList<Post>>>(){}.getType();
                 //ResultBase<ArrayList<Post>> res = JsonProvider.defaultGson.fromJson(result, typeToken);
                 GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
-                posts = res.result;
+                if (res.success) {
+                    posts = res.result;
 
-                createListView();
+                    createListView();
+                } else {
+                    Toast.makeText(FragmentPosts.this.getActivity(), "An error occurred", Toast.LENGTH_SHORT).show();
+                }
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                     progressDialog = null;

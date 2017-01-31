@@ -121,7 +121,7 @@ public class NewPostsPhoto extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(NewPostsPhoto.this);
-            progressDialog.setMessage("Загрузка данных");
+            progressDialog.setMessage(NewPostsPhoto.this.getResources().getString(R.string.message_uploading_image));
             progressDialog.show();
             progressDialog.setCancelable(false);
         }

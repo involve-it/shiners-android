@@ -39,8 +39,7 @@ public class LogIn extends AppCompatActivity {
                 MeteorSingleton.getInstance().loginWithUsername(editTextLogin.getText().toString(), editTextPass.getText().toString(), new ResultListener() {
                     @Override
                     public void onSuccess(String result) {
-                        System.out.println("Successfully logged in: " + result);
-                        Toast.makeText(LogIn.this, "Авторизация прошла успешно!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogIn.this, R.string.message_authentication_successful, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LogIn.this, Home.class)
                             .putExtra(App.homePositionFragment,1));
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -49,7 +48,7 @@ public class LogIn extends AppCompatActivity {
 
                     @Override
                     public void onError(String error, String reason, String details) {
-                        Toast.makeText(LogIn.this, "Ошибка авторизации", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogIn.this, R.string.message_authentication_error, Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;

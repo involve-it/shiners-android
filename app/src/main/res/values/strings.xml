@@ -7,10 +7,31 @@
     <string name="message_disconnected">Disconnected</string>
     <string name="message_loading_posts">Loading posts</string>
 
+    <string name="message_authentication_successful">Success!</string>
+    <string name="message_authentication_error">Authentication error</string>
+    <string name="message_internal_error">Internal error</string>
+
+    <string name="message_registration_success">Success!</string>
+    <string name="message_registration_unsuccessful">Registration failed</string>
+
+    <string name="message_uploading_image">Uploading image…</string>
+
     <string name="units_km">km</string>
     <string name="units_m">m</string>
     <string name="units_ft">ft</string>
     <string name="units_mi">mi</string>
 
     <string name="label_current_location">Current location</string>
+
+    <string name="tab_title_posts">Posts</string>
+    <string name="tab_title_me">Me</string>
+    <string name="tab_title_messages">Messages</string>
+    <string name="tab_title_settings">Settings</string>
+    <string-array name="tab_titles">
+        <item>Posts</item>
+        <item>Me</item>
+        <item></item>
+        <item>Messages</item>
+        <item>Settings</item>
+    </string-array>
 </resources>

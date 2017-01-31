@@ -48,7 +48,7 @@ public class Home extends AppCompatActivity {
     }
 
     private void displayView(int position) {
-        String actionBarTitle[]={"Posts","Me","","Messages","Settings"};
+        String actionBarTitle[]= getResources().getStringArray(R.array.tab_titles);
         Fragment fragment = null;
         tabLayout.getTabAt(position).select();
 

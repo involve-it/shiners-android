@@ -37,8 +37,7 @@ public class Register extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(String result) {
-                        System.out.println("Successfully registered: "+result);
-                        Toast.makeText(Register.this, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Register.this, R.string.message_registration_success, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Register.this, LogIn.class));
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         finish();
@@ -46,8 +45,7 @@ public class Register extends AppCompatActivity {
 
                     @Override
                     public void onError(String error, String reason, String details) {
-                        System.out.println("Could not register: "+error+" / "+reason+" / "+details);
-                        Toast.makeText(Register.this, "Введите корректные данные", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Register.this, R.string.message_registration_unsuccessful, Toast.LENGTH_SHORT).show();
                     }
 
                 });

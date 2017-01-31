@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
               android:orientation="vertical"
                 android:layout_height="match_parent"
-                tools:context="com.eranewgames.shiners.Fragments.FragmentMe">
+                tools:context="com.involveit.shiners.Fragments.FragmentMe">
 
     <ListView
         android:layout_width="match_parent"

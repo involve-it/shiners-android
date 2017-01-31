@@ -1,4 +1,4 @@
-package com.eranewgames.shiners.NewPosts;
+package com.involveit.shiners.NewPosts;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import android.view.MenuItem;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.eranewgames.shiners.App;
-import com.eranewgames.shiners.R;
+import com.involveit.shiners.App;
+import com.involveit.shiners.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

@@ -1,4 +1,4 @@
-package com.eranewgames.shiners.Fragments;
+package com.involveit.shiners.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,9 +16,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.eranewgames.shiners.App;
-import com.eranewgames.shiners.NewPosts.NewPostsText;
-import com.eranewgames.shiners.R;
+import com.involveit.shiners.App;
+import com.involveit.shiners.NewPosts.NewPostsText;
+import com.involveit.shiners.R;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;

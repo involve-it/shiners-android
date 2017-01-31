@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.eranewgames.shiners">
+    package="com.involveit.shiners">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".App"
+        android:name="com.involveit.shiners.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,55 +15,55 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Auth.Splash"
+            android:name="com.involveit.shiners.Auth.Splash"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDjWyZDlkMeu2NLTCODcVX19VAlTnfLnB0"/>
+            android:value="AIzaSyDjWyZDlkMeu2NLTCODcVX19VAlTnfLnB0" />
 
         <activity
-            android:name=".Home"
-            android:label="Главное"/>
+            android:name="com.involveit.shiners.Home"
+            android:label="Главное" />
         <activity
-            android:name=".Auth.LogIn"
+            android:name="com.involveit.shiners.Auth.LogIn"
             android:label="Авторизация"
-            android:theme="@style/AppThemeAuth"/>
+            android:theme="@style/AppThemeAuth" />
         <activity
-            android:name=".Auth.Register"
+            android:name="com.involveit.shiners.Auth.Register"
             android:label="Регистрация"
-            android:theme="@style/AppThemeAuth"/>
+            android:theme="@style/AppThemeAuth" />
 
         <service
-            android:name=".ServiceMeteor"
+            android:name="com.involveit.shiners.ServiceMeteor"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
 
-        <activity android:name=".PostsItem" android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".NewPosts.NewPostsText"
-            android:label="New Posts">
-        </activity>
-        <activity android:name=".NewPosts.NewPostsLocation"
-            android:label="Where is it located?">
-        </activity>
-        <activity android:name=".NewPosts.NewPostsDate"
-            android:label="When does it expire?">
-        </activity>
-        <activity android:name=".NewPosts.NewPostsPhoto"
-            android:label="How does it look like?">
-        </activity>
+            android:name="com.involveit.shiners.PostDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.involveit.shiners.NewPosts.NewPostsText"
+            android:label="New Posts" />
+        <activity
+            android:name="com.involveit.shiners.NewPosts.NewPostsLocation"
+            android:label="Where is it located?" />
+        <activity
+            android:name="com.involveit.shiners.NewPosts.NewPostsDate"
+            android:label="When does it expire?" />
+        <activity
+            android:name="com.involveit.shiners.NewPosts.NewPostsPhoto"
+            android:label="How does it look like?" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
-
     </application>
 
 </manifest>

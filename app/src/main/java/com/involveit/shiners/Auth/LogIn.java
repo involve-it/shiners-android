@@ -1,4 +1,4 @@
-package com.eranewgames.shiners.Auth;
+package com.involveit.shiners.Auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.eranewgames.shiners.App;
-import com.eranewgames.shiners.Home;
-import com.eranewgames.shiners.R;
+import com.involveit.shiners.App;
+import com.involveit.shiners.Home;
+import com.involveit.shiners.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

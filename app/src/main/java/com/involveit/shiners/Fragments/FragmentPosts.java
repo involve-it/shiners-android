@@ -1,8 +1,8 @@
-package com.eranewgames.shiners.Fragments;
+package com.involveit.shiners.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.location.Location;
+import android.icu.text.DateFormat;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,17 +17,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.eranewgames.shiners.App;
-import com.eranewgames.shiners.PostsItem;
-import com.eranewgames.shiners.R;
+import com.involveit.shiners.App;
+import com.involveit.shiners.Logic.JsonProvider;
+import com.involveit.shiners.Objects.GetPostsResponse;
+import com.involveit.shiners.Objects.Photo;
+import com.involveit.shiners.Objects.Post;
+import com.involveit.shiners.PostDetails;
+import com.involveit.shiners.R;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,10 +39,11 @@ public class FragmentPosts extends Fragment {
     ListView listView;
     View view;
     double testLat=37.890568,testLong=-122.205730;
-    JSONArray jsonArray;
+    ArrayList<Post> posts;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        posts = new ArrayList<>();
         view = inflater.inflate(R.layout.fragment_posts, container, false);
         setHasOptionsMenu(true);
         tabLayout= (TabLayout) view.findViewById(R.id.tabLayout);
@@ -70,17 +72,20 @@ public class FragmentPosts extends Fragment {
         App.meteor.call("getNearbyPostsTest", new Object[]{map}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
-                try {
-                    jsonArray = new JSONObject(result).getJSONArray("result");
-                    createListView();
-                    progressDialog.dismiss();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
+                //Type typeToken = new TypeToken<ResultBase<ArrayList<Post>>>(){}.getType();
+                //ResultBase<ArrayList<Post>> res = JsonProvider.defaultGson.fromJson(result, typeToken);
+                GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
+                posts = res.result;
+
+                createListView();
+                progressDialog.dismiss();
             }
 
             @Override
             public void onError(String error, String reason, String details) {
+                progressDialog.dismiss();
+                Toast.makeText(FragmentPosts.this.getActivity(), "An error occurred", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -96,7 +101,7 @@ public class FragmentPosts extends Fragment {
         listView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return jsonArray.length();
+                return posts.size();
             }
 
             @Override
@@ -119,52 +124,46 @@ public class FragmentPosts extends Fragment {
                 ImageView icon1= (ImageView) convertView.findViewById(R.id.icon1);
                 ImageView icon2= (ImageView) convertView.findViewById(R.id.icon2);
                 final ImageView imageView= (ImageView) convertView.findViewById(R.id.imageView);
+                Post post = posts.get(position);
 
-                try{
-                    //Рассчет дистанции
-                    double lat,lng;
-                    lat=jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("locations").getJSONObject(0).getJSONObject("coords").getDouble("lat");
-                    lng=jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("locations").getJSONObject(0).getJSONObject("coords").getDouble("lng");
-                    Location locationA=new Location("A");
-                    Location locationB=new Location("B");
-                    locationA.setLatitude(App.locationLat);
-                    locationA.setLongitude(App.locationLng);
-                    locationB.setLatitude(lat);
-                    locationB.setLongitude(lng);
-                    long distance=(int)locationA.distanceTo(locationB);
+                com.involveit.shiners.Objects.Location location = post.getLocation();
+                if (location != null){
+                    float distance = location.distanceFrom(App.locationLat, App.locationLng);
+
                     if (distance<5280){
                         distanceView.setText(distance+" ft");
                     }else {
                         distanceView.setText(distance/5280+" mi");
                     }
+                } else {
+                    distanceView.setText("N/A");
+                }
 
-                    titleView.setText(jsonArray.getJSONObject(position).getJSONObject("details").getString("title"));
-                    descView.setText(Html.fromHtml(jsonArray.getJSONObject(position).getJSONObject("details").getString("description")));
-                    if(jsonArray.getJSONObject(position).getJSONObject("presences").optString("static").equals("close")){
-                        icon2.setImageResource(R.drawable.posttype_static_live3x);
-                    }
-                    if(jsonArray.getJSONObject(position).getJSONObject("presences").optString("dynamic").equals("close")){
+                titleView.setText(post.details.title);
+                descView.setText(Html.fromHtml(post.details.description));
+
+                if (post.isLive()){
+                    if (com.involveit.shiners.Objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
                         icon1.setImageResource(R.drawable.postcell_dynamic_live3x);
+                    } else {
+                        icon1.setImageResource(R.drawable.posttype_static_live3x);
                     }
-
-                    //конвертирование даты в нормальный вид
-                    long date=jsonArray.getJSONObject(position).getJSONObject("endDatePost").getLong("$date");
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(date);
-                    dateView.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
-
-                    //Проверка null ключа для картинок и загрузки
-                    if (!jsonArray.getJSONObject(position).getJSONObject("details").isNull("photos")){
-                        if (!jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("photos").isNull(0)){
-                            if (!jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("photos").getJSONObject(0).isNull("thumbnail")){
-                                Picasso.with(getActivity())
-                                        .load(jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("photos").getJSONObject(0).getString("thumbnail"))
-                                        .into(imageView);
-                            }
-                        }
+                } else {
+                    if (com.involveit.shiners.Objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
+                        icon2.setImageResource(R.drawable.postcell_dynamic3x);
+                    } else {
+                        icon2.setImageResource(R.drawable.posttype_static3x);
                     }
+                }
 
-                } catch (JSONException e) { e.printStackTrace();}
+                DateFormat dateFormat = DateFormat.getDateInstance();
+                dateView.setText(dateFormat.format(post.timestamp));
+
+                Photo photo = post.getMainPhoto();
+                if (photo != null){
+                    Picasso.with(getActivity()).load(photo.original).into(imageView);
+                }
+
                 return convertView;
             }
         });
@@ -172,13 +171,7 @@ public class FragmentPosts extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try{
-                    startActivity(new Intent(getActivity(), PostsItem.class)
-                            .putExtra("position",jsonArray.getJSONObject(position).getString("_id")));
-                    getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                startActivity(new Intent(getActivity(), PostDetails.class).putExtra(PostDetails.EXTRA_POST, posts.get(position)));
             }
         });
     }

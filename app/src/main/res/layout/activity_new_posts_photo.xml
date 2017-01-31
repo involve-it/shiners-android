@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context="com.eranewgames.shiners.NewPosts.NewPostsPhoto">
+    tools:context="com.involveit.shiners.NewPosts.NewPostsPhoto">
 
     <Button
         android:text="Add photo"

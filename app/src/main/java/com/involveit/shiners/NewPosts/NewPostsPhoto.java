@@ -1,4 +1,4 @@
-package com.eranewgames.shiners.NewPosts;
+package com.involveit.shiners.NewPosts;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,9 +16,9 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.eranewgames.shiners.App;
-import com.eranewgames.shiners.Home;
-import com.eranewgames.shiners.R;
+import com.involveit.shiners.App;
+import com.involveit.shiners.Home;
+import com.involveit.shiners.R;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import im.delight.android.ddp.ResultListener;
 
-import static com.eranewgames.shiners.App.keyDetails;
-import static com.eranewgames.shiners.App.keyMap;
+import static com.involveit.shiners.App.keyDetails;
+import static com.involveit.shiners.App.keyMap;
 
 public class NewPostsPhoto extends AppCompatActivity {
 

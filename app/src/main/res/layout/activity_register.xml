@@ -6,7 +6,7 @@
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.eranewgames.shiners.Auth.Register"
+    tools:context="com.involveit.shiners.Auth.Register"
     android:background="#58B8F5">
 
     <EditText

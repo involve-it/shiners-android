@@ -1,4 +1,4 @@
-package com.eranewgames.shiners;
+package com.involveit.shiners;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,8 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
-import com.eranewgames.shiners.Fragments.FragmentMe;
-import com.eranewgames.shiners.Fragments.FragmentPosts;
+import com.involveit.shiners.Fragments.FragmentMe;
+import com.involveit.shiners.Fragments.FragmentPosts;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

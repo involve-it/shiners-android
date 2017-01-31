@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_login_page_2"
-    tools:context="com.eranewgames.shiners.Auth.Splash">
+    tools:context="com.involveit.shiners.Auth.Splash">
 
     <Button
         android:text="Tap here to LOG IN"

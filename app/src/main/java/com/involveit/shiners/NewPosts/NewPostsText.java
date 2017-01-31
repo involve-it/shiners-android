@@ -1,4 +1,4 @@
-package com.eranewgames.shiners.NewPosts;
+package com.involveit.shiners.NewPosts;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +9,13 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
-import com.eranewgames.shiners.App;
-import com.eranewgames.shiners.R;
+import com.involveit.shiners.App;
+import com.involveit.shiners.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.eranewgames.shiners.App.keyMap;
+import static com.involveit.shiners.App.keyMap;
 
 public class NewPostsText extends AppCompatActivity {
 

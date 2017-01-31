@@ -1,4 +1,4 @@
-package com.eranewgames.shiners;
+package com.involveit.shiners;
 
 import org.junit.Test;
 

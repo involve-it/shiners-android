@@ -28,6 +28,8 @@ import im.delight.android.ddp.MeteorSingleton;
 public class HomeActivity extends AppCompatActivity implements SettingsFragment.SettingsDelegate {
     @BindView(R.id.tabLayout) TabLayout tabLayout;
 
+    private int mLastTabSelected = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +40,8 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (Constants.Tags.NEW_POST.equals(tab.getTag())){
+                if (tab.getPosition() == 2){
+                    tabLayout.getTabAt(mLastTabSelected).select();
                     startActivity(new Intent(HomeActivity.this, NewPostActivity.class));
                 } else {
                     displayView(tab.getPosition());
@@ -77,38 +80,45 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
     }
 
     private void displayView(int position) {
-        String actionBarTitle[]= getResources().getStringArray(R.array.tab_titles);
-        Fragment fragment = null;
-        tabLayout.getTabAt(position).select();
+        if (mLastTabSelected != position) {
+            String actionBarTitle[] = getResources().getStringArray(R.array.tab_titles);
+            Fragment fragment = null;
+            tabLayout.getTabAt(position).select();
 
-        Boolean hideActionBar = false;
-        switch (position) {
-            case 0: fragment = new NearbyPostsFragment(); break;
-            case 1: fragment=new MeFragment(); break;
-            case 4:
-                if (MeteorSingleton.getInstance().isLoggedIn()) {
-                    fragment = SettingsFragment.newInstance();
-                } else {
-                    hideActionBar = true;
-                    fragment = SettingsNotLoggedInFragment.newInstance();
-                }
-                break;
+            Boolean hideActionBar = false;
+            switch (position) {
+                case 0:
+                    fragment = new NearbyPostsFragment();
+                    break;
+                case 1:
+                    fragment = new MeFragment();
+                    break;
+                case 4:
+                    if (MeteorSingleton.getInstance().isLoggedIn()) {
+                        fragment = SettingsFragment.newInstance();
+                    } else {
+                        hideActionBar = true;
+                        fragment = SettingsNotLoggedInFragment.newInstance();
+                    }
+                    break;
+            }
+
+            if (hideActionBar) {
+                getSupportActionBar().hide();
+            } else {
+                getSupportActionBar().show();
+            }
+
+            if (fragment != null) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.navigation_container, fragment);
+                fragmentTransaction.commit();
+            }
+
+            getSupportActionBar().setTitle(actionBarTitle[position]);
+            mLastTabSelected = position;
         }
-
-        if (hideActionBar){
-            getSupportActionBar().hide();
-        } else {
-            getSupportActionBar().show();
-        }
-
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.navigation_container, fragment);
-            fragmentTransaction.commit();
-        }
-
-        getSupportActionBar().setTitle(actionBarTitle[position]);
     }
 
     @Override

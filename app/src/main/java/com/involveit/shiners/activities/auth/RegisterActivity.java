@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, R.string.message_registration_success, Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         SettingsHandler.setSetting(RegisterActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
                         finish();
                     }

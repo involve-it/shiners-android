@@ -18,7 +18,7 @@ import im.delight.android.ddp.MeteorSingleton;
 
 import static com.involveit.shiners.App.keyMap;
 
-public class NewPostsText extends AppCompatActivity {
+public class NewPostActivity extends AppCompatActivity {
 
     @BindView(R.id.editText1) EditText editText1;
     @BindView(R.id.editText2) EditText editText2;
@@ -48,7 +48,7 @@ public class NewPostsText extends AppCompatActivity {
             App.keyDetails.put("title",editText1.getText().toString());
             App.keyDetails.put("description",editText2.getText().toString());
 
-            startActivity(new Intent(NewPostsText.this, NewPostsLocation.class));
+            startActivity(new Intent(NewPostActivity.this, WhereActivity.class));
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         return super.onOptionsItemSelected(item);

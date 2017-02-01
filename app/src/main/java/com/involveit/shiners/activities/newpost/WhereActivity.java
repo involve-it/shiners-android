@@ -25,7 +25,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewPostsLocation extends AppCompatActivity implements OnMapReadyCallback{
+public class WhereActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     @BindView(R.id.textView9) TextView textView9;
     @BindView(R.id.switchDynamic) Switch switchDynamic;
@@ -59,7 +59,7 @@ public class NewPostsLocation extends AppCompatActivity implements OnMapReadyCal
             keyLocations.put("lat",0);
             keyLocations.put("lng",0);
             App.keyDetails.put("locations",keyLocations);
-            startActivity(new Intent(NewPostsLocation.this, NewPostsDate.class));
+            startActivity(new Intent(WhereActivity.this, WhenActivity.class));
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         return super.onOptionsItemSelected(item);

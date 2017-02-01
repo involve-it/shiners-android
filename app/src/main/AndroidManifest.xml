@@ -14,30 +14,26 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activities.auth.Splash"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDjWyZDlkMeu2NLTCODcVX19VAlTnfLnB0" />
 
         <activity
-            android:name="com.involveit.shiners.activities.Home"
-            android:label="Главное" />
+            android:name="com.involveit.shiners.activities.HomeActivity"
+            android:label="Главное">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
-            android:name=".activities.auth.LogIn"
-            android:label="Авторизация"
+            android:name=".activities.auth.LogInActivity"
+            android:label="Login"
             android:theme="@style/AppThemeAuth" />
         <activity
-            android:name=".activities.auth.Register"
-            android:label="Регистрация"
+            android:name=".activities.auth.RegisterActivity"
+            android:label="Registration"
             android:theme="@style/AppThemeAuth" />
 
         <service
@@ -46,19 +42,19 @@
             android:exported="true" />
 
         <activity
-            android:name="com.involveit.shiners.activities.PostDetails"
+            android:name="com.involveit.shiners.activities.PostDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.involveit.shiners.activities.newpost.NewPostsText"
-            android:label="New Posts" />
+            android:name="com.involveit.shiners.activities.newpost.NewPostActivity"
+            android:label="New Post" />
         <activity
-            android:name="com.involveit.shiners.activities.newpost.NewPostsLocation"
+            android:name="com.involveit.shiners.activities.newpost.WhereActivity"
             android:label="Where is it located?" />
         <activity
-            android:name="com.involveit.shiners.activities.newpost.NewPostsDate"
+            android:name="com.involveit.shiners.activities.newpost.WhenActivity"
             android:label="When does it expire?" />
         <activity
-            android:name="com.involveit.shiners.activities.newpost.NewPostsPhoto"
+            android:name="com.involveit.shiners.activities.newpost.PhotoActivity"
             android:label="How does it look like?" />
 
         <service

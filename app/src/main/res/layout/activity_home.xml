@@ -6,7 +6,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.involveit.shiners.activities.Home"
+    tools:context="com.involveit.shiners.activities.HomeActivity"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,8 @@
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:icon="@drawable/shiners_add3x"/>
+            android:icon="@drawable/shiners_add3x"
+            android:tag="shiners:tags.NEW_POST" />
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

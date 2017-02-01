@@ -37,27 +37,27 @@ allprojects {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
+    //noinspection GradleCompatible
+    //noinspection GradleCompatible
+    //noinspection GradleCompatible
+    //noinspection GradleDynamicVersion
+    //noinspection GradleDynamicVersion
+    //noinspection GradleDynamicVersion
     compile 'com.jakewharton:butterknife:8.1.0'
     compile 'com.github.danielgindi:httprequest:1.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.2.1'
-    //noinspection GradleCompatible
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.github.delight-im:Android-DDP:v3.1.2'
-    //noinspection GradleCompatible
     compile 'com.android.support:design:25.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-    //noinspection GradleCompatible
     compile 'com.android.support:support-v4:25.1.0'
-    testCompile 'junit:junit:4.12'
-    apt 'com.jakewharton:butterknife-compiler:8.1.0'
-    //noinspection GradleCompatible
     compile 'com.android.support:cardview-v7:25.1.0'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
-    //noinspection GradleDynamicVersion
     compile 'com.amazonaws:aws-android-sdk-core:2.2.+'
-    //noinspection GradleDynamicVersion
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
-    //noinspection GradleDynamicVersion
     compile 'com.amazonaws:aws-android-sdk-ddb:2.2.+'
+    testCompile 'junit:junit:4.12'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
 }

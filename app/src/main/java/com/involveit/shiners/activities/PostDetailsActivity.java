@@ -33,9 +33,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PostDetails extends AppCompatActivity implements OnMapReadyCallback {
+public class PostDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    public static final String EXTRA_POST = "shiners:PostDetails.EXTRA_POST";
+    public static final String EXTRA_POST = "shiners:PostDetailsActivity.EXTRA_POST";
 
     @BindView(R.id.imageView2) ImageView imageView2;
     @BindView(R.id.textTitle) TextView textTitle;
@@ -79,7 +79,7 @@ public class PostDetails extends AppCompatActivity implements OnMapReadyCallback
         //Title
         textTitle.setText(post.details.title);
         //Photo
-        Picasso.with(PostDetails.this)
+        Picasso.with(PostDetailsActivity.this)
                 .load(post.details.photos.get(0).original)
                 .fit()
                 .centerCrop()
@@ -102,7 +102,7 @@ public class PostDetails extends AppCompatActivity implements OnMapReadyCallback
         ((TextView)toolBar.getChildAt(0)).setText(post.details.title);
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMaps);
-        supportMapFragment.getMapAsync(PostDetails.this);
+        supportMapFragment.getMapAsync(PostDetailsActivity.this);
     }
 
     @Override

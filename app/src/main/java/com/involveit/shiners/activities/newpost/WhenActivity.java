@@ -15,7 +15,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewPostsDate extends AppCompatActivity {
+public class WhenActivity extends AppCompatActivity {
 
     @BindView(R.id.datePicker) DatePicker datePicker;
 
@@ -38,7 +38,7 @@ public class NewPostsDate extends AppCompatActivity {
             calendar.set(datePicker.getYear(),datePicker.getMonth(),datePicker.getDayOfMonth());
             App.keyMap.put("endDatePost", calendar.getTimeInMillis()/1000 );
 
-            startActivity(new Intent(NewPostsDate.this, NewPostsPhoto.class));
+            startActivity(new Intent(WhenActivity.this, PhotoActivity.class));
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         return super.onOptionsItemSelected(item);

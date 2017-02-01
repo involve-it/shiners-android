@@ -15,6 +15,10 @@
     <string name="message_registration_unsuccessful">Registration failed</string>
 
     <string name="message_uploading_image">Uploading image…</string>
+    <string name="message_logging_out">Logging out</string>
+    <string name="message_logging_in">Logging in</string>
+    <string name="message_registering">Registering account</string>
+
 
     <string name="units_km">km</string>
     <string name="units_m">m</string>
@@ -27,6 +31,17 @@
     <string name="tab_title_me">Me</string>
     <string name="tab_title_messages">Messages</string>
     <string name="tab_title_settings">Settings</string>
+
+    <string name="btn_log_in">Log In</string>
+    <string name="btn_register">Register</string>
+    <string name="btn_forgot_password">Forgot password?</string>
+
+    <string name="hint_password">Password</string>
+    <string name="hint_username">Username</string>
+    <string name="btn_do_register">Ok</string>
+    <string name="hint_confirm_password">Confirm password</string>
+    <string name="hint_email_address">Email address</string>
+
     <string-array name="tab_titles">
         <item>Posts</item>
         <item>Me</item>
@@ -34,4 +49,7 @@
         <item>Messages</item>
         <item>Settings</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

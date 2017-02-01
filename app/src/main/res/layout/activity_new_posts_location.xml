@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:background="#EBEBEB"
     android:layout_height="match_parent"
-    tools:context="com.involveit.shiners.activities.newpost.NewPostsLocation"
+    tools:context="com.involveit.shiners.activities.newpost.WhereActivity"
     android:orientation="vertical">
 
     <FrameLayout

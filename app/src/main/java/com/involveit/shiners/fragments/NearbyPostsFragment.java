@@ -24,14 +24,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.involveit.shiners.App;
 import com.involveit.shiners.logic.JsonProvider;
 import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.objects.GetPostsResponse;
 import com.involveit.shiners.logic.objects.Photo;
 import com.involveit.shiners.logic.objects.Post;
-import com.involveit.shiners.activities.PostDetails;
+import com.involveit.shiners.activities.PostDetailsActivity;
 import com.involveit.shiners.R;
 import com.involveit.shiners.services.LocationService;
 import com.squareup.picasso.Picasso;
@@ -43,7 +42,7 @@ import java.util.Map;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class FragmentPosts extends Fragment {
+public class NearbyPostsFragment extends Fragment {
     TabLayout tabLayout;
     ListView listView;
     View view;
@@ -106,7 +105,7 @@ public class FragmentPosts extends Fragment {
 
                     createListView();
                 } else {
-                    Toast.makeText(FragmentPosts.this.getActivity(), "An error occurred", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
                 }
                 if (progressDialog != null) {
                     progressDialog.dismiss();
@@ -120,7 +119,7 @@ public class FragmentPosts extends Fragment {
                     progressDialog.dismiss();
                     progressDialog = null;
                 }
-                Toast.makeText(FragmentPosts.this.getActivity(), "An error occurred", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -209,7 +208,7 @@ public class FragmentPosts extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), PostDetails.class).putExtra(PostDetails.EXTRA_POST, posts.get(position)));
+                startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, posts.get(position)));
             }
         });
     }

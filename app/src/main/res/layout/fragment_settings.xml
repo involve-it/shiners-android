@@ -1,0 +1,46 @@
+<LinearLayout android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_margin="@dimen/activity_horizontal_margin">
+
+    <Switch
+        android:text="Notify me of nearby events"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/swNotifyOfNearbyEvents" />
+
+    <Switch
+        android:text="Invisible mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/switch3"
+        android:layout_marginTop="@dimen/settings_item_margin" />
+
+    <Button
+        android:text="My Profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button6"
+        android:layout_marginTop="@dimen/settings_section_vertical_margin" />
+
+    <Button
+        android:text="Contact Us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button7"
+        android:layout_marginTop="@dimen/settings_section_vertical_margin" />
+
+    <Button
+        android:text="About Us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button8" />
+
+    <Button
+        android:text="Log Out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_logout"
+        android:textColor="@android:color/holo_red_dark"
+        android:elevation="0dp"
+        android:layout_marginTop="@dimen/settings_section_vertical_margin" />
+</LinearLayout>

@@ -14,8 +14,8 @@ import im.delight.android.ddp.MeteorCallback;
  */
 
 public class MeteorCallbackHandler implements MeteorCallback {
-    public static final String CONNECTED = "shiners:MeteorCallbackHandler.CONNECTED";
-    public static final String DISCONNECTED = "shiners:MeteorCallbackHandler.DISCONNECTED";
+    static final String CONNECTED = "shiners:MeteorCallbackHandler.CONNECTED";
+    static final String DISCONNECTED = "shiners:MeteorCallbackHandler.DISCONNECTED";
     public Context context;
 
     public MeteorCallbackHandler(Context context){

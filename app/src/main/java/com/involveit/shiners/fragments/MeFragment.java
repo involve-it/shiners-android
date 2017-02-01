@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.involveit.shiners.activities.newpost.NewPostsText;
+import com.involveit.shiners.activities.newpost.NewPostActivity;
 import com.involveit.shiners.R;
 import com.squareup.picasso.Picasso;
 
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class FragmentMe extends Fragment {
+public class MeFragment extends Fragment {
     View view;
     ListView listView;
     JSONArray jsonArray;
@@ -50,7 +50,7 @@ public class FragmentMe extends Fragment {
         map.put("type","all");
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Загрузка данных");
+        progressDialog.setMessage(getResources().getString(R.string.message_loading_posts));
         progressDialog.show();
         progressDialog.setCancelable(false);
 
@@ -59,7 +59,7 @@ public class FragmentMe extends Fragment {
             @Override
             public void onSuccess(String result) {
                 try {
-                    Log.e("FragmentMe=onSuccess", result);
+                    Log.d("MeFragment=onSuccess", result);
                     jsonArray=new JSONObject(result).getJSONArray("result");
                     createListView();
                 } catch (JSONException e) { e.printStackTrace(); }
@@ -75,10 +75,10 @@ public class FragmentMe extends Fragment {
 
     public static void largeLog(String tag, String content) {
         if (content.length() > 4000) {
-            Log.e(tag, content.substring(0, 4000));
+            Log.d(tag, content.substring(0, 4000));
             largeLog(tag, content.substring(4000));
         } else {
-            Log.e(tag, content);
+            Log.d(tag, content);
         }
     }
 
@@ -101,7 +101,9 @@ public class FragmentMe extends Fragment {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                convertView=getActivity().getLayoutInflater().inflate(R.layout.fragment_me_adap,parent,false);
+                if (convertView == null) {
+                    convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_me_adap, parent, false);
+                }
                 ImageView imageView= (ImageView) convertView.findViewById(R.id.imageView);
                 ImageView imageIcon1= (ImageView) convertView.findViewById(R.id.imageView4);
                 ImageView imageIcon2= (ImageView) convertView.findViewById(R.id.imageView5);
@@ -138,7 +140,7 @@ public class FragmentMe extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId()==R.id.add){
-            startActivity(new Intent(getActivity(), NewPostsText.class));
+            startActivity(new Intent(getActivity(), NewPostActivity.class));
             getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         return super.onOptionsItemSelected(item);

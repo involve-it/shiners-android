@@ -14,6 +14,7 @@ import com.involveit.shiners.App;
 import com.involveit.shiners.R;
 import com.involveit.shiners.activities.newpost.NewPostActivity;
 import com.involveit.shiners.fragments.MeFragment;
+import com.involveit.shiners.fragments.MessagesFragment;
 import com.involveit.shiners.fragments.NearbyPostsFragment;
 import com.involveit.shiners.fragments.SettingsFragment;
 import com.involveit.shiners.fragments.SettingsNotLoggedInFragment;
@@ -96,6 +97,9 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
                     break;
                 case 1:
                     fragment = new MeFragment();
+                    break;
+                case 3:
+                    fragment = MessagesFragment.newInstance();
                     break;
                 case 4:
                     if (MeteorSingleton.getInstance().isLoggedIn()) {

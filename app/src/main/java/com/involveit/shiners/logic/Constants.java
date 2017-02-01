@@ -12,5 +12,6 @@ public class Constants {
     public static class MethodNames {
         public static final String GET_NEARBY_POSTS = "getNearbyPostsTest";
         public static final String GET_MY_POSTS = "getMyPosts";
+        public static final String GET_CHATS = "getChats";
     }
 }

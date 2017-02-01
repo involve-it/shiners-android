@@ -40,12 +40,22 @@ final public class JsonProvider {
                 }
             }
             catch (Exception ignored){
-                String dateString = json.getAsJsonPrimitive().getAsString();
                 try {
-                    return dateFormat.parse(dateString);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return null;
+                    Long dateLong = json.getAsLong();
+                    if (dateLong > 0){
+                        return new Date(dateLong);
+                    } else {
+                        return null;
+                    }
+                }
+                catch (Exception ignored2){
+                    String dateString = json.getAsJsonPrimitive().getAsString();
+                    try {
+                        return dateFormat.parse(dateString);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
                 }
             }
         }

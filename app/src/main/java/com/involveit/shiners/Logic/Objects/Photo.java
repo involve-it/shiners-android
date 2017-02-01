@@ -20,6 +20,16 @@ public class Photo implements Parcelable {
     public String original;
     @SerializedName("thumbnail")
     public String thumbnail;
+    @SerializedName("imageUrl")
+    public String imageUrl;
+
+    public String getImageUrl(){
+        if (original == null){
+            return imageUrl;
+        } else {
+            return original;
+        }
+    }
 
     protected Photo(Parcel in) {
         _id = in.readString();

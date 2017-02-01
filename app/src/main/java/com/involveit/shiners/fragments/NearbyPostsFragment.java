@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.icu.text.DateFormat;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -25,10 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.involveit.shiners.logic.Constants;
+import com.involveit.shiners.logic.Helper;
 import com.involveit.shiners.logic.JsonProvider;
 import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
-import com.involveit.shiners.logic.objects.GetPostsResponse;
+import com.involveit.shiners.logic.objects.response.GetPostsResponse;
 import com.involveit.shiners.logic.objects.Photo;
 import com.involveit.shiners.logic.objects.Post;
 import com.involveit.shiners.activities.PostDetailsActivity;
@@ -194,8 +194,7 @@ public class NearbyPostsFragment extends Fragment {
                     }
                 }
 
-                DateFormat dateFormat = DateFormat.getDateInstance();
-                dateView.setText(dateFormat.format(post.timestamp));
+                dateView.setText(Helper.formatDate(post.timestamp));
 
                 Photo photo = post.getMainPhoto();
                 if (photo != null){

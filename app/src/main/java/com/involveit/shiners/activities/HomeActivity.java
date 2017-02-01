@@ -20,6 +20,7 @@ import com.involveit.shiners.fragments.SettingsNotLoggedInFragment;
 import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.SettingsHandler;
+import com.involveit.shiners.services.LocationService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +34,9 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        startService(new Intent(this, LocationService.class));
+
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         displayView(0);

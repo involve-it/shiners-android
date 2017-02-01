@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.JsonProvider;
 import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
@@ -93,7 +94,7 @@ public class NearbyPostsFragment extends Fragment {
         map.put("radius", 10000);
         map.put("take", 10);
 
-        MeteorSingleton.getInstance().call("getNearbyPostsTest", new Object[]{map}, new ResultListener() {
+        MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
 

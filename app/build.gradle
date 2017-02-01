@@ -6,7 +6,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "com.eranewgames.shiners"
+        applicationId 'com.involveit.shiners'
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
@@ -17,6 +17,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 

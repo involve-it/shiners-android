@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.involveit.shiners.activities.newpost.NewPostActivity;
 import com.involveit.shiners.R;
+import com.involveit.shiners.logic.Constants;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -54,8 +55,7 @@ public class MeFragment extends Fragment {
         progressDialog.show();
         progressDialog.setCancelable(false);
 
-        MeteorSingleton.getInstance().call("getMyPosts", new Object[]{map}, new ResultListener() {
-
+        MeteorSingleton.getInstance().call(Constants.MethodNames.GET_MY_POSTS, new Object[]{map}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
                 try {

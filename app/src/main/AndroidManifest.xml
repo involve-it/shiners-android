@@ -7,23 +7,24 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.involveit.shiners.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDjWyZDlkMeu2NLTCODcVX19VAlTnfLnB0" />
 
         <activity
-            android:name="com.involveit.shiners.activities.HomeActivity"
-            android:label="Главное">
+            android:name=".activities.HomeActivity"
+            android:label="Главное"
+            android:icon="@drawable/shiners_add3x">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,29 +38,36 @@
             android:theme="@style/AppThemeAuth" />
 
         <service
-            android:name="com.involveit.shiners.services.LocationService"
+            android:name=".services.LocationService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="com.involveit.shiners.activities.PostDetailsActivity"
+            android:name=".activities.PostDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.involveit.shiners.activities.newpost.NewPostActivity"
+            android:name=".activities.newpost.NewPostActivity"
             android:label="New Post" />
         <activity
-            android:name="com.involveit.shiners.activities.newpost.WhereActivity"
+            android:name=".activities.newpost.WhereActivity"
             android:label="Where is it located?" />
         <activity
-            android:name="com.involveit.shiners.activities.newpost.WhenActivity"
+            android:name=".activities.newpost.WhenActivity"
             android:label="When does it expire?" />
         <activity
-            android:name="com.involveit.shiners.activities.newpost.PhotoActivity"
+            android:name=".activities.newpost.PhotoActivity"
             android:label="How does it look like?" />
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
+
+        <activity
+            android:name=".activities.DialogActivity"
+            android:label="Dialog"
+            android:parentActivityName=".activities.HomeActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activities.DialogActivity"/>
+        </activity>
     </application>
 
 </manifest>

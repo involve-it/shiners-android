@@ -98,8 +98,8 @@ public class NearbyPostsFragment extends Fragment {
             @Override
             public void onSuccess(String result) {
 
-                //Type typeToken = new TypeToken<ResultBase<ArrayList<Post>>>(){}.getType();
-                //ResultBase<ArrayList<Post>> res = JsonProvider.defaultGson.fromJson(result, typeToken);
+                //Type typeToken = new TypeToken<ResponseBase<ArrayList<Post>>>(){}.getType();
+                //ResponseBase<ArrayList<Post>> res = JsonProvider.defaultGson.fromJson(result, typeToken);
                 GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
                 if (res.success) {
                     posts = res.result;

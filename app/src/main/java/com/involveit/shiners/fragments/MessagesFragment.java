@@ -3,6 +3,7 @@ package com.involveit.shiners.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,16 +20,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.involveit.shiners.R;
+import com.involveit.shiners.activities.DialogActivity;
 import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.Helper;
 import com.involveit.shiners.logic.JsonProvider;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.objects.Chat;
 import com.involveit.shiners.logic.objects.response.GetChatsResponse;
+import com.involveit.shiners.logic.proxies.MessagesProxy;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
@@ -68,6 +73,17 @@ public class MessagesFragment extends Fragment {
         }
 
         listView = (ListView) view.findViewById(R.id.dialogs_list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Chat chat = ((ChatsArrayAdapter)listView.getAdapter()).getItem(i);
+                UUID requestId = MessagesProxy.startGettingMessagesAsync(getActivity(), chat.id, 0, 20);
+                Intent intent = new Intent(getActivity(), DialogActivity.class);
+                intent.putExtra(DialogActivity.EXTRA_CHAT, chat);
+                intent.putExtra(DialogActivity.EXTRA_REQUEST_ID, requestId);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
@@ -97,8 +113,6 @@ public class MessagesFragment extends Fragment {
                     progressDialog.dismiss();
                     progressDialog = null;
                 }
-
-                Log.d(TAG, result);
 
                 GetChatsResponse res = JsonProvider.defaultGson.fromJson(result, GetChatsResponse.class);
 

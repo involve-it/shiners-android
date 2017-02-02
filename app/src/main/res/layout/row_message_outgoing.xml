@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="@dimen/message_txt_width"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="This may be a very very long message occupying multiple lines"
+        android:id="@+id/row_message_txt_message"
+        android:background="#ff79d6fe"
+        android:padding="@dimen/message_txt_padding"
+        android:layout_gravity="right" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/message_status_delivered"
+        android:id="@+id/row_message_outgoing_txt_status"
+        android:layout_gravity="right"
+        android:visibility="gone"/>
+
+</LinearLayout>

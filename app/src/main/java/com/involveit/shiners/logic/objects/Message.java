@@ -31,6 +31,8 @@ public class Message implements Parcelable {
     @SerializedName("associatedPostId")
     public String associatedPostId;
 
+    public Message(){}
+
     protected Message(Parcel in) {
         id = in.readString();
         userId = in.readString();

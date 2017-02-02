@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.involveit.shiners.App;
+import com.google.gson.annotations.SerializedName;
 import com.involveit.shiners.R;
 import com.involveit.shiners.activities.newpost.NewPostActivity;
 import com.involveit.shiners.fragments.MeFragment;
@@ -18,7 +18,6 @@ import com.involveit.shiners.fragments.MessagesFragment;
 import com.involveit.shiners.fragments.NearbyPostsFragment;
 import com.involveit.shiners.fragments.SettingsFragment;
 import com.involveit.shiners.fragments.SettingsNotLoggedInFragment;
-import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.SettingsHandler;
 import com.involveit.shiners.services.LocationService;
@@ -40,16 +39,18 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
 
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        displayView(0);
+        displayView(SettingsHandler.getIntSetting(this, SettingsHandler.HOME_PAGE_INDEX));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 2){
+                int position = tab.getPosition();
+                if (position == 2){
                     tabLayout.getTabAt(mLastTabSelected).select();
                     startActivity(new Intent(HomeActivity.this, NewPostActivity.class));
                 } else {
-                    displayView(tab.getPosition());
+                    SettingsHandler.setIntSetting(HomeActivity.this, SettingsHandler.HOME_PAGE_INDEX, position);
+                    displayView(position);
                 }
             }
 
@@ -72,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         if (MeteorSingleton.getInstance().isConnected()){
             isLoggedIn = MeteorSingleton.getInstance().isLoggedIn();
         } else {
-            isLoggedIn = SettingsHandler.getSetting(this, SettingsHandler.USERNAME) != null;
+            isLoggedIn = SettingsHandler.getStringSetting(this, SettingsHandler.USERNAME) != null;
         }
 
         if (isLoggedIn){
@@ -153,7 +154,7 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         public void connected() {
             refreshLoggedInStatus();
             if (MeteorSingleton.getInstance().isLoggedIn()){
-                SettingsHandler.setSetting(HomeActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
+                SettingsHandler.setStringSetting(HomeActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
             } else {
                 SettingsHandler.removeSetting(HomeActivity.this, SettingsHandler.USERNAME);
             }

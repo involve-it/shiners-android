@@ -18,8 +18,6 @@ import com.involveit.shiners.R;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.SettingsHandler;
 
-import java.util.Set;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -74,7 +72,7 @@ public class LogInActivity extends AppCompatActivity {
                         startActivity(new Intent(LogInActivity.this, HomeActivity.class)
                             .putExtra(App.homePositionFragment,1));
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                        SettingsHandler.setSetting(LogInActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
+                        SettingsHandler.setStringSetting(LogInActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
                         progressDialog.dismiss();
                         finish();
                     }

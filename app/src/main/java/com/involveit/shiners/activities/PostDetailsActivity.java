@@ -93,7 +93,9 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
         textVisible.setText(String.valueOf(post.stats.seenTotal));
         textViewType.setText(String.valueOf(post.type));
         textLocation.setText(post.details.locations.get(0).name);
-        locationDesc.setText(Html.fromHtml(post.details.description));
+        if (post.details.description != null) {
+            locationDesc.setText(Html.fromHtml(post.details.description));
+        }
 
         textNear.setText(R.string.message_na);
 

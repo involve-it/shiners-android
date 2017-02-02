@@ -45,7 +45,7 @@
     <string name="hint_email_address">Email address</string>
 
     <string-array name="tab_titles">
-        <item>Posts</item>
+        <item>Shiners</item>
         <item>Me</item>
         <item></item>
         <item>Messages</item>

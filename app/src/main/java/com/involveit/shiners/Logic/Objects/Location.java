@@ -5,11 +5,13 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by yury on 1/30/17.
  */
 
-public class Location implements Parcelable {
+public class Location implements Parcelable, Serializable {
     public static final String LOCATION_TYPE_STATIC = "static";
     public static final String LOCATION_TYPE_DYNAMIC = "dynamic";
 
@@ -57,7 +59,7 @@ public class Location implements Parcelable {
         parcel.writeDouble(this.coords.lng);
     }
 
-    public static class Coords {
+    public static class Coords implements Serializable {
         @SerializedName("lat")
         public double lat;
         @SerializedName("lng")

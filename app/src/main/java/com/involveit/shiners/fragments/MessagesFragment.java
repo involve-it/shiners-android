@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Layout;
@@ -79,7 +80,7 @@ public class MessagesFragment extends Fragment {
                 Chat chat = ((ChatsArrayAdapter)listView.getAdapter()).getItem(i);
                 UUID requestId = MessagesProxy.startGettingMessagesAsync(getActivity(), chat.id, 0, 20);
                 Intent intent = new Intent(getActivity(), DialogActivity.class);
-                intent.putExtra(DialogActivity.EXTRA_CHAT, chat);
+                intent.putExtra(DialogActivity.EXTRA_CHAT, (Parcelable) chat);
                 intent.putExtra(DialogActivity.EXTRA_REQUEST_ID, requestId);
                 startActivity(intent);
             }

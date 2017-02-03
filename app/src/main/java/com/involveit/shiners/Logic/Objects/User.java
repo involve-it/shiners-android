@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by yury on 1/30/17.
  */
 
-public class User implements Parcelable {
+public class User implements Parcelable, Serializable {
     private  static final int LOCATION_REPORT_EXPIRATION = 20*60*1000;
 
     @SerializedName("_id")
@@ -108,7 +109,7 @@ public class User implements Parcelable {
         parcel.writeByte((byte)((isInvisible == null ? false : isInvisible) ? 1 : 0));
     }
 
-    public static class ProfileDetail implements Parcelable{
+    public static class ProfileDetail implements Parcelable, Serializable{
         @SerializedName("_id")
         public String id;
         public String userId;

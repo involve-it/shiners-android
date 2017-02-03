@@ -5,11 +5,13 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by yury on 1/30/17.
  */
 
-public class Photo implements Parcelable {
+public class Photo implements Parcelable, Serializable {
     @SerializedName("_id")
     public String _id;
     @SerializedName("userId")

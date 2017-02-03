@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.involveit.shiners.logic.CachingHandler;
 import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.Helper;
 import com.involveit.shiners.logic.JsonProvider;
@@ -60,10 +62,15 @@ public class NearbyPostsFragment extends Fragment {
         tabLayout= (TabLayout) view.findViewById(R.id.tabLayout);
         listView= (ListView) view.findViewById(R.id.listView);
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getText(R.string.message_loading_posts));
-        progressDialog.show();
-        progressDialog.setCancelable(false);
+        posts = CachingHandler.getObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS);
+        if (posts == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage(getResources().getText(R.string.message_loading_posts));
+            progressDialog.show();
+            progressDialog.setCancelable(false);
+        } else {
+            createListView();
+        }
 
         if (MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null){
             getNearbyPostsTest();
@@ -97,12 +104,13 @@ public class NearbyPostsFragment extends Fragment {
         MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
-
                 //Type typeToken = new TypeToken<ResponseBase<ArrayList<Post>>>(){}.getType();
                 //ResponseBase<ArrayList<Post>> res = JsonProvider.defaultGson.fromJson(result, typeToken);
                 GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
                 if (res.success) {
                     posts = res.result;
+
+                    CachingHandler.setObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS, posts);
 
                     createListView();
                 } else {
@@ -208,7 +216,7 @@ public class NearbyPostsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, posts.get(position)));
+                startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) posts.get(position)));
             }
         });
     }

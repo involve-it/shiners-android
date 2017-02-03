@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ import java.util.Date;
  * Created by yury on 2/1/17.
  */
 
-public class Chat implements Parcelable {
+public class Chat implements Parcelable, Serializable {
     @SerializedName("_id")
     public String id;
     @SerializedName("userId")

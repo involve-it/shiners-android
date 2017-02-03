@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,13 +19,15 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.involveit.shiners.logic.CachingHandler;
+import com.involveit.shiners.logic.cache.CacheEntity;
+import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.Helper;
 import com.involveit.shiners.logic.JsonProvider;
@@ -40,6 +43,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import im.delight.android.ddp.MeteorSingleton;
@@ -49,31 +53,43 @@ public class NearbyPostsFragment extends Fragment {
     TabLayout tabLayout;
     ListView listView;
     View view;
-    ArrayList<Post> posts;
 
     Boolean postsPending = true;
     ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        posts = new ArrayList<>();
         view = inflater.inflate(R.layout.fragment_posts, container, false);
         setHasOptionsMenu(true);
         tabLayout= (TabLayout) view.findViewById(R.id.tabLayout);
         listView= (ListView) view.findViewById(R.id.listView);
 
-        posts = CachingHandler.getObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS);
-        if (posts == null) {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
+                startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
+            }
+        });
+
+        CacheEntity<ArrayList<Post>> cacheEntity = CachingHandler.getCacheObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS);
+
+        if (cacheEntity == null) {
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getResources().getText(R.string.message_loading_posts));
             progressDialog.show();
             progressDialog.setCancelable(false);
         } else {
-            createListView();
+            createListView(cacheEntity.getObject());
+
+            if (!cacheEntity.isStale()){
+                postsPending = false;
+            }
         }
 
-        if (MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null){
+        if (postsPending && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null){
             getNearbyPostsTest();
+            postsPending = false;
         }
 
         return view;
@@ -104,15 +120,11 @@ public class NearbyPostsFragment extends Fragment {
         MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
-                //Type typeToken = new TypeToken<ResponseBase<ArrayList<Post>>>(){}.getType();
-                //ResponseBase<ArrayList<Post>> res = JsonProvider.defaultGson.fromJson(result, typeToken);
                 GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
                 if (res.success) {
-                    posts = res.result;
+                    CachingHandler.setObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS, res.result);
 
-                    CachingHandler.setObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS, posts);
-
-                    createListView();
+                    createListView(res.result);
                 } else {
                     Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
                 }
@@ -140,85 +152,15 @@ public class NearbyPostsFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void createListView(){
-        listView.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return posts.size();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return null;
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return 0;
-            }
-
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_posts_adap, parent, false);
-                }
-                TextView titleView= (TextView) convertView.findViewById(R.id.textView2);
-                TextView descView= (TextView) convertView.findViewById(R.id.textView3);
-                TextView dateView= (TextView) convertView.findViewById(R.id.textView);
-                TextView distanceView= (TextView) convertView.findViewById(R.id.textView4);
-                ImageView icon1= (ImageView) convertView.findViewById(R.id.icon1);
-                final ImageView imageView= (ImageView) convertView.findViewById(R.id.imageView);
-                Post post = posts.get(position);
-
-                distanceView.setText(R.string.message_na);
-                Location currentLocation = LocationHandler.getLatestReportedLocation();
-                if (currentLocation != null) {
-                    com.involveit.shiners.logic.objects.Location location = post.getLocation();
-                    if (location != null) {
-                        float distance = location.distanceFrom(currentLocation.getLatitude(), currentLocation.getLongitude());
-
-                        distanceView.setText(LocationHandler.distanceFormatted(getActivity(), distance));
-                    }
-                }
-
-                titleView.setText(post.details.title);
-                if (post.details.description != null) {
-                    descView.setText(Html.fromHtml(post.details.description));
-                } else {
-                    descView.setText("");
-                }
-
-                if (post.isLive()){
-                    if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
-                        icon1.setImageResource(R.drawable.postcell_dynamic_live3x);
-                    } else {
-                        icon1.setImageResource(R.drawable.posttype_static_live3x);
-                    }
-                } else {
-                    if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
-                        icon1.setImageResource(R.drawable.postcell_dynamic3x);
-                    } else {
-                        icon1.setImageResource(R.drawable.posttype_static3x);
-                    }
-                }
-
-                dateView.setText(Helper.formatDate(post.timestamp));
-
-                Photo photo = post.getMainPhoto();
-                if (photo != null){
-                    Picasso.with(getActivity()).load(photo.original).into(imageView);
-                }
-
-                return convertView;
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) posts.get(position)));
-            }
-        });
+    public void createListView(ArrayList<Post> posts){
+        PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
+        if (adapter == null){
+            adapter = new PostsArrayAdapter(getActivity(), R.layout.fragment_posts_adap, posts);
+            adapter.setNotifyOnChange(true);
+            listView.setAdapter(adapter);
+        } else {
+            Helper.mergeDataToArrayAdapter(posts, adapter);
+        }
     }
 
     private void recalculateDistances(){
@@ -254,4 +196,84 @@ public class NearbyPostsFragment extends Fragment {
 
         }
     };
+
+    private static class PostsArrayAdapter extends ArrayAdapter<Post>{
+        private PostsArrayAdapter(Context context, int resource, List<Post> objects) {
+            super(context, resource, objects);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = li.inflate(R.layout.fragment_posts_adap, parent, false);
+                viewHolder = new ViewHolder();
+                viewHolder.titleView= (TextView) convertView.findViewById(R.id.textView2);
+                viewHolder.descView= (TextView) convertView.findViewById(R.id.textView3);
+                viewHolder.dateView= (TextView) convertView.findViewById(R.id.textView);
+                viewHolder.distanceView= (TextView) convertView.findViewById(R.id.textView4);
+                viewHolder.icon= (ImageView) convertView.findViewById(R.id.icon1);
+                viewHolder.imageView= (ImageView) convertView.findViewById(R.id.imageView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            Post post = getItem(position);
+
+            viewHolder.distanceView.setText(R.string.message_na);
+            Location currentLocation = LocationHandler.getLatestReportedLocation();
+            if (currentLocation != null) {
+                com.involveit.shiners.logic.objects.Location location = post.getLocation();
+                if (location != null) {
+                    float distance = location.distanceFrom(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+                    viewHolder.distanceView.setText(LocationHandler.distanceFormatted(getContext(), distance));
+                }
+            }
+
+            viewHolder.titleView.setText(post.details.title);
+            if (post.details.description != null) {
+                viewHolder.descView.setText(Html.fromHtml(post.details.description));
+            } else {
+                viewHolder.descView.setText("");
+            }
+
+            if (post.isLive()){
+                if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
+                    viewHolder.icon.setImageResource(R.drawable.postcell_dynamic_live3x);
+                } else {
+                    viewHolder.icon.setImageResource(R.drawable.posttype_static_live3x);
+                }
+            } else {
+                if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
+                    viewHolder.icon.setImageResource(R.drawable.postcell_dynamic3x);
+                } else {
+                    viewHolder.icon.setImageResource(R.drawable.posttype_static3x);
+                }
+            }
+
+            viewHolder.dateView.setText(Helper.formatDate(post.timestamp));
+
+            Photo photo = post.getMainPhoto();
+            if (photo != null){
+                Picasso.with(getContext()).load(photo.original).into(viewHolder.imageView);
+            } else {
+                viewHolder.imageView.setImageDrawable(null);
+            }
+
+            return convertView;
+        }
+
+        private static class ViewHolder{
+            private TextView titleView;
+            private TextView descView;
+            private TextView dateView;
+            private TextView distanceView;
+            private ImageView icon;
+            private ImageView imageView;
+        }
+    }
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * Created by yury on 1/30/17.
  */
 
-public class Post implements Parcelable, Serializable {
+public class Post implements Parcelable, Serializable, UniqueIdContainer {
     @SerializedName("_id")
     public String id;
     @SerializedName("type")
@@ -131,6 +131,11 @@ public class Post implements Parcelable, Serializable {
         } else {
             parcel.writeLong(0);
         }
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     public static class PostDetails implements Parcelable, Serializable {

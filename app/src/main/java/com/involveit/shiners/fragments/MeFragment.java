@@ -1,9 +1,12 @@
 package com.involveit.shiners.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,21 +14,37 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.involveit.shiners.activities.newpost.NewPostActivity;
 import com.involveit.shiners.R;
 import com.involveit.shiners.logic.Constants;
+import com.involveit.shiners.logic.Helper;
+import com.involveit.shiners.logic.JsonProvider;
+import com.involveit.shiners.logic.LocationHandler;
+import com.involveit.shiners.logic.MeteorBroadcastReceiver;
+import com.involveit.shiners.logic.cache.CacheEntity;
+import com.involveit.shiners.logic.cache.CachingHandler;
+import com.involveit.shiners.logic.objects.Photo;
+import com.involveit.shiners.logic.objects.Post;
+import com.involveit.shiners.logic.objects.response.GetPostsResponse;
+import com.squareup.picasso.Cache;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
@@ -33,42 +52,79 @@ import im.delight.android.ddp.ResultListener;
 public class MeFragment extends Fragment {
     View view;
     ListView listView;
-    JSONArray jsonArray;
+    ProgressDialog progressDialog;
+    boolean mPendingPostsRequest = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_me, container, false);
         listView= (ListView) view.findViewById(R.id.listView);
         setHasOptionsMenu(true);
-        getMyPosts();
+
+        CacheEntity<ArrayList<Post>> cache = CachingHandler.getCacheObject(getActivity(), CachingHandler.KEY_MY_POSTS);
+        if (cache == null){
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage(getResources().getString(R.string.message_loading_posts));
+            progressDialog.show();
+            progressDialog.setCancelable(false);
+        } else {
+            createListView(cache.getObject());
+
+            if (!cache.isStale()){
+                mPendingPostsRequest = false;
+            }
+        }
+
+        if (mPendingPostsRequest && MeteorSingleton.getInstance().isConnected()) {
+            getMyPosts();
+            mPendingPostsRequest = false;
+        }
+
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        meteorBroadcastReceiver.unregister(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        meteorBroadcastReceiver.register(getActivity());
+    }
+
     public void getMyPosts(){
-        HashMap map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("skip", 0);
         map.put("take", 30);
         map.put("type","all");
 
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getString(R.string.message_loading_posts));
-        progressDialog.show();
-        progressDialog.setCancelable(false);
-
         MeteorSingleton.getInstance().call(Constants.MethodNames.GET_MY_POSTS, new Object[]{map}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
-                try {
-                    Log.d("MeFragment=onSuccess", result);
-                    jsonArray=new JSONObject(result).getJSONArray("result");
-                    createListView();
-                } catch (JSONException e) { e.printStackTrace(); }
-                progressDialog.dismiss();
+                GetPostsResponse response = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
+                if (response.success){
+                    CachingHandler.setObject(getActivity(), CachingHandler.KEY_MY_POSTS, response.result);
+                    createListView(response.result);
+                } else {
+                    Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                }
+
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
             }
 
             @Override
             public void onError(String error, String reason, String details) {
-
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
+                Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -82,53 +138,15 @@ public class MeFragment extends Fragment {
         }
     }
 
-    public void createListView(){
-        listView.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return jsonArray.length();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return null;
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return 0;
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_me_adap, parent, false);
-                }
-                ImageView imageView= (ImageView) convertView.findViewById(R.id.imageView);
-                ImageView imageIcon1= (ImageView) convertView.findViewById(R.id.imageView4);
-                ImageView imageIcon2= (ImageView) convertView.findViewById(R.id.imageView5);
-                TextView textTitle = (TextView) convertView.findViewById(R.id.textView2);
-                TextView textDesc = (TextView) convertView.findViewById(R.id.textView3);
-                TextView textCount = (TextView) convertView.findViewById(R.id.textView4);
-                TextView textLeft = (TextView) convertView.findViewById(R.id.textView5);
-                try{
-                    textTitle.setText(jsonArray.getJSONObject(position).getJSONObject("details").getString("title"));
-                    textDesc.setText(jsonArray.getJSONObject(position).getJSONObject("details").getString("description"));
-
-                    //Проверка null ключа для картинок и загрузки
-                    if (!jsonArray.getJSONObject(position).getJSONObject("details").isNull("photos")){
-                        if (!jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("photos").isNull(0)){
-                            if (!jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("photos").getJSONObject(0).isNull("thumbnail")){
-                                Picasso.with(getActivity())
-                                        .load(jsonArray.getJSONObject(position).getJSONObject("details").getJSONArray("photos").getJSONObject(0).getString("thumbnail"))
-                                        .into(imageView);
-                            }
-                        }
-                    }
-                } catch (JSONException e) { e.printStackTrace(); }
-                return convertView;
-            }
-        });
+    public void createListView(ArrayList<Post> posts){
+        MyPostsArrayAdapter adapter = (MyPostsArrayAdapter) listView.getAdapter();
+        if (adapter == null){
+            adapter = new MyPostsArrayAdapter(getActivity(), R.layout.fragment_me_adap, posts);
+            adapter.setNotifyOnChange(true);
+            listView.setAdapter(adapter);
+        } else {
+            Helper.mergeDataToArrayAdapter(posts, adapter);
+        }
     }
 
     @Override
@@ -144,5 +162,89 @@ public class MeFragment extends Fragment {
             //getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
+        @Override
+        public void connected() {
+            if (mPendingPostsRequest){
+                getMyPosts();
+                mPendingPostsRequest = false;
+            }
+        }
+
+        @Override
+        public void disconnected() {
+
+        }
+    };
+
+    private static class MyPostsArrayAdapter extends ArrayAdapter<Post>{
+        public MyPostsArrayAdapter(Context context, int resource, List<Post> objects) {
+            super(context, resource, objects);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = li.inflate(R.layout.fragment_me_adap, parent, false);
+
+                viewHolder = new ViewHolder();
+                viewHolder.imageView= (ImageView) convertView.findViewById(R.id.imageView);
+                viewHolder.icon= (ImageView) convertView.findViewById(R.id.imageView5);
+                viewHolder.textTitle = (TextView) convertView.findViewById(R.id.textView2);
+                viewHolder.textDesc = (TextView) convertView.findViewById(R.id.textView3);
+                viewHolder.textCount = (TextView) convertView.findViewById(R.id.textView4);
+                viewHolder.textLeft = (TextView) convertView.findViewById(R.id.textView5);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            Post post = getItem(position);
+
+            viewHolder.textTitle.setText(post.details.title);
+            if (post.details.description != null){
+                viewHolder.textDesc.setText(Html.fromHtml(post.details.description));
+            } else {
+                viewHolder.textDesc.setText("");
+            }
+
+            if (post.isLive()){
+                if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
+                    viewHolder.icon.setImageResource(R.drawable.postcell_dynamic_live3x);
+                } else {
+                    viewHolder.icon.setImageResource(R.drawable.posttype_static_live3x);
+                }
+            } else {
+                if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
+                    viewHolder.icon.setImageResource(R.drawable.postcell_dynamic3x);
+                } else {
+                    viewHolder.icon.setImageResource(R.drawable.posttype_static3x);
+                }
+            }
+
+            Photo photo = post.getMainPhoto();
+            if (photo != null){
+                Picasso.with(getContext()).load(photo.original).into(viewHolder.imageView);
+            } else {
+                viewHolder.imageView.setImageDrawable(null);
+            }
+
+            return convertView;
+        }
+
+        private static class ViewHolder{
+            private ImageView imageView;
+
+            private ImageView icon;
+            private TextView textTitle;
+            private TextView textDesc;
+            private TextView textCount;
+            private TextView textLeft;
+        }
     }
 }

@@ -26,11 +26,14 @@ import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.Helper;
 import com.involveit.shiners.logic.JsonProvider;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
+import com.involveit.shiners.logic.cache.CacheEntity;
+import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.objects.Chat;
 import com.involveit.shiners.logic.objects.response.GetChatsResponse;
 import com.involveit.shiners.logic.proxies.MessagesProxy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -64,15 +67,6 @@ public class MessagesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getText(R.string.message_loading_chats));
-        progressDialog.show();
-        progressDialog.setCancelable(false);
-
-        if (MeteorSingleton.getInstance().isConnected()){
-            loadChats();
-        }
-
         listView = (ListView) view.findViewById(R.id.dialogs_list);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -85,6 +79,25 @@ public class MessagesFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        CacheEntity<ArrayList<Chat>> cache = CachingHandler.getCacheObject(getActivity(), CachingHandler.KEY_DIALOGS);
+
+        if (cache == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage(getResources().getText(R.string.message_loading_chats));
+            progressDialog.show();
+            progressDialog.setCancelable(false);
+        } else {
+            createListView(cache.getObject());
+
+            if (!cache.isStale()){
+                messagesRequestPending = false;
+            }
+        }
+
+        if (messagesRequestPending && MeteorSingleton.getInstance().isConnected()){
+            loadChats();
+        }
 
         return view;
     }
@@ -99,6 +112,17 @@ public class MessagesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         meteorBroadcastReceiver.register(getActivity());
+    }
+
+    private void createListView(ArrayList<Chat> chats){
+        ChatsArrayAdapter adapter = (ChatsArrayAdapter) listView.getAdapter();
+        if (adapter == null){
+            adapter = new ChatsArrayAdapter(getActivity(), R.layout.row_messages, chats);
+            adapter.setNotifyOnChange(true);
+            listView.setAdapter(adapter);
+        } else {
+            Helper.mergeDataToArrayAdapter(chats, adapter);
+        }
     }
 
     private void loadChats(){
@@ -116,9 +140,12 @@ public class MessagesFragment extends Fragment {
                 }
 
                 GetChatsResponse res = JsonProvider.defaultGson.fromJson(result, GetChatsResponse.class);
-
-                ChatsArrayAdapter adapter = new ChatsArrayAdapter(getActivity(), R.layout.row_messages, res.result);
-                listView.setAdapter(adapter);
+                if (res.success){
+                    createListView(res.result);
+                    CachingHandler.setObject(getActivity(), CachingHandler.KEY_DIALOGS, res.result);
+                } else {
+                    Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

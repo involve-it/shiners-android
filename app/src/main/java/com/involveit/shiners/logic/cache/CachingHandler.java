@@ -1,4 +1,4 @@
-package com.involveit.shiners.logic;
+package com.involveit.shiners.logic.cache;
 
 import android.content.Context;
 import android.os.Parcelable;
@@ -18,8 +18,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * Created by yury on 2/2/17.
@@ -34,7 +36,7 @@ public final class CachingHandler {
     private static final Object saveLock = new Object();
     private static final Object setLock = new Object();
     private static final Timer timer = new Timer();
-    private static TimerTask timerTask = null;
+    private static CacheTimerTask timerTask = null;
 
     public static final String KEY_NEARBY_POSTS = "com.involveit.shiners.CachingHandler.key.NEARBY_POSTS";
     public static final String KEY_MY_POSTS = "com.involveit.shiners.CachingHandler.key.MY_POSTS";
@@ -44,25 +46,27 @@ public final class CachingHandler {
     private static void updateFile(final Context context){
         if (_cache != null) {
             if (timerTask != null){
+                Log.d(TAG, "Cancelling task with id: " + timerTask.mId);
                 timerTask.cancel();
             }
 
-            timerTask = new TimerTask() {
+            UUID taskId = UUID.randomUUID();
+            Log.d(TAG, "Scheduling task with id: " + taskId);
+
+            timerTask = new CacheTimerTask(taskId) {
                 @Override
                 public void run() {
                     try {
-                        //String json = JsonProvider.defaultGson.toJson(_cache);
+                        Log.d(TAG, "Running task with id: " + this.getId());
                         FileOutputStream file = new FileOutputStream(new File(context.getFilesDir(), FILENAME), false);
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(file);
                         objectOutputStream.writeObject(_cache);
                         objectOutputStream.close();
-                        //file.write(json.getBytes());
                         file.flush();
                         file.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
             };
 
@@ -70,7 +74,7 @@ public final class CachingHandler {
         }
     }
 
-    private static String convertStreamToString(InputStream is) throws IOException {
+    /*private static String convertStreamToString(InputStream is) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line;
@@ -79,7 +83,7 @@ public final class CachingHandler {
         }
         reader.close();
         return sb.toString();
-    }
+    }*/
 
     private static void initFromFile(Context context){
         try {
@@ -88,10 +92,11 @@ public final class CachingHandler {
                 FileInputStream fileStream = new FileInputStream(file);
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
                 _cache = (Cache) objectInputStream.readObject();
+                for (Map.Entry<String, CacheEntity> entry: _cache.entrySet()) {
+                    entry.getValue().setStale();
+                }
                 objectInputStream.close();
                 fileStream.close();
-                //String json = convertStreamToString(fileStream);
-                //_cache = JsonProvider.defaultGson.fromJson(json, Cache.class);
             } else {
                 Log.d(TAG, "Cache file does not exist");
             }
@@ -128,43 +133,25 @@ public final class CachingHandler {
         }
     }
 
-    public static<T> T getObject(Context context, String key){
+    public static<T> CacheEntity<T> getCacheObject(Context context, String key){
         init(context);
 
-        CacheEntity<T> entity = _cache.get(key);
-        if  (entity != null){
-            Log.d(TAG, "Success getting object for key: " + key);
-            return entity.getObject();
-        } else {
-            Log.d(TAG, "Object does not exist for key: " + key);
-            return null;
-        }
+        return _cache.get(key);
     }
 
     private static class Cache extends HashMap<String, CacheEntity> implements Serializable{
         private static final long serialVersionUID = 6529685098267757690L;
     }
 
-    private static class CacheEntity<T> implements Serializable{
-        private static final long serialVersionUID = 7529685098267757690L;
-        private T mObject;
-        private Date mTimestamp;
+    private static abstract class CacheTimerTask extends TimerTask{
+        private UUID mId;
 
-        private void setObject(T object){
-            mObject = object;
-            mTimestamp = new Date();
+        public UUID getId(){
+            return mId;
         }
 
-        private T getObject(){
-            return mObject;
-        }
-
-        private Date getTimestamp(){
-            return mTimestamp;
-        }
-
-        private CacheEntity(T object){
-            setObject(object);
+        private CacheTimerTask(UUID taskId){
+            mId = taskId;
         }
     }
 }

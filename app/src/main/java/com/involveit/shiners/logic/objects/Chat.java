@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by yury on 2/1/17.
  */
 
-public class Chat implements Parcelable, Serializable {
+public class Chat implements Parcelable, Serializable, UniqueIdContainer {
     @SerializedName("_id")
     public String id;
     @SerializedName("userId")
@@ -99,5 +99,10 @@ public class Chat implements Parcelable, Serializable {
         } else {
             parcel.writeLong(lastMessageTimestamp.getTime());
         }
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 }

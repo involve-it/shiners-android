@@ -3,7 +3,7 @@ package com.involveit.shiners;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import com.involveit.shiners.logic.CachingHandler;
+import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorCallbackHandler;
 

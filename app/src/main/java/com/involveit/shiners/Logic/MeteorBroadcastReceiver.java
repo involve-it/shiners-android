@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
-import static com.involveit.shiners.logic.MeteorCallbackHandler.CONNECTED;
-import static com.involveit.shiners.logic.MeteorCallbackHandler.DISCONNECTED;
+import static com.involveit.shiners.logic.MeteorCallbackHandler.BROADCAST_CONNECTED;
+import static com.involveit.shiners.logic.MeteorCallbackHandler.BROADCAST_DISCONNECTED;
 
 /**
  * Created by yury on 1/30/17.
@@ -17,17 +17,17 @@ public abstract class MeteorBroadcastReceiver extends BroadcastReceiver {
         @Override
         public final void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (CONNECTED.equals(action)){
+            if (BROADCAST_CONNECTED.equals(action)){
                 connected();
-            } else if (DISCONNECTED.equals(action)){
+            } else if (BROADCAST_DISCONNECTED.equals(action)){
                 disconnected();
             }
         }
 
         public final void register(Context context){
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(CONNECTED);
-            intentFilter.addAction(DISCONNECTED);
+            intentFilter.addAction(BROADCAST_CONNECTED);
+            intentFilter.addAction(BROADCAST_DISCONNECTED);
             LocalBroadcastManager.getInstance(context).registerReceiver(this, intentFilter);
         }
 

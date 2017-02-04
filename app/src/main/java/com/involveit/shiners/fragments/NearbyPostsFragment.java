@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -159,7 +158,7 @@ public class NearbyPostsFragment extends Fragment {
             adapter.setNotifyOnChange(true);
             listView.setAdapter(adapter);
         } else {
-            Helper.mergeDataToArrayAdapter(posts, adapter);
+            Helper.mergeDataToArrayAdapter(posts, adapter, true);
         }
     }
 

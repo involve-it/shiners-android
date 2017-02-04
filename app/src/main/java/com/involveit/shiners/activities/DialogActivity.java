@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.involveit.shiners.R;
 import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.JsonProvider;
+import com.involveit.shiners.logic.MeteorCallbackHandler;
 import com.involveit.shiners.logic.objects.Chat;
 import com.involveit.shiners.logic.objects.Message;
 import com.involveit.shiners.logic.objects.response.ResponseBase;
@@ -77,7 +78,10 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(messagesBroadcastReceiver, new IntentFilter(MessagesProxy.BROADCAST_GET_MESSAGES));
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MessagesProxy.BROADCAST_GET_MESSAGES);
+        intentFilter.addAction(MeteorCallbackHandler.BROADCAST_MESSAGE_ADDED);
+        LocalBroadcastManager.getInstance(this).registerReceiver(messagesBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -85,6 +89,39 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         super.onPause();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messagesBroadcastReceiver);
+    }
+
+    private void setAllMessagesSeen(){
+        final ArrayList<String> messageIds = new ArrayList<>();
+        for (Message message:chat.messages){
+            if (!message.seen){
+                messageIds.add(message.id);
+            }
+        }
+        if (messageIds.size() > 0) {
+            HashMap<String, Object> request = new HashMap<>();
+            request.put("messageIds", messageIds);
+            MeteorSingleton.getInstance().call(Constants.MethodNames.MESSAGES_SET_SEEN, new Object[]{request}, new ResultListener() {
+                @Override
+                public void onSuccess(String result) {
+                    ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
+                    if (response.success){
+                        for (Message message:chat.messages){
+                            if (messageIds.contains(message.id)){
+                                message.seen = true;
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "Failed to set 'seen' on messages");
+                    }
+                }
+
+                @Override
+                public void onError(String error, String reason, String details) {
+                    Log.d(TAG, "Failed to set 'seen' on messages");
+                }
+            });
+        }
     }
 
     private BroadcastReceiver messagesBroadcastReceiver = new BroadcastReceiver() {
@@ -98,8 +135,25 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 if (receivedRequestId.equals(requestId)){
                     ArrayList<Message> messages = MessagesProxy.getMessagesResult(receivedRequestId);
                     if (messages != null) {
+                        chat.messages = messages;
+                        setAllMessagesSeen();
                         MessagesArrayAdapter adapter = new MessagesArrayAdapter(DialogActivity.this, 0, messages);
+                        adapter.setNotifyOnChange(true);
                         listView.setAdapter(adapter);
+                    }
+                }
+            } else if (MeteorCallbackHandler.BROADCAST_MESSAGE_ADDED.equals(action)){
+                Log.d(TAG, "New message received.");
+                MessagesArrayAdapter adapter = (MessagesArrayAdapter) listView.getAdapter();
+                if (adapter != null) {
+                    Message message = intent.getParcelableExtra(MeteorCallbackHandler.EXTRA_COLLECTION_OBJECT);
+                    ArrayList<String> messageIds = new ArrayList<>();
+                    for (Message msg : chat.messages) {
+                        messageIds.add(msg.id);
+                    }
+                    if (!messageIds.contains(message.id) && message.chatId.equals(chat.id)){
+                        adapter.add(message);
+                        setAllMessagesSeen();
                     }
                 }
             }
@@ -121,15 +175,6 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 public void onSuccess(String result) {
                     SendMessageResponse response = JsonProvider.defaultGson.fromJson(result, SendMessageResponse.class);
                     if (response.success){
-                        Message message = new Message();
-                        message.timestamp = new Date();
-                        message.toUserId = chat.getOtherParty().id;
-                        message.chatId = chat.id;
-                        message.text = txtMessage.getText().toString();
-                        message.id = response.result;
-                        message.userId = MeteorSingleton.getInstance().getUserId();
-
-                        ((MessagesArrayAdapter)listView.getAdapter()).add(message);
                         txtMessage.post(new Runnable() {
                             @Override
                             public void run() {

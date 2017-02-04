@@ -145,7 +145,7 @@ public class MeFragment extends Fragment {
             adapter.setNotifyOnChange(true);
             listView.setAdapter(adapter);
         } else {
-            Helper.mergeDataToArrayAdapter(posts, adapter);
+            Helper.mergeDataToArrayAdapter(posts, adapter, true);
         }
     }
 

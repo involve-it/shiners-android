@@ -121,7 +121,7 @@ public class MessagesFragment extends Fragment {
             adapter.setNotifyOnChange(true);
             listView.setAdapter(adapter);
         } else {
-            Helper.mergeDataToArrayAdapter(chats, adapter);
+            Helper.mergeDataToArrayAdapter(chats, adapter, true);
         }
     }
 

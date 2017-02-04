@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorCallbackHandler;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -22,12 +22,12 @@ public final class Helper {
         return "";
     }
 
-    public static<T extends UniqueIdContainer> void mergeDataToArrayAdapter(ArrayList<T> newObjects, ArrayAdapter<T> adapter){
+    public static<T extends UniqueIdContainer> void mergeDataToArrayAdapter(ArrayList<T> newObjects, ArrayAdapter<T> adapter, boolean replaceAll){
         int index = 0;
         for (T obj : newObjects) {
             if (adapter.getCount() > index){
                 T currentObj = adapter.getItem(index);
-                if (!currentObj.getId().equals(obj.getId())){
+                if (replaceAll || !currentObj.getId().equals(obj.getId())){
                     adapter.remove(currentObj);
                     adapter.insert(obj, index);
                 }

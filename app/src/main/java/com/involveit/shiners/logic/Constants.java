@@ -15,5 +15,12 @@ public class Constants {
         public static final String GET_CHATS = "getChats";
         public static final String GET_MESSAGES = "getMessages";
         public static final String ADD_MESSAGE = "addMessage";
+        public static final String GET_USER = "getUser";
+        public static final String MESSAGES_SET_SEEN = "messagesSetSeen";
+    }
+
+    public static class CollectionNames{
+        public static final String MESSAGES = "bz.messages";
+        public static final String COMMENTS = "bz.reviews";
     }
 }

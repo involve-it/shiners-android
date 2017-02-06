@@ -6,34 +6,34 @@
         android:text="Notify me of nearby events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/swNotifyOfNearbyEvents" />
+        android:id="@+id/sw_notify_nearby" />
 
     <Switch
         android:text="Invisible mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/switch3"
+        android:id="@+id/sw_invisible_mode"
         android:layout_marginTop="@dimen/settings_item_margin" />
 
     <Button
         android:text="My Profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button6"
+        android:id="@+id/btn_my_profile"
         android:layout_marginTop="@dimen/settings_section_vertical_margin" />
 
     <Button
         android:text="Contact Us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button7"
+        android:id="@+id/btn_contact_us"
         android:layout_marginTop="@dimen/settings_section_vertical_margin" />
 
     <Button
         android:text="About Us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button8" />
+        android:id="@+id/btn_about_us" />
 
     <Button
         android:text="Log Out"

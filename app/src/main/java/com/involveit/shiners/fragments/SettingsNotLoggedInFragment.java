@@ -20,7 +20,6 @@ import butterknife.OnClick;
  * create an instance of this fragment.
  */
 public class SettingsNotLoggedInFragment extends Fragment {
-
     public SettingsNotLoggedInFragment() {
         // Required empty public constructor
     }
@@ -58,4 +57,8 @@ public class SettingsNotLoggedInFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

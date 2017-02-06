@@ -9,16 +9,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.involveit.shiners.R;
+import com.involveit.shiners.logic.AccountHandler;
+import com.involveit.shiners.logic.cache.CachingHandler;
+import com.involveit.shiners.logic.objects.User;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class SettingsFragment extends Fragment {
+    @BindView(R.id.sw_notify_nearby)
+    Switch swNotifyNearby;
+
+    @BindView(R.id.sw_invisible_mode)
+    Switch swInvisibleMode;
+
     private static final String TAG = "SettingsFragment";
     public SettingsFragment() {
         // Required empty public constructor
@@ -50,6 +61,9 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
+        User currentUser = AccountHandler.getCurrentUser();
+        swNotifyNearby.setChecked(currentUser.enableNearbyNotifications);
+        swInvisibleMode.setChecked(currentUser.isInvisible);
         return view;
     }
 
@@ -71,6 +85,7 @@ public class SettingsFragment extends Fragment {
         MeteorSingleton.getInstance().logout(new ResultListener() {
             @Override
             public void onSuccess(String result) {
+                AccountHandler.logoff(getActivity());
                 progressDialog.dismiss();
                 mDelegate.onLogout();
             }

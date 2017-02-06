@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.involveit.shiners.App;
 import com.involveit.shiners.activities.HomeActivity;
 import com.involveit.shiners.R;
+import com.involveit.shiners.logic.AccountHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.SettingsHandler;
 
@@ -73,8 +74,20 @@ public class LogInActivity extends AppCompatActivity {
                             .putExtra(App.homePositionFragment,1));
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         SettingsHandler.setStringSetting(LogInActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
-                        progressDialog.dismiss();
-                        finish();
+                        AccountHandler.loadAccount(LogInActivity.this, new AccountHandler.AccountHandlerDelegate() {
+                            @Override
+                            public void accountLoaded() {
+                                progressDialog.dismiss();
+                                finish();
+                            }
+
+                            @Override
+                            public void accountLoadFailed() {
+                                progressDialog.dismiss();
+                                Toast.makeText(LogInActivity.this, R.string.message_authentication_error, Toast.LENGTH_SHORT).show();
+                                SettingsHandler.removeSetting(LogInActivity.this, SettingsHandler.USERNAME);
+                            }
+                        });
                     }
 
                     @Override

@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +19,28 @@ import com.involveit.shiners.fragments.MessagesFragment;
 import com.involveit.shiners.fragments.NearbyPostsFragment;
 import com.involveit.shiners.fragments.SettingsFragment;
 import com.involveit.shiners.fragments.SettingsNotLoggedInFragment;
+import com.involveit.shiners.logic.AccountHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.SettingsHandler;
 import com.involveit.shiners.services.LocationService;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import im.delight.android.ddp.MeteorSingleton;
 
 public class HomeActivity extends AppCompatActivity implements SettingsFragment.SettingsDelegate {
+    private static final int TAB_NEARBY_POSTS = 0;
+    private static final int TAB_ME = 1;
+    private static final int TAB_MESSAGES = 3;
+    private static final int TAB_SETTINGS = 4;
+    private static final int TAB_SETTINGS_NOT_LOGGED_IN = 5;
+
     @BindView(R.id.tabLayout) TabLayout tabLayout;
 
     private int mLastTabSelected = -1;
+    private ArrayMap<Integer, Fragment> mFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,34 +96,47 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         }
     }
 
+    private Fragment getExistingFragment(int position){
+        if (mFragments == null){
+            mFragments = new ArrayMap<>();
+        }
+
+        return mFragments.get(position);
+    }
+
     private void displayView(int position) {
         if (mLastTabSelected != position) {
             String actionBarTitle[] = getResources().getStringArray(R.array.tab_titles);
-            Fragment fragment = null;
+
             tabLayout.getTabAt(position).select();
 
-            Boolean hideActionBar = false;
-            switch (position) {
-                case 0:
-                    fragment = new NearbyPostsFragment();
-                    break;
-                case 1:
-                    fragment = new MeFragment();
-                    break;
-                case 3:
-                    fragment = MessagesFragment.newInstance();
-                    break;
-                case 4:
-                    if (MeteorSingleton.getInstance().isLoggedIn()) {
-                        fragment = SettingsFragment.newInstance();
-                    } else {
-                        hideActionBar = true;
-                        fragment = SettingsNotLoggedInFragment.newInstance();
-                    }
-                    break;
+            if (position == TAB_SETTINGS && !AccountHandler.isLoggedIn()) {
+                position = TAB_SETTINGS_NOT_LOGGED_IN;
             }
 
-            if (hideActionBar) {
+            Fragment fragment = getExistingFragment(position);
+            if (fragment == null) {
+                switch (position) {
+                    case TAB_NEARBY_POSTS:
+                        fragment = new NearbyPostsFragment();
+                        break;
+                    case TAB_ME:
+                        fragment = new MeFragment();
+                        break;
+                    case TAB_MESSAGES:
+                        fragment = MessagesFragment.newInstance();
+                        break;
+                    case TAB_SETTINGS:
+                        fragment = SettingsFragment.newInstance();
+                        break;
+                    case TAB_SETTINGS_NOT_LOGGED_IN:
+                        fragment = SettingsNotLoggedInFragment.newInstance();
+                        break;
+                }
+                mFragments.put(position, fragment);
+            }
+
+            if (position == TAB_SETTINGS_NOT_LOGGED_IN) {
                 getSupportActionBar().hide();
             } else {
                 getSupportActionBar().show();
@@ -140,6 +164,9 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
     protected void onResume() {
         super.onResume();
         meteorBroadcastReceiver.register(this);
+        if (mLastTabSelected == TAB_SETTINGS_NOT_LOGGED_IN){
+            displayView(TAB_SETTINGS);
+        }
     }
 
     @Override

@@ -120,7 +120,7 @@ public final class CachingHandler {
         }
     }
 
-    public synchronized static<T> void setObject(Context context, String key, T object){
+    public static<T> void setObject(Context context, String key, T object){
         Log.d(TAG, "Setting object for key: " + key);
         init(context);
 
@@ -137,6 +137,19 @@ public final class CachingHandler {
         init(context);
 
         return _cache.get(key);
+    }
+
+    public static void removeObject(Context context, String key){
+        Log.d(TAG, "Deleting object for key: " + key);
+        init(context);
+
+        synchronized (setLock){
+            _cache.remove(key);
+        }
+
+        synchronized(saveLock) {
+            updateFile(context);
+        }
     }
 
     private static class Cache extends HashMap<String, CacheEntity> implements Serializable{

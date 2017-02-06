@@ -36,7 +36,7 @@ public class MeteorCallbackHandler implements MeteorCallback {
     public void onConnect(boolean signedInAutomatically) {
         Intent intent = new Intent(BROADCAST_CONNECTED);
 
-        AccountHandler.loadAccount();
+        AccountHandler.loadAccount(context, null);
 
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         Toast.makeText(context, R.string.message_connected, Toast.LENGTH_SHORT).show();

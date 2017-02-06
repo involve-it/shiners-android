@@ -3,6 +3,7 @@ package com.involveit.shiners;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import com.involveit.shiners.logic.AccountHandler;
 import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorCallbackHandler;
@@ -38,7 +39,9 @@ public class App extends Application {
                 CachingHandler.init(App.this);
             }
         });
+
         LocationHandler.init(this);
+        AccountHandler.initFromCache(this);
 
         this.meteorCallbackHandler = new MeteorCallbackHandler(this);
 

@@ -1,7 +1,10 @@
 package com.involveit.shiners.logic;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.involveit.shiners.logic.cache.CacheEntity;
+import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.objects.User;
 import com.involveit.shiners.logic.objects.response.GetUserResponse;
 
@@ -27,25 +30,60 @@ public class AccountHandler {
         return currentUser;
     }
 
-    public static void loadAccount(){
+    public static void initFromCache(Context context){
+        CacheEntity<User> cache =  CachingHandler.getCacheObject(context, CachingHandler.KEY_CURRENT_USER);
+        if (cache != null){
+            currentUser = cache.getObject();
+        }
+    }
+
+    public static void logoff(Context context){
+        currentUser = null;
+        if (messagesSubscriptionId != null){
+            MeteorSingleton.getInstance().unsubscribe(messagesSubscriptionId);
+        }
+        if (commentsSubscriptionId != null){
+            MeteorSingleton.getInstance().unsubscribe(commentsSubscriptionId);
+        }
+        accountLoaded = false;
+
+        CachingHandler.removeObject(context, CachingHandler.KEY_CURRENT_USER);
+    }
+
+    public static boolean isLoggedIn(){
+        return currentUser != null;
+    }
+
+    public static void loadAccount(final Context context, final AccountHandlerDelegate delegate){
         if (MeteorSingleton.getInstance().isLoggedIn()){
             MeteorSingleton.getInstance().call(Constants.MethodNames.GET_USER, new Object[]{MeteorSingleton.getInstance().getUserId()}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     GetUserResponse response = JsonProvider.defaultGson.fromJson(result, GetUserResponse.class);
+                    accountLoaded = true;
                     if (response.success){
                         Log.d(TAG, "User loaded.");
                         currentUser = response.result;
+
+                        CachingHandler.setObject(context, CachingHandler.KEY_CURRENT_USER, currentUser);
+                        if (delegate != null){
+                            delegate.accountLoaded();
+                        }
                     } else {
                         Log.d(TAG, "User load failed");
+                        if (delegate != null){
+                            delegate.accountLoadFailed();
+                        }
                     }
-                    accountLoaded = true;
                 }
 
                 @Override
                 public void onError(String error, String reason, String details) {
                     accountLoaded = true;
                     Log.d(TAG, "User load failed. Error: " + error);
+                    if (delegate != null){
+                        delegate.accountLoadFailed();
+                    }
                 }
             });
 
@@ -83,5 +121,10 @@ public class AccountHandler {
                 Log.d(TAG, "comments-my subscription failed");
             }
         });
+    }
+
+    public interface AccountHandlerDelegate{
+        void accountLoaded();
+        void accountLoadFailed();
     }
 }

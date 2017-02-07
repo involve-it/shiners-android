@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +78,7 @@ public class MessagesFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        listView.setEmptyView(view.findViewById(R.id.dialogs_list_empty_view));
 
         CacheEntity<ArrayList<Chat>> cache = CachingHandler.getCacheObject(getActivity(), CachingHandler.KEY_DIALOGS);
 

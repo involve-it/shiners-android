@@ -59,6 +59,7 @@ public class MeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_me, container, false);
         listView= (ListView) view.findViewById(R.id.listView);
+        listView.setEmptyView(view.findViewById(R.id.my_posts_list_empty_view));
         setHasOptionsMenu(true);
 
         CacheEntity<ArrayList<Post>> cache = CachingHandler.getCacheObject(getActivity(), CachingHandler.KEY_MY_POSTS);

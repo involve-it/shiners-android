@@ -1,5 +1,6 @@
 package com.involveit.shiners.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.annotations.SerializedName;
 import com.involveit.shiners.R;
 import com.involveit.shiners.activities.newpost.NewPostActivity;
 import com.involveit.shiners.fragments.MeFragment;
@@ -24,8 +24,6 @@ import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.SettingsHandler;
 import com.involveit.shiners.services.LocationService;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import im.delight.android.ddp.MeteorSingleton;
@@ -37,10 +35,14 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
     private static final int TAB_SETTINGS = 4;
     private static final int TAB_SETTINGS_NOT_LOGGED_IN = 5;
 
+    public static final int REQUEST_LOGIN = 1;
+
     @BindView(R.id.tabLayout) TabLayout tabLayout;
 
     private int mLastTabSelected = -1;
     private ArrayMap<Integer, Fragment> mFragments;
+
+    private boolean displayNearbyPosts = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,7 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         if (MeteorSingleton.getInstance().isConnected()){
             isLoggedIn = MeteorSingleton.getInstance().isLoggedIn();
         } else {
-            isLoggedIn = SettingsHandler.getStringSetting(this, SettingsHandler.USERNAME) != null;
+            isLoggedIn = SettingsHandler.getStringSetting(this, SettingsHandler.USER_ID) != null;
         }
 
         if (isLoggedIn){
@@ -164,14 +166,26 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
     protected void onResume() {
         super.onResume();
         meteorBroadcastReceiver.register(this);
-        if (mLastTabSelected == TAB_SETTINGS_NOT_LOGGED_IN){
-            displayView(TAB_SETTINGS);
+
+        if (displayNearbyPosts){
+            displayView(TAB_NEARBY_POSTS);
+            refreshLoggedInStatus();
+            displayNearbyPosts = false;
         }
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK){
+            displayNearbyPosts = true;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onLogout() {
-        SettingsHandler.removeSetting(this, SettingsHandler.USERNAME);
+        SettingsHandler.removeSetting(this, SettingsHandler.USER_ID);
         refreshLoggedInStatus();
         displayView(0);
     }
@@ -181,9 +195,9 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         public void connected() {
             refreshLoggedInStatus();
             if (MeteorSingleton.getInstance().isLoggedIn()){
-                SettingsHandler.setStringSetting(HomeActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
+                SettingsHandler.setStringSetting(HomeActivity.this, SettingsHandler.USER_ID, MeteorSingleton.getInstance().getUserId());
             } else {
-                SettingsHandler.removeSetting(HomeActivity.this, SettingsHandler.USERNAME);
+                SettingsHandler.removeSetting(HomeActivity.this, SettingsHandler.USER_ID);
             }
         }
 

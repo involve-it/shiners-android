@@ -62,6 +62,7 @@ public class NearbyPostsFragment extends Fragment {
         setHasOptionsMenu(true);
         tabLayout= (TabLayout) view.findViewById(R.id.tabLayout);
         listView= (ListView) view.findViewById(R.id.listView);
+        listView.setEmptyView(view.findViewById(R.id.nearby_posts_empty_view));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

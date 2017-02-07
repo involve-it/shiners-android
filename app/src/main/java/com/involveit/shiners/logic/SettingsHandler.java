@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 public final class SettingsHandler {
     private static final String SETTINGS_FILENAME = "com.involveit.shiners.SettingsHandler.SETTINGS";
 
-    public static final String USERNAME = "com.involveit.shiners.SettingsHandler.setting.USERNAME";
+    public static final String USER_ID = "com.involveit.shiners.SettingsHandler.setting.USER_ID";
     public static final String HOME_PAGE_INDEX = "com.involveit.shiners.SettingsHandler.setting.HOME_PAGE_INDEX";
 
     public static void setStringSetting(Context context, String key, String value){

@@ -31,8 +31,8 @@ public class User implements Parcelable, Serializable {
     @SerializedName("profileDetails")
     public List<ProfileDetail> profileDetails;
     public Date lastMobileLocationReport;
-    public Boolean enableNearbyNotifications;
-    public Boolean isInvisible;
+    public boolean enableNearbyNotifications;
+    public boolean isInvisible;
 
     protected User(Parcel in) {
         id = in.readString();
@@ -105,8 +105,10 @@ public class User implements Parcelable, Serializable {
         } else {
             parcel.writeLong(0);
         }
-        parcel.writeByte((byte)((enableNearbyNotifications == null ? false : enableNearbyNotifications) ? 1 : 0));
-        parcel.writeByte((byte)((isInvisible == null ? false : isInvisible) ? 1 : 0));
+        //parcel.writeByte((byte)((enableNearbyNotifications == null ? false : enableNearbyNotifications) ? 1 : 0));
+        //parcel.writeByte((byte)((isInvisible == null ? false : isInvisible) ? 1 : 0));
+        parcel.writeByte((byte) (enableNearbyNotifications ? 1 : 0));
+        parcel.writeByte((byte) (isInvisible ? 1 : 0));
     }
 
     public static class ProfileDetail implements Parcelable, Serializable{

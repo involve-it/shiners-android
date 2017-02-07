@@ -7,6 +7,8 @@
     <string name="message_disconnected">Disconnected</string>
     <string name="message_loading_posts">Loading posts</string>
 
+    <string name="message_loading_account">Loading user account</string>
+
     <string name="message_loading_chats">Loading conversations</string>
 
     <string name="message_authentication_successful">Success!</string>
@@ -59,4 +61,7 @@
     <string name="btn_label_send">Send</string>
     <string name="btn_label_sending">Sending</string>
     <string name="text_hint_message">Message</string>
+    <string name="dialogs_list_empty_view_text">There are no messages to display</string>
+    <string name="my_posts_list_empty_view_text">You don\'t have any posts. Time to create one?</string>
+    <string name="nearby_posts_list_empty_view_text">There are no posts around you</string>
 </resources>

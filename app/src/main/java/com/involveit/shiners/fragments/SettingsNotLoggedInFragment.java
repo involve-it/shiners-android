@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.involveit.shiners.R;
+import com.involveit.shiners.activities.HomeActivity;
 import com.involveit.shiners.activities.auth.LogInActivity;
 
 import butterknife.ButterKnife;
@@ -52,13 +53,8 @@ public class SettingsNotLoggedInFragment extends Fragment {
     public void OnClick(View view){
         switch (view.getId()){
             case R.id.btn_login:
-                startActivity(new Intent(getActivity(), LogInActivity.class));
+                getActivity().startActivityForResult(new Intent(getActivity(), LogInActivity.class), HomeActivity.REQUEST_LOGIN);
                 break;
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

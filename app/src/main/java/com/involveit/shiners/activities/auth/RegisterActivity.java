@@ -1,5 +1,6 @@
 package com.involveit.shiners.activities.auth;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.involveit.shiners.R;
+import com.involveit.shiners.logic.AccountHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.SettingsHandler;
 
@@ -58,22 +60,32 @@ public class RegisterActivity extends AppCompatActivity {
 
             MeteorSingleton.getInstance().registerAndLogin(editText1.getText().toString(),
                 editText2.getText().toString(), editText3.getText().toString(), new ResultListener() {
-
                     @Override
                     public void onSuccess(String result) {
-                        progressDialog.dismiss();
-                        Toast.makeText(RegisterActivity.this, R.string.message_registration_success, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
-                        //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                        SettingsHandler.setStringSetting(RegisterActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
-                        finish();
+                        SettingsHandler.setStringSetting(RegisterActivity.this, SettingsHandler.USER_ID, MeteorSingleton.getInstance().getUserId());
+                        AccountHandler.loadAccount(RegisterActivity.this, new AccountHandler.AccountHandlerDelegate() {
+                            @Override
+                            public void accountLoaded() {
+                                Toast.makeText(RegisterActivity.this, R.string.message_registration_success, Toast.LENGTH_SHORT).show();
+                                setResult(Activity.RESULT_OK);
+                                progressDialog.dismiss();
+                                finish();
+                            }
+
+                            @Override
+                            public void accountLoadFailed() {
+                                progressDialog.dismiss();
+                                Toast.makeText(RegisterActivity.this, R.string.message_registration_unsuccessful, Toast.LENGTH_SHORT).show();
+                                SettingsHandler.removeSetting(RegisterActivity.this, SettingsHandler.USER_ID);
+                            }
+                        });
                     }
 
                     @Override
                     public void onError(String error, String reason, String details) {
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, R.string.message_registration_unsuccessful, Toast.LENGTH_SHORT).show();
-                        SettingsHandler.removeSetting(RegisterActivity.this, SettingsHandler.USERNAME);
+                        SettingsHandler.removeSetting(RegisterActivity.this, SettingsHandler.USER_ID);
                     }
                 });
         }

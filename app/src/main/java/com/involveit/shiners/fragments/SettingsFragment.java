@@ -2,6 +2,7 @@ package com.involveit.shiners.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.involveit.shiners.R;
 import com.involveit.shiners.logic.AccountHandler;
+import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.objects.User;
 
@@ -29,6 +31,8 @@ public class SettingsFragment extends Fragment {
 
     @BindView(R.id.sw_invisible_mode)
     Switch swInvisibleMode;
+
+    ProgressDialog progressDialog;
 
     private static final String TAG = "SettingsFragment";
     public SettingsFragment() {
@@ -56,15 +60,48 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        meteorBroadcastReceiver.unregister(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        meteorBroadcastReceiver.register(getActivity());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
         User currentUser = AccountHandler.getCurrentUser();
-        swNotifyNearby.setChecked(currentUser.enableNearbyNotifications);
-        swInvisibleMode.setChecked(currentUser.isInvisible);
+        if (currentUser != null) {
+            updateControls(currentUser);
+        } else {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage(getResources().getText(R.string.message_loading_account));
+            progressDialog.show();
+            progressDialog.setCancelable(false);
+        }
         return view;
+    }
+
+    private void updateControls(final User currentUser){
+        swNotifyNearby.post(new Runnable() {
+            @Override
+            public void run() {
+                swNotifyNearby.setChecked(currentUser.enableNearbyNotifications);
+                swInvisibleMode.setChecked(currentUser.isInvisible);
+            }
+        });
     }
 
     @OnClick({R.id.btn_logout})
@@ -118,4 +155,16 @@ public class SettingsFragment extends Fragment {
     public interface SettingsDelegate{
         void onLogout();
     }
+
+    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
+        @Override
+        public void connected() {
+            updateControls(AccountHandler.getCurrentUser());
+        }
+
+        @Override
+        public void disconnected() {
+
+        }
+    };
 }

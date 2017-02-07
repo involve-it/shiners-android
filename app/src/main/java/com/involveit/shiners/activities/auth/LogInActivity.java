@@ -1,5 +1,6 @@
 package com.involveit.shiners.activities.auth;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.involveit.shiners.App;
-import com.involveit.shiners.activities.HomeActivity;
 import com.involveit.shiners.R;
 import com.involveit.shiners.logic.AccountHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
@@ -27,6 +26,7 @@ import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class LogInActivity extends AppCompatActivity {
+    public static final int REQUEST_REGISTER = 2;
 
     @BindView(R.id.txtUsername) EditText editTextLogin;
     @BindView(R.id.txtPassword) EditText editTextPass;
@@ -69,14 +69,12 @@ public class LogInActivity extends AppCompatActivity {
                 MeteorSingleton.getInstance().loginWithUsername(editTextLogin.getText().toString(), editTextPass.getText().toString(), new ResultListener() {
                     @Override
                     public void onSuccess(String result) {
-                        Toast.makeText(LogInActivity.this, R.string.message_authentication_successful, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LogInActivity.this, HomeActivity.class)
-                            .putExtra(App.homePositionFragment,1));
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                        SettingsHandler.setStringSetting(LogInActivity.this, SettingsHandler.USERNAME, MeteorSingleton.getInstance().getUserId());
+                        SettingsHandler.setStringSetting(LogInActivity.this, SettingsHandler.USER_ID, MeteorSingleton.getInstance().getUserId());
                         AccountHandler.loadAccount(LogInActivity.this, new AccountHandler.AccountHandlerDelegate() {
                             @Override
                             public void accountLoaded() {
+                                Toast.makeText(LogInActivity.this, R.string.message_authentication_successful, Toast.LENGTH_SHORT).show();
+                                setResult(Activity.RESULT_OK);
                                 progressDialog.dismiss();
                                 finish();
                             }
@@ -85,7 +83,7 @@ public class LogInActivity extends AppCompatActivity {
                             public void accountLoadFailed() {
                                 progressDialog.dismiss();
                                 Toast.makeText(LogInActivity.this, R.string.message_authentication_error, Toast.LENGTH_SHORT).show();
-                                SettingsHandler.removeSetting(LogInActivity.this, SettingsHandler.USERNAME);
+                                SettingsHandler.removeSetting(LogInActivity.this, SettingsHandler.USER_ID);
                             }
                         });
                     }
@@ -94,14 +92,22 @@ public class LogInActivity extends AppCompatActivity {
                     public void onError(String error, String reason, String details) {
                         progressDialog.dismiss();
                         Toast.makeText(LogInActivity.this, R.string.message_authentication_error, Toast.LENGTH_SHORT).show();
-                        SettingsHandler.removeSetting(LogInActivity.this, SettingsHandler.USERNAME);
+                        SettingsHandler.removeSetting(LogInActivity.this, SettingsHandler.USER_ID);
                     }
                 });
                 break;
             case R.id.button3:
-                startActivity(new Intent(this, RegisterActivity.class));
-                //overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                startActivityForResult(new Intent(this, RegisterActivity.class), REQUEST_REGISTER);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_REGISTER && resultCode == RESULT_OK){
+            setResult(RESULT_OK);
+            finish();
         }
     }
 

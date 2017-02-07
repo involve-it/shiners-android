@@ -11,6 +11,7 @@ import com.involveit.shiners.R;
 import com.involveit.shiners.logic.objects.Message;
 
 import im.delight.android.ddp.MeteorCallback;
+import im.delight.android.ddp.MeteorSingleton;
 
 /**
  * Created by yury on 1/30/17.

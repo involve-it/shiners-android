@@ -37,7 +37,7 @@ import com.involveit.shiners.logic.objects.Photo;
 import com.involveit.shiners.logic.objects.Post;
 import com.involveit.shiners.activities.PostDetailsActivity;
 import com.involveit.shiners.R;
-import com.involveit.shiners.services.LocationService;
+import com.involveit.shiners.services.SimpleLocationService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class NearbyPostsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         this.meteorBroadcastReceiver.register(getActivity());
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(this.locationBroadcastReceiver, new IntentFilter(LocationService.BROADCAST_LOCATION_REPORTED));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(this.locationBroadcastReceiver, new IntentFilter(SimpleLocationService.BROADCAST_LOCATION_REPORTED));
     }
 
     @Override
@@ -171,7 +171,7 @@ public class NearbyPostsFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (LocationService.BROADCAST_LOCATION_REPORTED.equals(action)){
+            if (SimpleLocationService.BROADCAST_LOCATION_REPORTED.equals(action)){
                 if (postsPending && LocationHandler.getLatestReportedLocation() != null){
                     getNearbyPostsTest();
                     postsPending = false;

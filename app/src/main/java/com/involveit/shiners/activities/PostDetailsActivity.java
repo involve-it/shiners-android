@@ -26,7 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.involveit.shiners.services.LocationService;
+import com.involveit.shiners.services.SimpleLocationService;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -63,7 +63,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(this.locationBroadcastReceiver, new IntentFilter(LocationService.BROADCAST_LOCATION_REPORTED));
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.locationBroadcastReceiver, new IntentFilter(SimpleLocationService.BROADCAST_LOCATION_REPORTED));
     }
 
     @Override
@@ -153,7 +153,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (LocationService.BROADCAST_LOCATION_REPORTED.equals(action)){
+            if (SimpleLocationService.BROADCAST_LOCATION_REPORTED.equals(action)){
                 recalculateDistances();
             }
         }

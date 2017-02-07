@@ -20,8 +20,8 @@
 
         <activity
             android:name=".activities.HomeActivity"
-            android:label="Главное"
-            android:icon="@drawable/shiners_add3x">
+            android:icon="@drawable/shiners_add3x"
+            android:label="Главное">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +38,7 @@
             android:theme="@style/AppThemeAuth" />
 
         <service
-            android:name=".services.LocationService"
+            android:name=".services.SimpleLocationService"
             android:enabled="true"
             android:exported="true" />
 
@@ -66,8 +66,15 @@
             android:name=".activities.DialogActivity"
             android:label="Dialog"
             android:parentActivityName=".activities.HomeActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activities.DialogActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DialogActivity" />
         </activity>
+
+        <service
+            android:name=".services.BackgroundLocationService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

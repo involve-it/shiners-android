@@ -1,12 +1,14 @@
 package com.involveit.shiners.logic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.involveit.shiners.logic.cache.CacheEntity;
 import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.objects.User;
 import com.involveit.shiners.logic.objects.response.GetUserResponse;
+import com.involveit.shiners.services.BackgroundLocationService;
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
@@ -64,6 +66,9 @@ public class AccountHandler {
                     if (response.success){
                         Log.d(TAG, "User loaded.");
                         currentUser = response.result;
+                        if (!currentUser.isInvisible){
+                            context.startService(new Intent(context, BackgroundLocationService.class));
+                        }
 
                         CachingHandler.setObject(context, CachingHandler.KEY_CURRENT_USER, currentUser);
                         if (delegate != null){

@@ -93,6 +93,8 @@ public class AccountHandler {
             });
 
             subscribeToCollections();
+        } else {
+            logoff(context);
         }
     }
 

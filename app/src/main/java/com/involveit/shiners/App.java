@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import com.involveit.shiners.logic.AccountHandler;
+import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorCallbackHandler;
@@ -19,8 +20,6 @@ import im.delight.android.ddp.MeteorSingleton;
  */
 
 public class App extends Application {
-    private static final String METEOR_URL = "ws://shiners.mobi/websocket";
-
     public static String homePositionFragment="homePositionFragment";
 
     //TODO: remove
@@ -45,7 +44,7 @@ public class App extends Application {
 
         this.meteorCallbackHandler = new MeteorCallbackHandler(this);
 
-        MeteorSingleton.createInstance(this, METEOR_URL);
+        MeteorSingleton.createInstance(this, Constants.Urls.METEOR_URL);
         MeteorSingleton.getInstance().addCallback(this.meteorCallbackHandler);
 
         MeteorSingleton.getInstance().connect();

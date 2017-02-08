@@ -13,6 +13,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +50,7 @@ import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class NearbyPostsFragment extends Fragment {
+    private static final String TAG = "NearbyPostsFragment";
     TabLayout tabLayout;
     ListView listView;
     View view;
@@ -120,6 +122,7 @@ public class NearbyPostsFragment extends Fragment {
         MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
+                Log.d(TAG, result);
                 GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
                 if (res.success) {
                     CachingHandler.setObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS, res.result);

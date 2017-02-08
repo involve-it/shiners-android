@@ -3,6 +3,8 @@ package com.involveit.shiners.logic;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.UUID;
+
 /**
  * Created by yury on 1/31/17.
  */
@@ -12,6 +14,21 @@ public final class SettingsHandler {
 
     public static final String USER_ID = "com.involveit.shiners.SettingsHandler.setting.USER_ID";
     public static final String HOME_PAGE_INDEX = "com.involveit.shiners.SettingsHandler.setting.HOME_PAGE_INDEX";
+
+    private static final String DEVICE_ID = "com.involveit.shiners.SettingsHandler.setting.DEVICE_ID";
+
+    public synchronized static String getDeviceId(Context context){
+        SharedPreferences prefs = context.getSharedPreferences(SETTINGS_FILENAME, Context.MODE_PRIVATE);
+        String deviceId = prefs.getString(DEVICE_ID, null);
+        if (deviceId == null){
+            deviceId = UUID.randomUUID().toString();
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(DEVICE_ID, deviceId);
+            editor.apply();
+        }
+
+        return deviceId;
+    }
 
     public static void setStringSetting(Context context, String key, String value){
         SharedPreferences prefs = context.getSharedPreferences(SETTINGS_FILENAME, Context.MODE_PRIVATE);

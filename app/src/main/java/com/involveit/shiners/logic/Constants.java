@@ -23,4 +23,12 @@ public class Constants {
         public static final String MESSAGES = "bz.messages";
         public static final String COMMENTS = "bz.reviews";
     }
+
+    public static class Urls{
+        public static final String BASE_URL = "http://192.168.1.73:3000";
+        public static final String METEOR_URL = "ws://192.168.1.73:3000/websocket";
+
+        /*public static final String BASE_URL = "https://shiners.mobi";
+        public static final String METEOR_URL = "wss://shiners.mobi/websocket";*/
+    }
 }

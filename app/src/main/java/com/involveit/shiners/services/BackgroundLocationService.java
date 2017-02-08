@@ -14,7 +14,15 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.involveit.shiners.logic.AccountHandler;
+import com.involveit.shiners.logic.CommunicationProvider;
+import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.LocationHandler;
+import com.involveit.shiners.logic.SettingsHandler;
+import com.involveit.shiners.logic.objects.LocationReport;
+import com.involveit.shiners.logic.objects.User;
+
+import java.util.Set;
 
 import static com.involveit.shiners.services.SimpleLocationService.BROADCAST_LOCATION_REPORTED;
 import static com.involveit.shiners.services.SimpleLocationService.EXTRA_LOCATION;
@@ -138,6 +146,19 @@ public class BackgroundLocationService extends Service {
                 Intent intent = new Intent(BROADCAST_LOCATION_REPORTED);
                 intent.putExtra(EXTRA_LOCATION, loc);
                 sendBroadcast(intent);
+
+                User currentUser = AccountHandler.getCurrentUser();
+
+                if (currentUser != null && !currentUser.isInvisible) {
+                    LocationReport locationReport = new LocationReport();
+                    locationReport.lat = loc.getLatitude();
+                    locationReport.lng = loc.getLongitude();
+                    locationReport.userId = AccountHandler.getCurrentUser().id;
+                    locationReport.deviceId = SettingsHandler.getDeviceId(BackgroundLocationService.this);
+                    locationReport.notify = true;
+
+                    CommunicationProvider.makeAsyncPostRequestResponse(Constants.Urls.BASE_URL + "/api/geolocation", locationReport, null);
+                }
 
                 Log.d(TAG, "Location reported. Lat: " + loc.getLatitude() + ", lng: " + loc.getLongitude());
             }

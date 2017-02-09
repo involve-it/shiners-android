@@ -5,6 +5,10 @@ package com.involveit.shiners.logic;
  */
 
 public class Constants {
+    public static class Defaults{
+        public static final int DEFAULT_MESSASGES_PAGE = 20;
+    }
+
     public static class Tags{
         public static final String NEW_POST = "shiners:tags.NEW_POST";
     }
@@ -13,6 +17,7 @@ public class Constants {
         public static final String GET_NEARBY_POSTS = "getNearbyPostsTest";
         public static final String GET_MY_POSTS = "getMyPosts";
         public static final String GET_CHATS = "getChats";
+        public static final String GET_CHAT = "getChat";
         public static final String GET_MESSAGES = "getMessages";
         public static final String ADD_MESSAGE = "addMessage";
         public static final String GET_USER = "getUser";
@@ -36,10 +41,10 @@ public class Constants {
     }
 
     public static class Urls{
-        public static final String BASE_URL = "http://192.168.1.73:3000";
-        public static final String METEOR_URL = "ws://192.168.1.73:3000/websocket";
+        /*public static final String BASE_URL = "http://192.168.1.73:3000";
+        public static final String METEOR_URL = "ws://192.168.1.73:3000/websocket";*/
 
-        /*public static final String BASE_URL = "https://shiners.mobi";
-        public static final String METEOR_URL = "wss://shiners.mobi/websocket";*/
+        public static final String BASE_URL = "https://shiners.mobi";
+        public static final String METEOR_URL = "wss://shiners.mobi/websocket";
     }
 }

@@ -37,4 +37,14 @@ public final class Helper {
             index++;
         }
     }
+
+    public static<T extends UniqueIdContainer> T find(ArrayList<T> list, String id){
+        for (T item : list) {
+            if (id.equals(item.getId())){
+                return item;
+            }
+        }
+
+        return null;
+    }
 }

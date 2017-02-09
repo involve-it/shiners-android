@@ -1,10 +1,12 @@
 package com.involveit.shiners.activities;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,10 +23,15 @@ import android.widget.Toast;
 
 import com.involveit.shiners.R;
 import com.involveit.shiners.logic.Constants;
+import com.involveit.shiners.logic.Helper;
 import com.involveit.shiners.logic.JsonProvider;
+import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.MeteorCallbackHandler;
+import com.involveit.shiners.logic.cache.CacheEntity;
+import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.objects.Chat;
 import com.involveit.shiners.logic.objects.Message;
+import com.involveit.shiners.logic.objects.response.GetChatResponse;
 import com.involveit.shiners.logic.objects.response.ResponseBase;
 import com.involveit.shiners.logic.objects.response.SendMessageResponse;
 import com.involveit.shiners.logic.proxies.MessagesProxy;
@@ -58,20 +65,64 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog);
 
-        chat = getIntent().getParcelableExtra(EXTRA_CHAT);
-        requestId = (UUID) getIntent().getSerializableExtra(EXTRA_REQUEST_ID);
-
         listView = (ListView) findViewById(R.id.list_view_messages);
         txtMessage = (EditText) findViewById(R.id.txt_message);
         btnSend = (Button)findViewById(R.id.btn_send);
         btnSend.setOnClickListener(this);
 
-        getSupportActionBar().setTitle(chat.getOtherParty().username);
+        chat = getIntent().getParcelableExtra(EXTRA_CHAT);
+        requestId = (UUID) getIntent().getSerializableExtra(EXTRA_REQUEST_ID);
+        boolean validIntent = false;
+        if (chat == null) {
+            final String chatId = getIntent().getStringExtra(Constants.Gcm.EXTRA_ID);
+            if (chatId != null){
+                validIntent = true;
+                CacheEntity<ArrayList<Chat>> chatsCache = CachingHandler.getCacheObject(this, CachingHandler.KEY_DIALOGS);
+                if (chatsCache != null){
+                    chat = Helper.find(chatsCache.getObject(), chatId);
+                }
+                if (chat == null) {
+                    MeteorSingleton.getInstance().call(Constants.MethodNames.GET_CHAT, new Object[]{chatId}, new ResultListener() {
+                        @Override
+                        public void onSuccess(String result) {
+                            GetChatResponse response = JsonProvider.defaultGson.fromJson(result, GetChatResponse.class);
+                            if (response.success){
+                                chat = response.result;
+                                requestId = MessagesProxy.startGettingMessagesAsync(DialogActivity.this, chatId, 0, Constants.Defaults.DEFAULT_MESSASGES_PAGE);
+                            } else {
+                                navigateUp();
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error, String reason, String details) {
+                            navigateUp();
+                        }
+                    });
+                } else {
+                    requestId = MessagesProxy.startGettingMessagesAsync(this, chatId, 0, Constants.Defaults.DEFAULT_MESSASGES_PAGE);
+                }
+            }
+        } else if (requestId != null) {
+            validIntent = true;
+            getSupportActionBar().setTitle(chat.getOtherParty().username);
+            ArrayList<Message> messages = MessagesProxy.getMessagesResult(requestId);
+            if (messages != null){
+                populateMessages(messages);
+            }
+        }
+
+        if (!validIntent){
+            navigateUp();
+        }
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
-        Log.d(TAG, "requestId: " + requestId.toString());
+    private void navigateUp(){
+        Toast.makeText(this, "An error occurred while loading your conversation", Toast.LENGTH_SHORT).show();
+        NavUtils.navigateUpFromSameTask(this);
     }
 
     @Override
@@ -82,6 +133,8 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         intentFilter.addAction(MessagesProxy.BROADCAST_GET_MESSAGES);
         intentFilter.addAction(MeteorCallbackHandler.BROADCAST_MESSAGE_ADDED);
         LocalBroadcastManager.getInstance(this).registerReceiver(messagesBroadcastReceiver, intentFilter);
+
+        meteorBroadcastReceiver.register(this);
     }
 
     @Override
@@ -89,6 +142,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         super.onPause();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messagesBroadcastReceiver);
+        meteorBroadcastReceiver.unregister(this);
     }
 
     private void setAllMessagesSeen(){
@@ -124,6 +178,27 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    private void populateMessages(ArrayList<Message> messages){
+        chat.messages = messages;
+        setAllMessagesSeen();
+        MessagesArrayAdapter adapter = new MessagesArrayAdapter(DialogActivity.this, 0, messages);
+        adapter.setNotifyOnChange(true);
+        listView.setAdapter(adapter);
+        requestId = null;
+    }
+
+    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
+        @Override
+        public void connected() {
+
+        }
+
+        @Override
+        public void disconnected() {
+
+        }
+    };
+
     private BroadcastReceiver messagesBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -135,11 +210,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 if (receivedRequestId.equals(requestId)){
                     ArrayList<Message> messages = MessagesProxy.getMessagesResult(receivedRequestId);
                     if (messages != null) {
-                        chat.messages = messages;
-                        setAllMessagesSeen();
-                        MessagesArrayAdapter adapter = new MessagesArrayAdapter(DialogActivity.this, 0, messages);
-                        adapter.setNotifyOnChange(true);
-                        listView.setAdapter(adapter);
+                        populateMessages(messages);
                     }
                 }
             } else if (MeteorCallbackHandler.BROADCAST_MESSAGE_ADDED.equals(action)){

@@ -26,6 +26,15 @@ public class Constants {
         public static final String COMMENTS = "bz.reviews";
     }
 
+    public static class Gcm {
+        public static class PayloadType {
+            public static final String CHAT = "chat";
+            public static final String COMMENT = "comment";
+            public static final String POST = "post";
+        }
+        public static final String EXTRA_ID = "id";
+    }
+
     public static class Urls{
         public static final String BASE_URL = "http://192.168.1.73:3000";
         public static final String METEOR_URL = "ws://192.168.1.73:3000/websocket";

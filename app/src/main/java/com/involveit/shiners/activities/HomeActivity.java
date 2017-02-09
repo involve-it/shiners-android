@@ -1,9 +1,13 @@
 package com.involveit.shiners.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.involveit.shiners.R;
 import com.involveit.shiners.activities.newpost.NewPostActivity;
 import com.involveit.shiners.fragments.MeFragment;
@@ -23,6 +29,9 @@ import com.involveit.shiners.logic.AccountHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.SettingsHandler;
 import com.involveit.shiners.services.SimpleLocationService;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +57,23 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startService(new Intent(this, SimpleLocationService.class));
+        ArrayList<String> permissions = new ArrayList<>();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            permissions.addAll(Arrays.asList(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WAKE_LOCK, Manifest.permission.INTERNET));
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissions.addAll(Arrays.asList(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION));
+        } else {
+            startService(new Intent(this, SimpleLocationService.class));
+        }
+
+        if (permissions.size() > 0){
+            requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
+        }
 
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
@@ -79,6 +104,22 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         });
 
         refreshLoggedInStatus();
+
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int result = googleApiAvailability.isGooglePlayServicesAvailable(this);
+        if (result != ConnectionResult.SUCCESS){
+            if (googleApiAvailability.isUserResolvableError(result)){
+                googleApiAvailability.getErrorDialog(this, result, 9000).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1 && (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
+            startService(new Intent(this, SimpleLocationService.class));
+        }
     }
 
     private void refreshLoggedInStatus(){

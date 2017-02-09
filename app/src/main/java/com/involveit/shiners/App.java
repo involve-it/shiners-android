@@ -3,6 +3,8 @@ package com.involveit.shiners;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 import com.involveit.shiners.logic.AccountHandler;
 import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.cache.CachingHandler;
@@ -10,6 +12,7 @@ import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorCallbackHandler;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,5 +51,7 @@ public class App extends Application {
         MeteorSingleton.getInstance().addCallback(this.meteorCallbackHandler);
 
         MeteorSingleton.getInstance().connect();
+
+
     }
 }

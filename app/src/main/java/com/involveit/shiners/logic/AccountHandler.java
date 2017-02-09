@@ -2,13 +2,25 @@ package com.involveit.shiners.logic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+import com.involveit.shiners.App;
+import com.involveit.shiners.R;
 import com.involveit.shiners.logic.cache.CacheEntity;
 import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.objects.User;
 import com.involveit.shiners.logic.objects.response.GetUserResponse;
+import com.involveit.shiners.logic.objects.response.ResponseBase;
 import com.involveit.shiners.services.BackgroundLocationService;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
@@ -56,8 +68,75 @@ public class AccountHandler {
         return currentUser != null;
     }
 
+    private static void gcmRegistrationFailed(){
+        Log.d(TAG, "GCM Registration failed.");
+    }
+    
+    public static synchronized void registerGcm(final Context context){
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int result = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        if (result != ConnectionResult.SUCCESS){
+            return;
+        }
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                InstanceID instanceID = InstanceID.getInstance(context);
+                try {
+                    final String userId = MeteorSingleton.getInstance().getUserId();
+                    final String token = instanceID.getToken(context.getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                    Log.d(TAG, "Registered GCM token: " + token);
+                    HashMap<String, Object> raixRequest = new HashMap<>();
+                    HashMap<String, Object> tokenMap = new HashMap<>();
+                    tokenMap.put("gcm", token);
+                    raixRequest.put("token", tokenMap);
+                    raixRequest.put("appName", "com.involveit.shiners");
+                    raixRequest.put("userId", userId);
+                    MeteorSingleton.getInstance().call(Constants.MethodNames.REGISTER_PUSH_TOKEN_RAIX, new Object[]{raixRequest}, new ResultListener() {
+                        @Override
+                        public void onSuccess(String result) {
+                            Log.d(TAG, "Raix token registration successful");
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("token", token);
+                            map.put("deviceId", SettingsHandler.getDeviceId(context));
+                            map.put("platform", "gcm");
+                            map.put("userId", userId);
+
+                            MeteorSingleton.getInstance().call(Constants.MethodNames.REGISTER_PUSH_TOKEN, new Object[]{map}, new ResultListener() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
+                                    if (response.success){
+                                        Log.d(TAG, "GCM token registration completed");
+                                    } else {
+                                        gcmRegistrationFailed();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(String error, String reason, String details) {
+                                    gcmRegistrationFailed();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(String error, String reason, String details) {
+                            gcmRegistrationFailed();
+                        }
+                    });
+                } catch (IOException e) {
+                    gcmRegistrationFailed();
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     public static void loadAccount(final Context context, final AccountHandlerDelegate delegate){
         if (MeteorSingleton.getInstance().isLoggedIn()){
+            registerGcm(context);
             MeteorSingleton.getInstance().call(Constants.MethodNames.GET_USER, new Object[]{MeteorSingleton.getInstance().getUserId()}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {

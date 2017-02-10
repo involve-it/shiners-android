@@ -76,6 +76,7 @@ public class AccountHandler {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int result = googleApiAvailability.isGooglePlayServicesAvailable(context);
         if (result != ConnectionResult.SUCCESS){
+            Log.d(TAG, "GCM registration failed - Google Play is not available");
             return;
         }
 

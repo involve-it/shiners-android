@@ -1,6 +1,7 @@
 package com.involveit.shiners.logic;
 
 import android.icu.text.DateFormat;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.involveit.shiners.logic.objects.UniqueIdContainer;
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 
 public final class Helper {
+    private static final String TAG = "Helper";
     public static String formatDate(Date date){
         if (date != null) {
             DateFormat dateFormat = DateFormat.getDateInstance();
@@ -36,6 +38,14 @@ public final class Helper {
             }
             index++;
         }
+        if (adapter.getCount() > index){
+            int total = adapter.getCount();
+            for(int i = index; i < total; i++){
+                adapter.remove(adapter.getItem(index));
+            }
+        }
+
+        Log.d(TAG, "Merge complete. Adapter items count: " + adapter.getCount());
     }
 
     public static<T extends UniqueIdContainer> T find(ArrayList<T> list, String id){

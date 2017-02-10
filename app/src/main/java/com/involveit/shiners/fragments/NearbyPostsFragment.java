@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,8 +56,11 @@ public class NearbyPostsFragment extends Fragment {
     ListView listView;
     View view;
 
-    Boolean postsPending = true;
+    boolean postsPending = true;
+    boolean loading = false;
+
     ProgressDialog progressDialog;
+    SwipeRefreshLayout layout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +75,14 @@ public class NearbyPostsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
                 startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
+            }
+        });
+
+        layout = (SwipeRefreshLayout)view.findViewById(R.id.fragment_posts_layout);
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getNearbyPostsTest();
             }
         });
 
@@ -112,41 +124,47 @@ public class NearbyPostsFragment extends Fragment {
     }
 
     public void getNearbyPostsTest(){
-        Location currentLocation = LocationHandler.getLatestReportedLocation();
-        Map<String,Object> map = new HashMap<>();
-        map.put("lat", currentLocation.getLatitude());
-        map.put("lng", currentLocation.getLongitude());
-        map.put("radius", 10000);
-        map.put("take", 10);
+        if (!loading && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null) {
+            loading = true;
+            Location currentLocation = LocationHandler.getLatestReportedLocation();
+            Map<String, Object> map = new HashMap<>();
+            map.put("lat", currentLocation.getLatitude());
+            map.put("lng", currentLocation.getLongitude());
+            map.put("radius", 10000);
+            map.put("take", 10);
 
-        MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
-            @Override
-            public void onSuccess(String result) {
-                Log.d(TAG, result);
-                GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
-                if (res.success) {
-                    CachingHandler.setObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS, res.result);
+            MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
+                @Override
+                public void onSuccess(String result) {
+                    Log.d(TAG, result);
+                    GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
+                    if (res.success) {
+                        CachingHandler.setObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS, res.result);
 
-                    createListView(res.result);
-                } else {
+                        createListView(res.result);
+                    } else {
+                        Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                    }
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                        progressDialog = null;
+                    }
+                    loading = false;
+                    layout.setRefreshing(false);
+                }
+
+                @Override
+                public void onError(String error, String reason, String details) {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                        progressDialog = null;
+                    }
                     Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                    loading = false;
+                    layout.setRefreshing(false);
                 }
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
-            }
-
-            @Override
-            public void onError(String error, String reason, String details) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
-                Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
-            }
-
-        });
+            });
+        }
     }
 
     @Override

@@ -1,12 +1,17 @@
 package com.involveit.shiners.activities;
 
+import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.icu.text.DateFormat;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,8 +21,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.involveit.shiners.R;
+import com.involveit.shiners.logic.Constants;
+import com.involveit.shiners.logic.JsonProvider;
 import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.objects.Post;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,33 +34,55 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.involveit.shiners.logic.objects.response.GetChatResponse;
+import com.involveit.shiners.logic.objects.response.GetPostResponse;
+import com.involveit.shiners.services.GcmNotificationService;
 import com.involveit.shiners.services.SimpleLocationService;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import im.delight.android.ddp.MeteorSingleton;
+import im.delight.android.ddp.ResultListener;
 
 public class PostDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final String EXTRA_POST = "shiners:PostDetailsActivity.EXTRA_POST";
 
-    @BindView(R.id.imageView2) ImageView imageView2;
-    @BindView(R.id.textTitle) TextView textTitle;
-    @BindView(R.id.textDesc) TextView textDesc;
-    @BindView(R.id.imageFav) ImageView imageFav;
-    @BindView(R.id.imageVisible) ImageView imageVisible;
-    @BindView(R.id.textVisible) TextView textVisible;
-    @BindView(R.id.locationDesc) TextView locationDesc;
-    @BindView(R.id.btnLike) LinearLayout btnLike;
-    @BindView(R.id.btnComment) LinearLayout btnComment;
-    @BindView(R.id.textView12) TextView textViewType;
-    @BindView(R.id.imageNear) ImageView imageNear;
-    @BindView(R.id.textNear) TextView textNear;
-    @BindView(R.id.imageLocation) ImageView imageLocation;
-    @BindView(R.id.textLocation) TextView textLocation;
+    @BindView(R.id.imageView2)
+    ImageView imageView2;
+    @BindView(R.id.textTitle)
+    TextView textTitle;
+    @BindView(R.id.textDesc)
+    TextView textDesc;
+    @BindView(R.id.imageFav)
+    ImageView imageFav;
+    @BindView(R.id.imageVisible)
+    ImageView imageVisible;
+    @BindView(R.id.textVisible)
+    TextView textVisible;
+    @BindView(R.id.locationDesc)
+    TextView locationDesc;
+    @BindView(R.id.btnLike)
+    LinearLayout btnLike;
+    @BindView(R.id.btnComment)
+    LinearLayout btnComment;
+    @BindView(R.id.textView12)
+    TextView textViewType;
+    @BindView(R.id.imageNear)
+    ImageView imageNear;
+    @BindView(R.id.textNear)
+    TextView textNear;
+    @BindView(R.id.imageLocation)
+    ImageView imageLocation;
+    @BindView(R.id.textLocation)
+    TextView textLocation;
     Post post;
-    @BindView(R.id.toolBar) Toolbar toolBar;
+    @BindView(R.id.toolBar)
+    Toolbar toolBar;
+    private ProgressDialog progressDialog;
+    private GoogleMap googleMap;
 
     @Override
     protected void onPause() {
@@ -76,6 +106,54 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         post = getIntent().getParcelableExtra(EXTRA_POST);
 
+        if (post != null) {
+            populatePost();
+        } else {
+            String postId = getIntent().getStringExtra(Constants.Gcm.EXTRA_ID);
+            if (postId != null){
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage(getResources().getText(R.string.message_loading_posts));
+                progressDialog.show();
+                progressDialog.setCancelable(false);
+
+                MeteorSingleton.getInstance().call(Constants.MethodNames.GET_POST, new Object[]{postId}, new ResultListener() {
+                    @Override
+                    public void onSuccess(String result) {
+                        progressDialog.dismiss();
+                        GetPostResponse response = JsonProvider.defaultGson.fromJson(result, GetPostResponse.class);
+                        if (response.success){
+                            post = response.result;
+                            populatePost();
+                            updateMap();
+                        } else {
+                            navigateUp();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error, String reason, String details) {
+                        navigateUp();
+                    }
+                });
+            } else {
+                navigateUp();
+            }
+        }
+
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMaps);
+        supportMapFragment.getMapAsync(PostDetailsActivity.this);
+    }
+
+    private void navigateUp(){
+        if (progressDialog != null){
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+        Toast.makeText(this, "An error occurred while loading your conversation", Toast.LENGTH_SHORT).show();
+        NavUtils.navigateUpFromSameTask(this);
+    }
+
+    private void populatePost(){
         //Title
         textTitle.setText(post.details.title);
         //Photo
@@ -101,10 +179,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
 
         recalculateDistances();
 
-        ((TextView)toolBar.getChildAt(0)).setText(post.details.title);
-
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMaps);
-        supportMapFragment.getMapAsync(PostDetailsActivity.this);
+        ((TextView) toolBar.getChildAt(0)).setText(post.details.title);
     }
 
     @Override
@@ -117,14 +192,18 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng sydney = new LatLng(post.details.locations.get(0).coords.lat, post.details.locations.get(0).coords.lng);
+        this.googleMap = googleMap;
+        updateMap();
+    }
 
-        googleMap.setMyLocationEnabled(true);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
-
-        googleMap.addMarker(new MarkerOptions()
-                .title(post.details.locations.get(0).name)
-                .position(sydney));
+    private  void updateMap(){
+        if (post != null && googleMap != null) {
+            LatLng latLng = new LatLng(post.details.locations.get(0).coords.lat, post.details.locations.get(0).coords.lng);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+            googleMap.addMarker(new MarkerOptions()
+                    .title(post.details.locations.get(0).name)
+                    .position(latLng));
+        }
     }
 
     @OnClick({R.id.btnLike, R.id.btnComment})

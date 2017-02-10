@@ -53,6 +53,7 @@ public class GcmNotificationService extends GcmListenerService {
                 intent = new Intent(this, DialogActivity.class);
                 break;
             case Constants.Gcm.PayloadType.POST:
+            //case Constants.Gcm.PayloadType.COMMENT:
                 intent = new Intent(this, PostDetailsActivity.class);
                 break;
 

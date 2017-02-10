@@ -29,7 +29,8 @@
         <activity
             android:name=".activities.HomeActivity"
             android:icon="@drawable/shiners_add3x"
-            android:label="Home">
+            android:label="Home"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,11 +40,13 @@
         <activity
             android:name=".activities.auth.LogInActivity"
             android:label="Login"
-            android:theme="@style/AppThemeAuth" />
+            android:theme="@style/AppThemeAuth"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.auth.RegisterActivity"
             android:label="Registration"
-            android:theme="@style/AppThemeAuth" />
+            android:theme="@style/AppThemeAuth"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".services.SimpleLocationService"
@@ -52,19 +55,24 @@
 
         <activity
             android:name=".activities.PostDetailsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.newpost.NewPostActivity"
-            android:label="New Post" />
+            android:label="New Post"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.newpost.WhereActivity"
-            android:label="Where is it located?" />
+            android:label="Where is it located?"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.newpost.WhenActivity"
-            android:label="When does it expire?" />
+            android:label="When does it expire?"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.newpost.PhotoActivity"
-            android:label="How does it look like?" />
+            android:label="How does it look like?"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
@@ -73,6 +81,7 @@
         <activity
             android:name=".activities.DialogActivity"
             android:label="Dialog"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

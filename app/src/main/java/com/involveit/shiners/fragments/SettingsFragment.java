@@ -1,7 +1,9 @@
 package com.involveit.shiners.fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -108,7 +110,17 @@ public class SettingsFragment extends Fragment {
     public void onClick(View view){
         switch (view.getId()){
             case R.id.btn_logout:
-                logOut();
+                new AlertDialog.Builder(getActivity()).setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Log out")
+                        .setMessage("Are you sure you wish to log out?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                logOut();
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
                 break;
         }
     }

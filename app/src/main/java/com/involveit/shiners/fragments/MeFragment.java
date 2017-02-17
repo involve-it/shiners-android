@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,12 +55,25 @@ public class MeFragment extends Fragment {
     ListView listView;
     ProgressDialog progressDialog;
     boolean mPendingPostsRequest = true;
+    SwipeRefreshLayout layout;
+    boolean loading = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_me, container, false);
         listView= (ListView) view.findViewById(R.id.listView);
         listView.setEmptyView(view.findViewById(R.id.my_posts_list_empty_view));
+        layout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_me_layout);
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!loading && MeteorSingleton.getInstance().isConnected()) {
+                    getMyPosts();
+                } else if (!MeteorSingleton.getInstance().isConnected()) {
+                    mPendingPostsRequest = true;
+                }
+            }
+        });
         setHasOptionsMenu(true);
 
         CacheEntity<ArrayList<Post>> cache = CachingHandler.getCacheObject(getActivity(), CachingHandler.KEY_MY_POSTS);
@@ -97,9 +111,10 @@ public class MeFragment extends Fragment {
     }
 
     public void getMyPosts(){
+        loading = true;
         HashMap<String, Object> map = new HashMap<>();
         map.put("skip", 0);
-        map.put("take", 30);
+        map.put("take", 100);
         map.put("type","all");
 
         MeteorSingleton.getInstance().call(Constants.MethodNames.GET_MY_POSTS, new Object[]{map}, new ResultListener() {
@@ -117,6 +132,8 @@ public class MeFragment extends Fragment {
                     progressDialog.dismiss();
                     progressDialog = null;
                 }
+                loading = false;
+                layout.setRefreshing(false);
             }
 
             @Override
@@ -126,6 +143,8 @@ public class MeFragment extends Fragment {
                     progressDialog = null;
                 }
                 Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                loading = false;
+                layout.setRefreshing(false);
             }
         });
     }

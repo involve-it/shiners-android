@@ -82,7 +82,11 @@ public class NearbyPostsFragment extends Fragment {
         layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getNearbyPostsTest();
+                if (!loading && MeteorSingleton.getInstance().isConnected()) {
+                    getNearbyPostsTest();
+                } else if (!MeteorSingleton.getInstance().isConnected()){
+                    postsPending = true;
+                }
             }
         });
 

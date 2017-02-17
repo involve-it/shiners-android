@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,8 @@ public class MessagesFragment extends Fragment {
     private boolean messagesRequestPending = true;
     private ProgressDialog progressDialog;
     private ListView listView;
+    private SwipeRefreshLayout layout;
+    private boolean loading = false;
 
     public static MessagesFragment newInstance() {
         MessagesFragment fragment = new MessagesFragment();
@@ -79,6 +82,17 @@ public class MessagesFragment extends Fragment {
             }
         });
         listView.setEmptyView(view.findViewById(R.id.dialogs_list_empty_view));
+        layout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_layout);
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!loading && MeteorSingleton.getInstance().isConnected()){
+                    loadChats();
+                } else if (!MeteorSingleton.getInstance().isConnected()){
+                    messagesRequestPending = true;
+                }
+            }
+        });
 
         CacheEntity<ArrayList<Chat>> cache = CachingHandler.getCacheObject(getActivity(), CachingHandler.KEY_DIALOGS);
 
@@ -126,6 +140,7 @@ public class MessagesFragment extends Fragment {
     }
 
     private void loadChats(){
+        loading = true;
         messagesRequestPending = false;
         HashMap<String,Object> map = new HashMap<>();
         map.put("take", 50);
@@ -146,6 +161,8 @@ public class MessagesFragment extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
                 }
+                loading = false;
+                layout.setRefreshing(false);
             }
 
             @Override
@@ -158,6 +175,8 @@ public class MessagesFragment extends Fragment {
                 Log.d(TAG, "Reason: " + reason);
                 Log.d(TAG, "Details: " + details);
                 Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                loading = false;
+                layout.setRefreshing(false);
             }
         });
     }

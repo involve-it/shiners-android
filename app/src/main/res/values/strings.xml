@@ -64,4 +64,8 @@
     <string name="dialogs_list_empty_view_text">There are no messages to display</string>
     <string name="my_posts_list_empty_view_text">You don\'t have any posts. Time to create one?</string>
     <string name="nearby_posts_list_empty_view_text">There are no posts around you</string>
+    <string name="title_logout">Log out</string>
+    <string name="message_logout_confirmation">Are you sure you wish to log out?</string>
+    <string name="btn_label_yes">Yes</string>
+    <string name="btl_label_no">No</string>
 </resources>

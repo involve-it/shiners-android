@@ -111,15 +111,15 @@ public class SettingsFragment extends Fragment {
         switch (view.getId()){
             case R.id.btn_logout:
                 new AlertDialog.Builder(getActivity()).setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("Log out")
-                        .setMessage("Are you sure you wish to log out?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setTitle(R.string.title_logout)
+                        .setMessage(R.string.message_logout_confirmation)
+                        .setPositiveButton(R.string.btn_label_yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 logOut();
                             }
                         })
-                        .setNegativeButton("No", null)
+                        .setNegativeButton(R.string.btl_label_no, null)
                         .show();
                 break;
         }

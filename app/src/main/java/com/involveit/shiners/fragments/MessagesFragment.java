@@ -82,6 +82,7 @@ public class MessagesFragment extends Fragment {
             }
         });
         listView.setEmptyView(view.findViewById(R.id.dialogs_list_empty_view));
+
         layout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_layout);
         layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

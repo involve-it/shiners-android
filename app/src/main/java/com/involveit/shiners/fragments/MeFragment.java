@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,22 +27,14 @@ import com.involveit.shiners.R;
 import com.involveit.shiners.logic.Constants;
 import com.involveit.shiners.logic.Helper;
 import com.involveit.shiners.logic.JsonProvider;
-import com.involveit.shiners.logic.LocationHandler;
 import com.involveit.shiners.logic.MeteorBroadcastReceiver;
 import com.involveit.shiners.logic.cache.CacheEntity;
 import com.involveit.shiners.logic.cache.CachingHandler;
 import com.involveit.shiners.logic.objects.Photo;
 import com.involveit.shiners.logic.objects.Post;
 import com.involveit.shiners.logic.objects.response.GetPostsResponse;
-import com.squareup.picasso.Cache;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -177,10 +169,14 @@ public class MeFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.add){
-            startActivity(new Intent(getActivity(), NewPostActivity.class));
-            //getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        switch (item.getItemId()){
+            case R.id.fragment_me_add:
+                startActivity(new Intent(getActivity(), NewPostActivity.class));
+                break;
+            case R.id.fragment_me_edit:
+                break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -7,6 +7,7 @@ package com.involveit.shiners.logic;
 public class Constants {
     public static class Defaults{
         public static final int DEFAULT_MESSAGES_PAGE = 40;
+        public static final int DEFAULT_POSTS_PAGE = 40;
     }
 
     public static class Tags{

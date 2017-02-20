@@ -1,11 +1,11 @@
 package com.involveit.shiners.fragments;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ProviderInfo;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -14,7 +14,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -44,6 +44,7 @@ import com.involveit.shiners.R;
 import com.involveit.shiners.services.SimpleLocationService;
 import com.squareup.picasso.Picasso;
 
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +65,9 @@ public class NearbyPostsFragment extends Fragment {
     ProgressDialog progressDialog;
     SwipeRefreshLayout layout;
 
+    ArrayList<Post> posts = new ArrayList<>();
+    boolean moreAvailable = true;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_posts, container, false);
@@ -80,12 +84,26 @@ public class NearbyPostsFragment extends Fragment {
             }
         });
 
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (moreAvailable && totalItemCount - (firstVisibleItem + visibleItemCount) < 10){
+                    getNearbyPosts(true);
+                }
+            }
+        });
+
         layout = (SwipeRefreshLayout)view.findViewById(R.id.fragment_posts_layout);
         layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (!loading && MeteorSingleton.getInstance().isConnected()) {
-                    getNearbyPostsTest();
+                    getNearbyPosts(false);
                 } else if (!MeteorSingleton.getInstance().isConnected()){
                     postsPending = true;
                 }
@@ -100,7 +118,7 @@ public class NearbyPostsFragment extends Fragment {
             progressDialog.show();
             progressDialog.setCancelable(false);
         } else {
-            createListView(cacheEntity.getObject());
+            populateListView(cacheEntity.getObject(), false);
 
             if (!cacheEntity.isStale()){
                 postsPending = false;
@@ -108,7 +126,7 @@ public class NearbyPostsFragment extends Fragment {
         }
 
         if (postsPending && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null){
-            getNearbyPostsTest();
+            getNearbyPosts(false);
             postsPending = false;
         }
 
@@ -129,25 +147,36 @@ public class NearbyPostsFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this.locationBroadcastReceiver);
     }
 
-    public void getNearbyPostsTest(){
+    public void getNearbyPosts(final boolean loadMore){
         if (!loading && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null) {
             loading = true;
+            ((PostsArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
             Location currentLocation = LocationHandler.getLatestReportedLocation();
             Map<String, Object> map = new HashMap<>();
             map.put("lat", currentLocation.getLatitude());
             map.put("lng", currentLocation.getLongitude());
             map.put("radius", 10000);
-            map.put("take", 10);
+            map.put("take", Constants.Defaults.DEFAULT_POSTS_PAGE);
+            if (loadMore){
+                map.put("skip", posts.size());
+            }
 
             MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
-                    Log.d(TAG, result);
+                    //Log.d(TAG, result);
+                    loading = false;
+                    ((PostsArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
+
                     GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
                     if (res.success) {
                         CachingHandler.setObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS, res.result);
-
-                        createListView(res.result);
+                        if (loadMore) {
+                            posts.addAll(res.result);
+                        } else {
+                            posts = res.result;
+                        }
+                        populateListView(res.result, loadMore);
                     } else {
                         Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
                     }
@@ -155,7 +184,7 @@ public class NearbyPostsFragment extends Fragment {
                         progressDialog.dismiss();
                         progressDialog = null;
                     }
-                    loading = false;
+
                     layout.setRefreshing(false);
                 }
 
@@ -167,6 +196,7 @@ public class NearbyPostsFragment extends Fragment {
                     }
                     Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
                     loading = false;
+                    ((PostsArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
                     layout.setRefreshing(false);
                 }
             });
@@ -179,14 +209,22 @@ public class NearbyPostsFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void createListView(ArrayList<Post> posts){
+    private void populateListView(ArrayList<Post> posts, boolean append){
         PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
+        moreAvailable = posts.size() == Constants.Defaults.DEFAULT_POSTS_PAGE;
         if (adapter == null){
-            adapter = new PostsArrayAdapter(getActivity(), R.layout.fragment_posts_adap, posts);
+            Log.d(TAG, "New adapter");
+            adapter = new PostsArrayAdapter(getActivity(), R.layout.fragment_posts_adap, new ArrayList<>(posts));
             adapter.setNotifyOnChange(true);
             listView.setAdapter(adapter);
         } else {
-            Helper.mergeDataToArrayAdapter(posts, adapter, true);
+            if (append){
+                Log.d(TAG, "Appending posts");
+                adapter.addAll(new ArrayList<>(posts));
+            } else {
+                Log.d(TAG, "Replacing posts");
+                Helper.mergeDataToArrayAdapter(posts, adapter, true);
+            }
         }
     }
 
@@ -200,7 +238,7 @@ public class NearbyPostsFragment extends Fragment {
             String action = intent.getAction();
             if (SimpleLocationService.BROADCAST_LOCATION_REPORTED.equals(action)){
                 if (postsPending && LocationHandler.getLatestReportedLocation() != null){
-                    getNearbyPostsTest();
+                    getNearbyPosts(false);
                     postsPending = false;
                 } else {
                     recalculateDistances();
@@ -213,7 +251,7 @@ public class NearbyPostsFragment extends Fragment {
         @Override
         public void connected() {
             if (postsPending && LocationHandler.getLatestReportedLocation() != null){
-                getNearbyPostsTest();
+                getNearbyPosts(false);
                 postsPending = false;
             }
         }
@@ -224,7 +262,30 @@ public class NearbyPostsFragment extends Fragment {
         }
     };
 
-    private static class PostsArrayAdapter extends ArrayAdapter<Post>{
+    private class PostsArrayAdapter extends ArrayAdapter<Post>{
+        private static final int VIEW_TYPE_POST = 0;
+        private static final int VIEW_TYPE_LOADING = 1;
+        private static final int VIEW_TYPE_COUNT = 2;
+
+        @Override
+        public int getViewTypeCount() {
+            return VIEW_TYPE_COUNT;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (loading && position == getCount() - 1){
+                return VIEW_TYPE_LOADING;
+            } else {
+                return VIEW_TYPE_POST;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount() + (loading ? 1 : 0);
+        }
+
         private PostsArrayAdapter(Context context, int resource, List<Post> objects) {
             super(context, resource, objects);
         }
@@ -233,68 +294,76 @@ public class NearbyPostsFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
+            int viewType = getItemViewType(position);
             if (convertView == null) {
-                LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = li.inflate(R.layout.fragment_posts_adap, parent, false);
                 viewHolder = new ViewHolder();
-                viewHolder.titleView= (TextView) convertView.findViewById(R.id.textView2);
-                viewHolder.descView= (TextView) convertView.findViewById(R.id.textView3);
-                viewHolder.dateView= (TextView) convertView.findViewById(R.id.textView);
-                viewHolder.distanceView= (TextView) convertView.findViewById(R.id.textView4);
-                viewHolder.icon= (ImageView) convertView.findViewById(R.id.icon1);
-                viewHolder.imageView= (ImageView) convertView.findViewById(R.id.imageView);
-                convertView.setTag(viewHolder);
+
+                LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                if (viewType == VIEW_TYPE_POST) {
+                    convertView = li.inflate(R.layout.fragment_posts_adap, parent, false);
+                    viewHolder.titleView = (TextView) convertView.findViewById(R.id.textView2);
+                    viewHolder.descView = (TextView) convertView.findViewById(R.id.textView3);
+                    viewHolder.dateView = (TextView) convertView.findViewById(R.id.textView);
+                    viewHolder.distanceView = (TextView) convertView.findViewById(R.id.textView4);
+                    viewHolder.icon = (ImageView) convertView.findViewById(R.id.icon1);
+                    viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
+                    convertView.setTag(viewHolder);
+                } else {
+                    convertView = li.inflate(R.layout.row_posts_loading, parent, false);
+                }
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            Post post = getItem(position);
+            if (viewType == VIEW_TYPE_POST) {
+                Post post = getItem(position);
 
-            viewHolder.distanceView.setText(R.string.message_na);
-            Location currentLocation = LocationHandler.getLatestReportedLocation();
-            if (currentLocation != null) {
-                com.involveit.shiners.logic.objects.Location location = post.getLocation();
-                if (location != null) {
-                    float distance = location.distanceFrom(currentLocation.getLatitude(), currentLocation.getLongitude());
+                viewHolder.distanceView.setText(R.string.message_na);
+                Location currentLocation = LocationHandler.getLatestReportedLocation();
+                if (currentLocation != null) {
+                    com.involveit.shiners.logic.objects.Location location = post.getLocation();
+                    if (location != null) {
+                        float distance = location.distanceFrom(currentLocation.getLatitude(), currentLocation.getLongitude());
 
-                    viewHolder.distanceView.setText(LocationHandler.distanceFormatted(getContext(), distance));
+                        viewHolder.distanceView.setText(LocationHandler.distanceFormatted(getContext(), distance));
+                    }
                 }
-            }
 
-            viewHolder.titleView.setText(post.details.title);
-            if (post.details.description != null) {
-                viewHolder.descView.setText(Html.fromHtml(post.details.description));
-            } else {
-                viewHolder.descView.setText("");
-            }
-
-            if (post.isLive()){
-                if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
-                    viewHolder.icon.setImageResource(R.drawable.postcell_dynamic_live3x);
+                viewHolder.titleView.setText(post.details.title);
+                if (post.details.description != null) {
+                    viewHolder.descView.setText(Html.fromHtml(post.details.description));
                 } else {
-                    viewHolder.icon.setImageResource(R.drawable.posttype_static_live3x);
+                    viewHolder.descView.setText("");
                 }
-            } else {
-                if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
-                    viewHolder.icon.setImageResource(R.drawable.postcell_dynamic3x);
+
+                if (post.isLive()) {
+                    if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())) {
+                        viewHolder.icon.setImageResource(R.drawable.postcell_dynamic_live3x);
+                    } else {
+                        viewHolder.icon.setImageResource(R.drawable.posttype_static_live3x);
+                    }
                 } else {
-                    viewHolder.icon.setImageResource(R.drawable.posttype_static3x);
+                    if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())) {
+                        viewHolder.icon.setImageResource(R.drawable.postcell_dynamic3x);
+                    } else {
+                        viewHolder.icon.setImageResource(R.drawable.posttype_static3x);
+                    }
                 }
-            }
 
-            viewHolder.dateView.setText(Helper.formatDate(post.timestamp));
+                viewHolder.dateView.setText(Helper.formatDate(post.timestamp));
 
-            Photo photo = post.getMainPhoto();
-            if (photo != null){
-                Picasso.with(getContext()).load(photo.original).into(viewHolder.imageView);
-            } else {
-                viewHolder.imageView.setImageDrawable(null);
+                Photo photo = post.getMainPhoto();
+                if (photo != null) {
+                    Picasso.with(getContext()).load(photo.original).into(viewHolder.imageView);
+                } else {
+                    viewHolder.imageView.setImageDrawable(null);
+                }
             }
 
             return convertView;
         }
 
-        private static class ViewHolder{
+        private class ViewHolder{
             private TextView titleView;
             private TextView descView;
             private TextView dateView;

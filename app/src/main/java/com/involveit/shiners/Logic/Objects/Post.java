@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
     @SerializedName("type")
     public String type;
     @SerializedName("tags")
-    public String tags;
+    public ArrayList<String> tags;
     @SerializedName("details")
     public PostDetails details;
     @SerializedName("presences")
@@ -46,7 +47,8 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
     protected Post(Parcel in) {
         id = in.readString();
         type = in.readString();
-        tags = in.readString();
+        tags = new ArrayList<>();
+        in.readStringList(tags);
         details = in.readParcelable(PostDetails.class.getClassLoader());
         likes = in.readInt();
         liked = in.readByte() != 0;
@@ -99,7 +101,11 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeString(type);
-        parcel.writeString(tags);
+        if (tags != null){
+            parcel.writeStringList(tags);
+        } else {
+            parcel.writeStringList(new ArrayList<String>());
+        }
         parcel.writeParcelable(details, i);
         parcel.writeInt(likes);
         parcel.writeByte((byte) (liked ? 1 : 0));

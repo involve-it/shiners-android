@@ -43,5 +43,5 @@
         android:divider="@null"
         android:id="@+id/list_view_messages"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" android:dividerHeight="@dimen/message_divider_height"/>
+        android:transcriptMode="normal" android:dividerHeight="@dimen/message_divider_height"/>
 </RelativeLayout>

@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by yury on 2/1/17.
  */
 
-public class Message implements Parcelable, Serializable {
+public class Message implements Parcelable, Serializable, UniqueIdContainer {
     @SerializedName("_id")
     public String id;
     @SerializedName("userId")
@@ -81,5 +81,10 @@ public class Message implements Parcelable, Serializable {
         } else {
             parcel.writeLong(0);
         }
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 }

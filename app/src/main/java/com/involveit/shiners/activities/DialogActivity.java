@@ -1,11 +1,12 @@
 package com.involveit.shiners.activities;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,13 +38,9 @@ import com.involveit.shiners.logic.objects.response.ResponseBase;
 import com.involveit.shiners.logic.objects.response.SendMessageResponse;
 import com.involveit.shiners.logic.proxies.MessagesProxy;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 import im.delight.android.ddp.MeteorSingleton;
@@ -59,6 +57,8 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
     private ListView listView;
     private EditText txtMessage;
     private Button btnSend;
+    private boolean loading;
+    private boolean moreAvailable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,24 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         txtMessage = (EditText) findViewById(R.id.txt_message);
         btnSend = (Button)findViewById(R.id.btn_send);
         btnSend.setOnClickListener(this);
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (moreAvailable && !loading && firstVisibleItem == 0 && totalItemCount > 0){
+                    Log.d(TAG, "Getting more messages...");
+                    loading = true;
+                    ((MessagesArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
+                    requestId = MessagesProxy.startGettingMessagesAsync(DialogActivity.this, chat.id, chat.messages.size(), Constants.Defaults.DEFAULT_MESSAGES_PAGE);
+                    //listView.setSelection(0);
+                }
+            }
+        });
 
         chat = getIntent().getParcelableExtra(EXTRA_CHAT);
         requestId = (UUID) getIntent().getSerializableExtra(EXTRA_REQUEST_ID);
@@ -81,6 +99,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 if (chatsCache != null){
                     chat = Helper.find(chatsCache.getObject(), chatId);
                 }
+                loading = true;
                 if (chat == null) {
                     MeteorSingleton.getInstance().call(Constants.MethodNames.GET_CHAT, new Object[]{chatId}, new ResultListener() {
                         @Override
@@ -88,7 +107,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                             GetChatResponse response = JsonProvider.defaultGson.fromJson(result, GetChatResponse.class);
                             if (response.success){
                                 chat = response.result;
-                                requestId = MessagesProxy.startGettingMessagesAsync(DialogActivity.this, chatId, 0, Constants.Defaults.DEFAULT_MESSASGES_PAGE);
+                                requestId = MessagesProxy.startGettingMessagesAsync(DialogActivity.this, chatId, 0, Constants.Defaults.DEFAULT_MESSAGES_PAGE);
                             } else {
                                 navigateUp();
                             }
@@ -100,16 +119,19 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                         }
                     });
                 } else {
-                    requestId = MessagesProxy.startGettingMessagesAsync(this, chatId, 0, Constants.Defaults.DEFAULT_MESSASGES_PAGE);
+                    requestId = MessagesProxy.startGettingMessagesAsync(this, chatId, 0, Constants.Defaults.DEFAULT_MESSAGES_PAGE);
                 }
+                //((MessagesArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
             }
         } else if (requestId != null) {
+            loading = true;
             validIntent = true;
             getSupportActionBar().setTitle(chat.getOtherParty().username);
             ArrayList<Message> messages = MessagesProxy.getMessagesResult(requestId);
             if (messages != null){
                 populateMessages(messages);
             }
+            //((MessagesArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
         }
 
         if (!validIntent){
@@ -146,44 +168,113 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setAllMessagesSeen(){
-        final ArrayList<String> messageIds = new ArrayList<>();
-        for (Message message:chat.messages){
-            if (!message.seen){
-                messageIds.add(message.id);
-            }
-        }
-        if (messageIds.size() > 0) {
-            HashMap<String, Object> request = new HashMap<>();
-            request.put("messageIds", messageIds);
-            MeteorSingleton.getInstance().call(Constants.MethodNames.MESSAGES_SET_SEEN, new Object[]{request}, new ResultListener() {
-                @Override
-                public void onSuccess(String result) {
-                    ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
-                    if (response.success){
-                        for (Message message:chat.messages){
-                            if (messageIds.contains(message.id)){
-                                message.seen = true;
-                            }
-                        }
-                    } else {
-                        Log.d(TAG, "Failed to set 'seen' on messages");
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                final ArrayList<String> messageIds = new ArrayList<>();
+                for (Message message:chat.messages){
+                    if (!message.seen){
+                        messageIds.add(message.id);
                     }
                 }
+                if (messageIds.size() > 0) {
+                    HashMap<String, Object> request = new HashMap<>();
+                    request.put("messageIds", messageIds);
+                    MeteorSingleton.getInstance().call(Constants.MethodNames.MESSAGES_SET_SEEN, new Object[]{request}, new ResultListener() {
+                        @Override
+                        public void onSuccess(String result) {
+                            ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
+                            if (response.success){
+                                for (Message message:chat.messages){
+                                    if (messageIds.contains(message.id)){
+                                        message.seen = true;
+                                    }
+                                }
+                            } else {
+                                Log.d(TAG, "Failed to set 'seen' on messages");
+                            }
+                        }
 
-                @Override
-                public void onError(String error, String reason, String details) {
-                    Log.d(TAG, "Failed to set 'seen' on messages");
+                        @Override
+                        public void onError(String error, String reason, String details) {
+                            Log.d(TAG, "Failed to set 'seen' on messages");
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
     }
 
-    private void populateMessages(ArrayList<Message> messages){
-        chat.messages = messages;
-        setAllMessagesSeen();
-        MessagesArrayAdapter adapter = new MessagesArrayAdapter(DialogActivity.this, 0, messages);
-        adapter.setNotifyOnChange(true);
-        listView.setAdapter(adapter);
+    private void populateMessages(final ArrayList<Message> messages){
+        /*int initialPosition = listView.getFirstVisiblePosition();
+        View view = listView.getChildAt(initialPosition);
+        int top = view == null ? 0 : view.getBottom();*/
+
+        if (messages.size() > Constants.Defaults.DEFAULT_MESSAGES_PAGE){
+            messages.remove(messages.size() - 1);
+            moreAvailable = true;
+        } else {
+            moreAvailable = false;
+        }
+
+        listView.post(new Runnable() {
+            @Override
+            public void run() {
+                MessagesArrayAdapter adapter = (MessagesArrayAdapter) listView.getAdapter();
+                if (adapter == null) {
+                    Log.d(TAG, "Messages: first page");
+                    chat.messages = messages;
+                    adapter = new MessagesArrayAdapter(DialogActivity.this, 0, new ArrayList<>(chat.messages));
+                    adapter.setNotifyOnChange(false);
+                    listView.setAdapter(adapter);
+                    //listView.smoothScrollToPosition(messages.size());
+                } else {
+                    //listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+                    //Helper.mergeDataToArrayAdapter(messages, adapter, false);
+                    Log.d(TAG, "Messages: next page. Count: " + messages.size() + ", requestid: " + requestId);
+                    int i = 0;
+                    //adapter.clear();
+                    for(Message message : messages){
+                        adapter.insert(message, i);
+                        chat.messages.add(i++, message);
+                    }
+                    //adapter.addAll(new ArrayList<>(chat.messages));
+                }
+                setAllMessagesSeen();
+
+                loading = false;
+
+                adapter.notifyDataSetChanged();
+
+                listView.setSelection(messages.size());
+                //listView.scrollTo(1, 100);
+            }
+        });
+        /*if (messages.size() > 0) {
+            messages.get(0).text += "---------";
+        }*/
+
+
+        //
+        /*listView.post(new Runnable() {
+            @Override
+            public void run() {*/
+        //listView.clearFocus();
+        //listView.requestFocusFromTouch();
+                //listView.setSelectionFromTop(5, 10);
+        //listView.setSelection(messages.size());
+        //listView.requestFocus();
+            /*}
+        });*/
+        //listView.smoothScrollToPosition(messages.size(), 0);
+        //listView.setSelectionFromTop(messages.size(), 0);
+
+
+        //Log.d(TAG, "Total count: " + adapter.getCount());
+
+        /*listView.setSelectionFromTop(initialPosition + messages.size(), top);
+        Log.d(TAG, "Scrolling, initial position: " + initialPosition + ", messages count: " + messages.size() + ", top: " + top);*/
+
         requestId = null;
     }
 
@@ -224,6 +315,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     if (!messageIds.contains(message.id) && message.chatId.equals(chat.id)){
                         adapter.add(message);
+                        adapter.notifyDataSetChanged();
                         setAllMessagesSeen();
                     }
                 }
@@ -282,10 +374,11 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private static class MessagesArrayAdapter extends ArrayAdapter<Message> {
-        private static final int VIEW_TYPE_COUNT = 2;
+    private class MessagesArrayAdapter extends ArrayAdapter<Message> {
+        private static final int VIEW_TYPE_COUNT = 3;
         private static final int VIEW_TYPE_INCOMING = 0;
         private static final int VIEW_TYPE_OUTGOING = 1;
+        private static final int VIEW_TYPE_LOADING_MORE = 2;
 
         public MessagesArrayAdapter(Context context, int resource, List<Message> objects) {
             super(context, resource, objects);
@@ -298,12 +391,27 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         public int getItemViewType(int position) {
-            Message message = getItem(position);
-            if (message.toUserId.equals(MeteorSingleton.getInstance().getUserId())){
-                return VIEW_TYPE_INCOMING;
+            if (position == 0 && loading){
+                return VIEW_TYPE_LOADING_MORE;
             } else {
-                return VIEW_TYPE_OUTGOING;
+                Message message = getItem(position);
+                if (message.toUserId.equals(MeteorSingleton.getInstance().getUserId())) {
+                    return VIEW_TYPE_INCOMING;
+                } else {
+                    return VIEW_TYPE_OUTGOING;
+                }
             }
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount() + (loading ? 1 : 0);
+        }
+
+        @Nullable
+        @Override
+        public Message getItem(int position) {
+            return super.getItem(position - (loading ? 1 : 0));
         }
 
         @NonNull
@@ -320,6 +428,9 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                     case VIEW_TYPE_OUTGOING:
                         layout = R.layout.row_message_outgoing;
                         break;
+                    case VIEW_TYPE_LOADING_MORE:
+                        layout = R.layout.row_message_loading_more;
+                        break;
                     default:
                         throw new Error("DialogActivity: view type is not supported");
                 }
@@ -329,10 +440,12 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 convertView.setTag(itemViewType);
             }
 
-            Message message = getItem(position);
+            if (!loading || position != 0) {
+                Message message = getItem(position);
 
-            TextView txtMessage = (TextView) convertView.findViewById(R.id.row_message_txt_message);
-            txtMessage.setText(message.text);
+                TextView txtMessage = (TextView) convertView.findViewById(R.id.row_message_txt_message);
+                txtMessage.setText(message.text);
+            }
 
             return convertView;
         }

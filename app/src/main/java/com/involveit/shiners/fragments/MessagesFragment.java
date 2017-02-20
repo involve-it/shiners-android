@@ -74,7 +74,7 @@ public class MessagesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Chat chat = ((ChatsArrayAdapter)listView.getAdapter()).getItem(i);
-                UUID requestId = MessagesProxy.startGettingMessagesAsync(getActivity(), chat.id, 0, Constants.Defaults.DEFAULT_MESSASGES_PAGE);
+                UUID requestId = MessagesProxy.startGettingMessagesAsync(getActivity(), chat.id, 0, Constants.Defaults.DEFAULT_MESSAGES_PAGE);
                 Intent intent = new Intent(getActivity(), DialogActivity.class);
                 intent.putExtra(DialogActivity.EXTRA_CHAT, (Parcelable) chat);
                 intent.putExtra(DialogActivity.EXTRA_REQUEST_ID, requestId);

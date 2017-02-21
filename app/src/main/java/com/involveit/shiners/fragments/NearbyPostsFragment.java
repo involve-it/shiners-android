@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ProviderInfo;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -44,7 +43,6 @@ import com.involveit.shiners.R;
 import com.involveit.shiners.services.SimpleLocationService;
 import com.squareup.picasso.Picasso;
 
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -150,7 +148,10 @@ public class NearbyPostsFragment extends Fragment {
     public void getNearbyPosts(final boolean loadMore){
         if (!loading && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null) {
             loading = true;
-            ((PostsArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
+            final PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
             Location currentLocation = LocationHandler.getLatestReportedLocation();
             Map<String, Object> map = new HashMap<>();
             map.put("lat", currentLocation.getLatitude());
@@ -166,7 +167,9 @@ public class NearbyPostsFragment extends Fragment {
                 public void onSuccess(String result) {
                     //Log.d(TAG, result);
                     loading = false;
-                    ((PostsArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                    }
 
                     GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
                     if (res.success) {
@@ -196,7 +199,9 @@ public class NearbyPostsFragment extends Fragment {
                     }
                     Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
                     loading = false;
-                    ((PostsArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                    }
                     layout.setRefreshing(false);
                 }
             });
@@ -309,7 +314,8 @@ public class NearbyPostsFragment extends Fragment {
                     viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
                     convertView.setTag(viewHolder);
                 } else {
-                    convertView = li.inflate(R.layout.row_posts_loading, parent, false);
+                    convertView = li.inflate(R.layout.row_loading_more, parent, false);
+                    ((TextView)convertView.findViewById(R.id.row_loading_more_txt)).setText(R.string.row_posts_loading_label);
                 }
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();

@@ -7,6 +7,6 @@
         android:text="@string/row_posts_loading_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView11"
+        android:id="@+id/row_loading_more_txt"
         android:gravity="center_horizontal" />
 </LinearLayout>

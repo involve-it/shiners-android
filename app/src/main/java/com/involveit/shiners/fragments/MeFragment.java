@@ -9,13 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -49,6 +49,8 @@ public class MeFragment extends Fragment {
     boolean mPendingPostsRequest = true;
     SwipeRefreshLayout layout;
     boolean loading = false;
+    boolean moreAvailable = true;
+    ArrayList<Post> posts = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,9 +62,22 @@ public class MeFragment extends Fragment {
             @Override
             public void onRefresh() {
                 if (!loading && MeteorSingleton.getInstance().isConnected()) {
-                    getMyPosts();
+                    getMyPosts(false);
                 } else if (!MeteorSingleton.getInstance().isConnected()) {
                     mPendingPostsRequest = true;
+                }
+            }
+        });
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (moreAvailable && totalItemCount - (firstVisibleItem + visibleItemCount) < 10){
+                    getMyPosts(true);
                 }
             }
         });
@@ -75,7 +90,7 @@ public class MeFragment extends Fragment {
             progressDialog.show();
             progressDialog.setCancelable(false);
         } else {
-            createListView(cache.getObject());
+            populateListView(cache.getObject(), false);
 
             if (!cache.isStale()){
                 mPendingPostsRequest = false;
@@ -83,7 +98,7 @@ public class MeFragment extends Fragment {
         }
 
         if (mPendingPostsRequest && MeteorSingleton.getInstance().isConnected()) {
-            getMyPosts();
+            getMyPosts(false);
             mPendingPostsRequest = false;
         }
 
@@ -102,43 +117,57 @@ public class MeFragment extends Fragment {
         meteorBroadcastReceiver.register(getActivity());
     }
 
-    public void getMyPosts(){
-        loading = true;
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("skip", 0);
-        map.put("take", 100);
-        map.put("type","all");
+    public void getMyPosts(final boolean loadMore){
+        if (!loading && MeteorSingleton.getInstance().isConnected()) {
+            loading = true;
+            final MyPostsArrayAdapter adapter = (MyPostsArrayAdapter) listView.getAdapter();
+            if (adapter != null){
+                adapter.notifyDataSetChanged();
+            }
 
-        MeteorSingleton.getInstance().call(Constants.MethodNames.GET_MY_POSTS, new Object[]{map}, new ResultListener() {
-            @Override
-            public void onSuccess(String result) {
-                GetPostsResponse response = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
-                if (response.success){
-                    CachingHandler.setObject(getActivity(), CachingHandler.KEY_MY_POSTS, response.result);
-                    createListView(response.result);
-                } else {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("skip", (loadMore ? posts.size() : 0));
+            map.put("take", Constants.Defaults.DEFAULT_MY_POSTS_PAGE);
+            map.put("type", "all");
+
+            MeteorSingleton.getInstance().call(Constants.MethodNames.GET_MY_POSTS, new Object[]{map}, new ResultListener() {
+                @Override
+                public void onSuccess(String result) {
+                    loading = false;
+                    if (adapter != null){
+                        adapter.notifyDataSetChanged();
+                    }
+                    GetPostsResponse response = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
+                    if (response.success) {
+                        CachingHandler.setObject(getActivity(), CachingHandler.KEY_MY_POSTS, response.result);
+                        populateListView(response.result, loadMore);
+                    } else {
+                        Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                        progressDialog = null;
+                    }
+
+                    layout.setRefreshing(false);
+                }
+
+                @Override
+                public void onError(String error, String reason, String details) {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                        progressDialog = null;
+                    }
                     Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                    loading = false;
+                    if (adapter != null){
+                        adapter.notifyDataSetChanged();
+                    }
+                    layout.setRefreshing(false);
                 }
-
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
-                loading = false;
-                layout.setRefreshing(false);
-            }
-
-            @Override
-            public void onError(String error, String reason, String details) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
-                Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
-                loading = false;
-                layout.setRefreshing(false);
-            }
-        });
+            });
+        }
     }
 
     public static void largeLog(String tag, String content) {
@@ -150,14 +179,19 @@ public class MeFragment extends Fragment {
         }
     }
 
-    public void createListView(ArrayList<Post> posts){
+    private void populateListView(ArrayList<Post> posts, boolean append){
         MyPostsArrayAdapter adapter = (MyPostsArrayAdapter) listView.getAdapter();
+        moreAvailable = posts.size() == Constants.Defaults.DEFAULT_MY_POSTS_PAGE;
         if (adapter == null){
             adapter = new MyPostsArrayAdapter(getActivity(), R.layout.fragment_me_adap, posts);
             adapter.setNotifyOnChange(true);
             listView.setAdapter(adapter);
         } else {
-            Helper.mergeDataToArrayAdapter(posts, adapter, true);
+            if (append){
+                adapter.addAll(posts);
+            } else {
+                Helper.mergeDataToArrayAdapter(posts, adapter, true);
+            }
         }
     }
 
@@ -184,7 +218,7 @@ public class MeFragment extends Fragment {
         @Override
         public void connected() {
             if (mPendingPostsRequest){
-                getMyPosts();
+                getMyPosts(false);
                 mPendingPostsRequest = false;
             }
         }
@@ -195,65 +229,96 @@ public class MeFragment extends Fragment {
         }
     };
 
-    private static class MyPostsArrayAdapter extends ArrayAdapter<Post>{
+    private class MyPostsArrayAdapter extends ArrayAdapter<Post>{
+        private static final int VIEW_TYPE_POST = 0;
+        private static final int VIEW_TYPE_LOADING = 1;
+        private static final int VIEW_TYPE_COUNT = 2;
+
         public MyPostsArrayAdapter(Context context, int resource, List<Post> objects) {
             super(context, resource, objects);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (loading && position == getCount() - 1){
+                return VIEW_TYPE_LOADING;
+            } else {
+                return VIEW_TYPE_POST;
+            }
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return VIEW_TYPE_COUNT;
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount() + (loading ? 1 : 0);
         }
 
         @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
+            int viewType = getItemViewType(position);
             if (convertView == null) {
                 LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = li.inflate(R.layout.fragment_me_adap, parent, false);
-
                 viewHolder = new ViewHolder();
-                viewHolder.imageView= (ImageView) convertView.findViewById(R.id.imageView);
-                viewHolder.icon= (ImageView) convertView.findViewById(R.id.imageView5);
-                viewHolder.textTitle = (TextView) convertView.findViewById(R.id.textView2);
-                viewHolder.textDesc = (TextView) convertView.findViewById(R.id.textView3);
-                viewHolder.textCount = (TextView) convertView.findViewById(R.id.textView4);
-                viewHolder.textLeft = (TextView) convertView.findViewById(R.id.textView5);
-                convertView.setTag(viewHolder);
+                if (viewType == VIEW_TYPE_POST) {
+                    convertView = li.inflate(R.layout.fragment_me_adap, parent, false);
+
+                    viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
+                    viewHolder.icon = (ImageView) convertView.findViewById(R.id.imageView5);
+                    viewHolder.textTitle = (TextView) convertView.findViewById(R.id.textView2);
+                    viewHolder.textDesc = (TextView) convertView.findViewById(R.id.textView3);
+                    viewHolder.textCount = (TextView) convertView.findViewById(R.id.textView4);
+                    viewHolder.textLeft = (TextView) convertView.findViewById(R.id.textView5);
+                    convertView.setTag(viewHolder);
+                } else {
+                    convertView = li.inflate(R.layout.row_loading_more, parent, false);
+                    ((TextView)convertView.findViewById(R.id.row_loading_more_txt)).setText(R.string.row_posts_loading_label);
+                }
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            Post post = getItem(position);
+            if (viewType == VIEW_TYPE_POST) {
+                Post post = getItem(position);
 
-            viewHolder.textTitle.setText(post.details.title);
-            if (post.details.description != null){
-                viewHolder.textDesc.setText(Html.fromHtml(post.details.description));
-            } else {
-                viewHolder.textDesc.setText("");
-            }
-
-            if (post.isLive()){
-                if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
-                    viewHolder.icon.setImageResource(R.drawable.postcell_dynamic_live3x);
+                viewHolder.textTitle.setText(post.details.title);
+                if (post.details.description != null) {
+                    viewHolder.textDesc.setText(Html.fromHtml(post.details.description));
                 } else {
-                    viewHolder.icon.setImageResource(R.drawable.posttype_static_live3x);
+                    viewHolder.textDesc.setText("");
                 }
-            } else {
-                if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())){
-                    viewHolder.icon.setImageResource(R.drawable.postcell_dynamic3x);
-                } else {
-                    viewHolder.icon.setImageResource(R.drawable.posttype_static3x);
-                }
-            }
 
-            Photo photo = post.getMainPhoto();
-            if (photo != null){
-                Picasso.with(getContext()).load(photo.original).into(viewHolder.imageView);
-            } else {
-                viewHolder.imageView.setImageDrawable(null);
+                if (post.isLive()) {
+                    if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())) {
+                        viewHolder.icon.setImageResource(R.drawable.postcell_dynamic_live3x);
+                    } else {
+                        viewHolder.icon.setImageResource(R.drawable.posttype_static_live3x);
+                    }
+                } else {
+                    if (com.involveit.shiners.logic.objects.Location.LOCATION_TYPE_DYNAMIC.equals(post.getPostType())) {
+                        viewHolder.icon.setImageResource(R.drawable.postcell_dynamic3x);
+                    } else {
+                        viewHolder.icon.setImageResource(R.drawable.posttype_static3x);
+                    }
+                }
+
+                Photo photo = post.getMainPhoto();
+                if (photo != null) {
+                    Picasso.with(getContext()).load(photo.original).into(viewHolder.imageView);
+                } else {
+                    viewHolder.imageView.setImageDrawable(null);
+                }
             }
 
             return convertView;
         }
 
-        private static class ViewHolder{
+        private class ViewHolder{
             private ImageView imageView;
 
             private ImageView icon;

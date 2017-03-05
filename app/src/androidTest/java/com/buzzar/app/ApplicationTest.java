@@ -1,4 +1,4 @@
-package org.buzzar.app;
+package org.buzzar.appnative;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.buzzar.app.activities.newpost.WhenActivity">
+    tools:context="org.buzzar.appnative.activities.newpost.WhenActivity">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

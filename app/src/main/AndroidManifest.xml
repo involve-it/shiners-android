@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.buzzar.app">
+    package="org.buzzar.appnative">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -9,13 +9,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission
-        android:name="org.buzzar.app.permission.C2D_MESSAGE"
+        android:name="org.buzzar.appnative.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.involveit.shiners.permission.C2D_MESSAGE" />
 
     <application
-        android:name="org.buzzar.app.App"
+        android:name="org.buzzar.appnative.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,7 +27,7 @@
             android:value="AIzaSyDjWyZDlkMeu2NLTCODcVX19VAlTnfLnB0" />
 
         <activity
-            android:name="org.buzzar.app.activities.HomeActivity"
+            android:name="org.buzzar.appnative.activities.HomeActivity"
             android:icon="@drawable/shiners_add3x"
             android:label="Shiners"
             android:screenOrientation="portrait">
@@ -38,39 +38,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.buzzar.app.activities.auth.LogInActivity"
+            android:name="org.buzzar.appnative.activities.auth.LogInActivity"
             android:label="Login"
             android:theme="@style/AppThemeAuth"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="org.buzzar.app.activities.auth.RegisterActivity"
+            android:name="org.buzzar.appnative.activities.auth.RegisterActivity"
             android:label="Registration"
             android:theme="@style/AppThemeAuth"
             android:screenOrientation="portrait"/>
 
         <service
-            android:name="org.buzzar.app.services.SimpleLocationService"
+            android:name="org.buzzar.appnative.services.SimpleLocationService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="org.buzzar.app.activities.PostDetailsActivity"
+            android:name="org.buzzar.appnative.activities.PostDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="org.buzzar.app.activities.newpost.NewPostActivity"
+            android:name="org.buzzar.appnative.activities.newpost.NewPostActivity"
             android:label="New Post"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="org.buzzar.app.activities.newpost.WhereActivity"
+            android:name="org.buzzar.appnative.activities.newpost.WhereActivity"
             android:label="Where is it located?"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="org.buzzar.app.activities.newpost.WhenActivity"
+            android:name="org.buzzar.appnative.activities.newpost.WhenActivity"
             android:label="When does it expire?"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="org.buzzar.app.activities.newpost.PhotoActivity"
+            android:name="org.buzzar.appnative.activities.newpost.PhotoActivity"
             android:label="How does it look like?"
             android:screenOrientation="portrait"/>
 
@@ -79,28 +79,28 @@
             android:enabled="true" />
 
         <activity
-            android:name="org.buzzar.app.activities.DialogActivity"
+            android:name="org.buzzar.appnative.activities.DialogActivity"
             android:label="Dialog"
             android:screenOrientation="portrait"
-            android:parentActivityName="org.buzzar.app.activities.HomeActivity">
+            android:parentActivityName="org.buzzar.appnative.activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.buzzar.app.activities.DialogActivity" />
+                android:value="org.buzzar.appnative.activities.DialogActivity" />
         </activity>
 
         <service
-            android:name="org.buzzar.app.services.BackgroundLocationService"
+            android:name="org.buzzar.appnative.services.BackgroundLocationService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name="org.buzzar.app.services.GcmNotificationService"
+            android:name="org.buzzar.appnative.services.GcmNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name="org.buzzar.app.services.GcmIdListenerService"
+            android:name="org.buzzar.appnative.services.GcmIdListenerService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

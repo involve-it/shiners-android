@@ -356,7 +356,7 @@ public class NearbyPostsFragment extends Fragment {
                     }
                 }
 
-                viewHolder.dateView.setText(Helper.formatDate(post.timestamp));
+                viewHolder.dateView.setText(Helper.formatDate(getContext(), post.timestamp));
 
                 Photo photo = post.getMainPhoto();
                 if (photo != null) {

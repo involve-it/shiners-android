@@ -274,7 +274,7 @@ public class MessagesFragment extends Fragment {
                 Chat chat = getItem(position);
                 viewHolder.mTxtFrom.setText(chat.getOtherParty().username);
                 viewHolder.mTxtMessage.setText(chat.lastMessage.text);
-                viewHolder.mTxtDate.setText(Helper.formatDate(chat.lastMessageTimestamp));
+                viewHolder.mTxtDate.setText(Helper.formatDate(getContext(), chat.lastMessageTimestamp));
 
                 if (chat.getOtherParty().image != null) {
                     Picasso.with(getContext()).load(chat.getOtherParty().image.getImageUrl()).into(viewHolder.mImgAccountPhoto);

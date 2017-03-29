@@ -1,11 +1,12 @@
 package org.buzzar.appnative.logic;
 
-import android.icu.text.DateFormat;
+import android.content.Context;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import org.buzzar.appnative.logic.objects.UniqueIdContainer;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,9 +16,9 @@ import java.util.Date;
 
 public final class Helper {
     private static final String TAG = "Helper";
-    public static String formatDate(Date date){
+    public static String formatDate(Context context, Date date){
         if (date != null) {
-            DateFormat dateFormat = DateFormat.getDateInstance();
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
             return dateFormat.format(date);
         }
 

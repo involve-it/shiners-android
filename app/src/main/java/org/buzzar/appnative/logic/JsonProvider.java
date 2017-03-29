@@ -1,7 +1,5 @@
 package org.buzzar.appnative.logic;
 
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,7 +10,9 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**

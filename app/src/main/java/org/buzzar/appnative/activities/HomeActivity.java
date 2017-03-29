@@ -40,6 +40,7 @@ import im.delight.android.ddp.MeteorSingleton;
 public class HomeActivity extends AppCompatActivity implements SettingsFragment.SettingsDelegate {
     private static final int TAB_NEARBY_POSTS = 0;
     private static final int TAB_ME = 1;
+    private static final int TAB_NEW_POST = 2;
     private static final int TAB_MESSAGES = 3;
     private static final int TAB_SETTINGS = 4;
     private static final int TAB_SETTINGS_NOT_LOGGED_IN = 5;
@@ -83,9 +84,15 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                if (position == 2){
-                    tabLayout.getTabAt(mLastTabSelected).select();
-                    startActivity(new Intent(HomeActivity.this, NewPostActivity.class));
+                if (position == TAB_NEW_POST){
+                    if (AccountHandler.isLoggedIn()) {
+                        tabLayout.getTabAt(mLastTabSelected).select();
+                        startActivity(new Intent(HomeActivity.this, NewPostActivity.class));
+                    } else {
+                        tabLayout.getTabAt(TAB_SETTINGS).select();
+                        SettingsHandler.setIntSetting(HomeActivity.this, SettingsHandler.HOME_PAGE_INDEX, TAB_SETTINGS);
+                        displayView(TAB_SETTINGS);
+                    }
                 } else {
                     SettingsHandler.setIntSetting(HomeActivity.this, SettingsHandler.HOME_PAGE_INDEX, position);
                     displayView(position);

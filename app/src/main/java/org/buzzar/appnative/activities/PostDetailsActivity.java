@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.icu.text.DateFormat;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -22,6 +21,7 @@ import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.Constants;
+import org.buzzar.appnative.logic.Helper;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.LocationHandler;
 import org.buzzar.appnative.logic.objects.Post;
@@ -159,8 +159,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
                 .into(imageView2);
 
         //Date
-        DateFormat dateFormat = DateFormat.getDateInstance();
-        textDesc.setText(dateFormat.format(post.timestamp));
+        textDesc.setText(Helper.formatDate(this, post.timestamp));
 
         //Text Photo Locations
         textVisible.setText(String.valueOf(post.stats.seenTotal));

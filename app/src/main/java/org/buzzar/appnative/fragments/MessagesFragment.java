@@ -123,6 +123,15 @@ public class MessagesFragment extends Fragment {
             progressDialog.show();
             progressDialog.setCancelable(false);
         } else {
+
+            ArrayList<Chat> chatsFiltered = new ArrayList<>();
+            for(Chat chat : cache.getObject()) {
+                if(chat.lastMessage != null) {
+                    chatsFiltered.add(chat);
+                }
+            }
+            cache.setObject(chatsFiltered);
+
             populateListView(cache.getObject(), false);
 
             if (!cache.isStale()){

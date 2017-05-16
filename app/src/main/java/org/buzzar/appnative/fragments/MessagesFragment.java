@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,12 +33,16 @@ import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Chat;
 import org.buzzar.appnative.logic.objects.response.GetChatsResponse;
 import org.buzzar.appnative.logic.proxies.MessagesProxy;
+
+import com.amazonaws.util.StringUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
@@ -147,6 +152,15 @@ public class MessagesFragment extends Fragment {
     }
 
     private void populateListView(ArrayList<Chat> chats, boolean append){
+
+        ArrayList<Chat> chatsFiltered = new ArrayList<>();
+        for(Chat chat : chats) {
+            if(chat.lastMessage != null) {
+                chatsFiltered.add(chat);
+            }
+        }
+        chats = chatsFiltered;
+
         ChatsArrayAdapter adapter = (ChatsArrayAdapter) listView.getAdapter();
         moreAvailable = chats.size() == Constants.Defaults.DEFAULT_DIALOGS_PAGE;
         if (adapter == null){
@@ -273,7 +287,7 @@ public class MessagesFragment extends Fragment {
             if (viewType == VIEW_TYPE_CHAT) {
                 Chat chat = getItem(position);
                 viewHolder.mTxtFrom.setText(chat.getOtherParty().username);
-                viewHolder.mTxtMessage.setText(chat.lastMessage.text);
+                viewHolder.mTxtMessage.setText(chat.lastMessage == null ? "" : chat.lastMessage.text);
                 viewHolder.mTxtDate.setText(Helper.formatDate(getContext(), chat.lastMessageTimestamp));
 
                 if (chat.getOtherParty().image != null) {

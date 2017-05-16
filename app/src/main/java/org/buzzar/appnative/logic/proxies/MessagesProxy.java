@@ -11,6 +11,7 @@ import org.buzzar.appnative.logic.objects.Message;
 import org.buzzar.appnative.logic.objects.response.GetMessagesResponse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.UUID;
@@ -43,7 +44,8 @@ public final class MessagesProxy {
                 GetMessagesResponse response = JsonProvider.defaultGson.fromJson(result, GetMessagesResponse.class);
 
                 if (response.success){
-                    response.result.sort(new Comparator<Message>() {
+
+                    Collections.sort(response.result, new Comparator<Message>() {
                         @Override
                         public int compare(Message message, Message t1) {
                             if (message.timestamp.after(t1.timestamp)){
@@ -54,6 +56,7 @@ public final class MessagesProxy {
                             return 0;
                         }
                     });
+
                     messagesRequests.put(requestId, response.result);
                 }
                 Intent intent = new Intent(BROADCAST_GET_MESSAGES);

@@ -10,7 +10,7 @@
 
 
     <TextView
-        android:text="Don't have an account? Register here "
+        android:text="@string/dont_have_an_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView6"
@@ -30,7 +30,7 @@
         >
 
         <TextView
-            android:text="Let's begin"
+            android:text="@string/lets_begin"
             android:layout_width="wrap_content"
             android:textColor="#fff"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:layout_gravity="center_horizontal" />
 
         <TextView
-            android:text="Sign up to create post"
+            android:text="@string/sign_up_to_create_post"
             android:layout_width="wrap_content"
             android:textColor="#fff"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             android:layout_gravity="center_horizontal" />
 
         <Button
-            android:text="Tap here to LOG IN"
+            android:text="@string/tap_here_to_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_login"

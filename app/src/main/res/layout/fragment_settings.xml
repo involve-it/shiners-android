@@ -3,40 +3,40 @@
     android:orientation="vertical" android:layout_margin="@dimen/activity_horizontal_margin">
 
     <Switch
-        android:text="Notify me of nearby events"
+        android:text="@string/notify_me_of_nearby_events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sw_notify_nearby" />
 
     <Switch
-        android:text="Invisible mode"
+        android:text="@string/invisible_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sw_invisible_mode"
         android:layout_marginTop="@dimen/settings_item_margin" />
 
     <Button
-        android:text="My Profile"
+        android:text="@string/my_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_my_profile"
         android:layout_marginTop="@dimen/settings_section_vertical_margin" />
 
     <Button
-        android:text="Contact Us"
+        android:text="@string/contact_us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_contact_us"
         android:layout_marginTop="@dimen/settings_section_vertical_margin" />
 
     <Button
-        android:text="About Us"
+        android:text="@string/about_us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_about_us" />
 
     <Button
-        android:text="Log Out"
+        android:text="@string/log_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_logout"

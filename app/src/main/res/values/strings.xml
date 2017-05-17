@@ -71,4 +71,17 @@
     <string name="loading_more_messages">Loading more messages…</string>
     <string name="row_posts_loading_label">Loading more posts…</string>
     <string name="row_chats_loading_label">Loading more conversations…</string>
+
+    <string name="lets_begin">Let\'s begin</string>
+    <string name="sign_up_to_create_post">Sign up to create post</string>
+    <string name="dont_have_an_account">Don\'t have an account? Register here</string>
+    <string name="tap_here_to_login">Tap here to LOG IN</string>
+
+    <string name="about_us">About Us</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="my_profile">My Profile</string>
+    <string name="notify_me_of_nearby_events">Notify me of nearby events</string>
+    <string name="invisible_mode">Invisible mode</string>
+    <string name="log_out">Log Out</string>
+
 </resources>

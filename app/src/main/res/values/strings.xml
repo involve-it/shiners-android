@@ -83,5 +83,9 @@
     <string name="notify_me_of_nearby_events">Notify me of nearby events</string>
     <string name="invisible_mode">Invisible mode</string>
     <string name="log_out">Log Out</string>
-
+    <string name="like">Like</string>
+    <string name="add_a_comment">Add a comment</string>
+    <string name="category">Category</string>
+    <string name="trainings">Trainings</string>
+    <string name="location">Location</string>
 </resources>

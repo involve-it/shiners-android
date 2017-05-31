@@ -116,14 +116,14 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:text="Category"
+                android:text="@string/category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/textView13"/>
 
             <TextView
-                android:text="Trainings"
+                android:text="@string/trainings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView12"/>
@@ -142,7 +142,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:text="Location"
+                android:text="@string/location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView18"/>
@@ -235,7 +235,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginLeft="5dp"
-                android:text="Like"/>
+                android:text="@string/like"/>
         </LinearLayout>
 
         <TextView
@@ -260,7 +260,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginLeft="5dp"
-                android:text="Add a comment"/>
+                android:text="@string/add_a_comment"/>
         </LinearLayout>
     </LinearLayout>
 

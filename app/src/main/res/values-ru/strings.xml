@@ -83,4 +83,9 @@
     <string name="notify_me_of_nearby_events">Оповещать меня о событиях рядом</string>
     <string name="invisible_mode">Невидимка</string>
     <string name="log_out">Выйти</string>
+    <string name="like">Нравится</string>
+    <string name="add_a_comment">Комментарий</string>
+    <string name="category">Категория</string>
+    <string name="trainings">Тренинги</string>
+    <string name="location">Местоположение</string>
 </resources>

@@ -22,15 +22,16 @@
         android:layout_height="?android:attr/actionBarSize"
         app:tabTextAppearance="@style/MineCustomTabText"
         android:layout_weight="0">
+
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Posts"
-            android:icon="@drawable/home3x"/>
+            android:icon="@drawable/home3x"
+            android:text="@string/tab_title_posts" />
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Me"
+            android:text="@string/tab_title_me"
             android:icon="@drawable/my_posts3x"/>
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
@@ -40,12 +41,12 @@
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Messages"
+            android:text="@string/tab_title_messages"
             android:icon="@drawable/messages3x"/>
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Settings"
+            android:text="@string/tab_title_settings"
             android:icon="@drawable/settings3x"/>
     </android.support.design.widget.TabLayout>
 </LinearLayout>

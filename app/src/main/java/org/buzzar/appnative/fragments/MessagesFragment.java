@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,12 +33,14 @@ import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Chat;
 import org.buzzar.appnative.logic.objects.response.GetChatsResponse;
 import org.buzzar.appnative.logic.proxies.MessagesProxy;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
@@ -120,6 +123,15 @@ public class MessagesFragment extends Fragment {
             progressDialog.show();
             progressDialog.setCancelable(false);
         } else {
+
+            ArrayList<Chat> chatsFiltered = new ArrayList<>();
+            for(Chat chat : cache.getObject()) {
+                if(chat.lastMessage != null) {
+                    chatsFiltered.add(chat);
+                }
+            }
+            cache.setObject(chatsFiltered);
+
             populateListView(cache.getObject(), false);
 
             if (!cache.isStale()){
@@ -147,6 +159,7 @@ public class MessagesFragment extends Fragment {
     }
 
     private void populateListView(ArrayList<Chat> chats, boolean append){
+
         ChatsArrayAdapter adapter = (ChatsArrayAdapter) listView.getAdapter();
         moreAvailable = chats.size() == Constants.Defaults.DEFAULT_DIALOGS_PAGE;
         if (adapter == null){
@@ -190,6 +203,16 @@ public class MessagesFragment extends Fragment {
 
                     GetChatsResponse res = JsonProvider.defaultGson.fromJson(result, GetChatsResponse.class);
                     if (res.success) {
+
+                        ArrayList<Chat> chatsFiltered = new ArrayList<>();
+                        for(Chat chat : res.result) {
+                            if(chat.lastMessage != null) {
+                                chatsFiltered.add(chat);
+                            }
+                        }
+
+                        res.result = chatsFiltered;
+
                         populateListView(res.result, loadMore);
                         CachingHandler.setObject(getActivity(), CachingHandler.KEY_DIALOGS, res.result);
                     } else {

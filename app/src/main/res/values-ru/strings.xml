@@ -1,0 +1,94 @@
+<resources>
+    <string name="app_name">Светлячки</string>
+
+    <string name="message_na">…</string>
+
+    <string name="message_connected">Соединение установлено</string>
+    <string name="message_disconnected">Соединение разорвано</string>
+    <string name="message_loading_posts">Загрузка постов</string>
+
+    <string name="message_loading_account">Загрузка учетной записи</string>
+
+    <string name="message_loading_chats">Загрузка</string>
+
+    <string name="message_authentication_successful">Аутенитфикация успешна!</string>
+    <string name="message_authentication_error">Ошибка аутентификации</string>
+    <string name="message_internal_error">Внутренняя ошибка</string>
+
+    <string name="message_registration_success">Регистрация успешна!</string>
+    <string name="message_registration_unsuccessful">Ошибка регистрации</string>
+
+    <string name="message_uploading_image">Загрузка изображения…</string>
+    <string name="message_logging_out">Выход</string>
+    <string name="message_logging_in">Вход</string>
+    <string name="message_registering">Регистрация</string>
+
+
+    <string name="units_km">км</string>
+    <string name="units_m">м</string>
+    <string name="units_ft">фт</string>
+    <string name="units_mi">ми</string>
+
+    <string name="label_current_location">Текущее местоположение</string>
+
+    <string name="tab_title_posts">Посты</string>
+    <string name="tab_title_me">Я</string>
+    <string name="tab_title_messages">Сообщения</string>
+    <string name="tab_title_settings">Настройки</string>
+
+    <string name="btn_log_in">Войти</string>
+    <string name="btn_register">Зарегистрироваться</string>
+    <string name="btn_forgot_password">Забыли пароль?</string>
+
+    <string name="hint_password">Пароль</string>
+    <string name="hint_username">Имя пользователя</string>
+    <string name="btn_do_register">Ок</string>
+    <string name="hint_confirm_password">Подтвердите пароль</string>
+    <string name="hint_email_address">Email адрес</string>
+
+    <string-array name="tab_titles">
+        <item>Светлячки</item>
+        <item>Я</item>
+        <item></item>
+        <item>Сообщения</item>
+        <item>Настройки</item>
+        <item>Настройки</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Привет пустой фрагмент</string>
+    <string name="message_status_delivered">Доставлено</string>
+    <string name="btn_label_send">Отправить</string>
+    <string name="btn_label_sending">Отправляется</string>
+    <string name="text_hint_message">Сообщение</string>
+    <string name="dialogs_list_empty_view_text">Нет сообщений</string>
+    <string name="my_posts_list_empty_view_text">У Вас нет ни одного поста. Может создать?</string>
+    <string name="nearby_posts_list_empty_view_text">Рядом с Вами нет постов</string>
+    <string name="title_logout">Выйти</string>
+    <string name="message_logout_confirmation">Вы действительно хотите выйти?</string>
+    <string name="btn_label_yes">Да</string>
+    <string name="btl_label_no">Нет</string>
+    <string name="loading_more_messages">Загружаются сообщения…</string>
+    <string name="row_posts_loading_label">Загружаются посты…</string>
+    <string name="row_chats_loading_label">Загружаются диалоги…</string>
+
+    <string name="lets_begin">Давайте начнем</string>
+    <string name="sign_up_to_create_post">Войдите, чтобы создать пост</string>
+    <string name="dont_have_an_account">Не зарегистрированы? Зарегистрируйтесь здесь</string>
+    <string name="tap_here_to_login">Нажмите здесь, чтобы войти</string>
+
+    <string name="about_us">О нас</string>
+    <string name="contact_us">Связаться с нами</string>
+    <string name="my_profile">Мой профиль</string>
+    <string name="notify_me_of_nearby_events">Оповещать меня о событиях рядом</string>
+    <string name="invisible_mode">Невидимка</string>
+    <string name="log_out">Выйти</string>
+    <string name="like">Нравится</string>
+    <string name="add_a_comment">Комментарий</string>
+    <string name="category">Категория</string>
+    <string name="trainings">Тренинги</string>
+    <string name="location">Местоположение</string>
+    <string name="tap_here_to_give_post_a_title">Нажмите здесь, чтобы создать заголовок</string>
+    <string name="optional_provide_more_details">Детали (не обязательное)</string>
+    <string name="new_post_header">Новый пост</string>
+</resources>

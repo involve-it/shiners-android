@@ -88,4 +88,7 @@
     <string name="category">Категория</string>
     <string name="trainings">Тренинги</string>
     <string name="location">Местоположение</string>
+    <string name="tap_here_to_give_post_a_title">Нажмите здесь, чтобы создать заголовок</string>
+    <string name="optional_provide_more_details">Детали (не обязательное)</string>
+    <string name="new_post_header">Новый пост</string>
 </resources>

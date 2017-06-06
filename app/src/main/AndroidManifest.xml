@@ -59,7 +59,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name="org.buzzar.appnative.activities.newpost.NewPostActivity"
-            android:label="New Post"
+            android:label="@string/new_post_header"
             android:screenOrientation="portrait"/>
         <activity
             android:name="org.buzzar.appnative.activities.newpost.WhereActivity"

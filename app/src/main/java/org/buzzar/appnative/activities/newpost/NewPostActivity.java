@@ -32,7 +32,7 @@ public class NewPostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         String test[]={"categ1","categ2","categ1","categ2"};
-        spinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,test));
+        spinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
     }
 
     @Override

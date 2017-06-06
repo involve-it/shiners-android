@@ -88,4 +88,7 @@
     <string name="category">Category</string>
     <string name="trainings">Trainings</string>
     <string name="location">Location</string>
+    <string name="tap_here_to_give_post_a_title">Tap here to give post a title</string>
+    <string name="optional_provide_more_details">Optional: Provide more details</string>
+    <string name="new_post_header">New Post</string>
 </resources>

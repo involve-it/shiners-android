@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by yury on 1/30/17.
@@ -43,6 +44,15 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
     public boolean liked;
     @SerializedName("user")
     public User user;
+
+    public Post(){
+        details = new PostDetails();
+        presences = new Presences();
+        status = new Status();
+        user = new User();
+        tags = new ArrayList<>();
+        stats = new Stats();
+    }
 
     protected Post(Parcel in) {
         id = in.readString();
@@ -160,6 +170,12 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
         @SerializedName("photosUrls")
         public List<String> photosUrls;
 
+        public PostDetails(){
+            locations = new ArrayList<>();
+            photos = new ArrayList<>();
+            photosUrls = new ArrayList<>();
+        }
+
         protected PostDetails(Parcel in) {
             url = in.readString();
             title = in.readString();
@@ -196,6 +212,27 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
             parcel.writeTypedList(locations);
             parcel.writeTypedList(photos);
             parcel.writeStringList(photosUrls);
+        }
+
+        public void removeLocation(String placeType){
+            Location location = getLocation(placeType);
+            if (location != null){
+                locations.remove(location);
+            }
+        }
+
+        public Location getLocation(String placeType){
+            Location location = null;
+            if (locations != null){
+                for(Location loc: locations){
+                    if (Objects.equals(loc.placeType, placeType)){
+                        location = loc;
+                        break;
+                    }
+                }
+            }
+
+            return location;
         }
     }
 

@@ -46,6 +46,17 @@
     <string name="hint_confirm_password">Confirm password</string>
     <string name="hint_email_address">Email address</string>
 
+    <string-array name="post_categories">
+        <item>Job market</item>
+        <item>Need or provide training</item>
+        <item>Looking for connections</item>
+        <item>Buy &amp; sell</item>
+        <item>Housing market</item>
+        <item>Local events</item>
+        <item>Need or provide training</item>
+        <item>Need or give help</item>
+    </string-array>
+
     <string-array name="tab_titles">
         <item>Shiners</item>
         <item>Me</item>
@@ -91,4 +102,21 @@
     <string name="tap_here_to_give_post_a_title">Tap here to give post a title</string>
     <string name="optional_provide_more_details">Optional: Provide more details</string>
     <string name="new_post_header">New Post</string>
+    <string name="activity_where_lbl_acquiring_location">Acquiring location...</string>
+    <string name="activity_where_lbl_select_location">Select location:</string>
+    <string name="activity_where_lbl_expl_dynamic_post">It is connected to your mobile phone. Moving along with you.</string>
+    <string name="activity_where_lbl_expl_static_post">It is connected to the location that you have chosen.</string>
+    <string name="activity_where_lbl_dynamic_post">Dynamic post</string>
+    <string name="activity_where_lbl_static_post">Static post</string>
+    <string name="activity_new_post_when_exp_1_day">1 day</string>
+    <string name="activity_new_post_when_exp_2_days">2 days</string>
+    <string name="activity_new_post_when_exp_1_week">1 week</string>
+    <string name="activity_new_post_when_exp_2_weeks">2 weeks</string>
+    <string name="activity_new_post_when_exp_1_month">1 month</string>
+    <string name="activity_new_post_when_exp_1_year">1 year</string>
+    <string name="activity_new_post_when_lbl_ad_expires">Pick when your ad expires</string>
+    <string name="activity_new_post_when_lbl_or">OR</string>
+    <string name="activity_new_post_when_btn_pick_custom_date">Pick custom date</string>
+    <string name="new_post_wizard_menu_next">Next</string>
+    <string name="new_post_wizard_menu_create">Create</string>
 </resources>

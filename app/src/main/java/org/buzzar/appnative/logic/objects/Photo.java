@@ -33,6 +33,8 @@ public class Photo implements Parcelable, Serializable {
         }
     }
 
+    public Photo(){}
+
     protected Photo(Parcel in) {
         _id = in.readString();
         userId = in.readString();

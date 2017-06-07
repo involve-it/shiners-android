@@ -34,6 +34,8 @@ public class User implements Parcelable, Serializable {
     public boolean enableNearbyNotifications;
     public boolean isInvisible;
 
+    public User (){}
+
     protected User(Parcel in) {
         id = in.readString();
         username = in.readString();

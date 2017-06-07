@@ -33,6 +33,12 @@ public class Location implements Parcelable, Serializable {
         this.coords.lng = in.readDouble();
     }
 
+    public Location(String placeType){
+        this.placeType = placeType;
+
+        coords = new Coords();
+    }
+
     public static final Creator<Location> CREATOR = new Creator<Location>() {
         @Override
         public Location createFromParcel(Parcel in) {

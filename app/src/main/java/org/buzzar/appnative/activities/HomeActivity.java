@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -73,7 +74,9 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         }
 
         if (permissions.size() > 0){
-            requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(permissions.toArray(new String[permissions.size()]), 1);
+            }
         }
 
         setContentView(R.layout.activity_home);

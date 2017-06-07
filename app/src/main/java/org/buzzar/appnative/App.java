@@ -22,8 +22,8 @@ public class App extends Application {
     public static String homePositionFragment="homePositionFragment";
 
     //TODO: remove
-    public static Map<String,Object> keyMap=new HashMap<>();
-    public static Map<String,Object> keyDetails=new HashMap<>();
+    //public static Map<String,Object> keyMap=new HashMap<>();
+    //public static Map<String,Object> keyDetails=new HashMap<>();
 
     private MeteorCallbackHandler meteorCallbackHandler;
 

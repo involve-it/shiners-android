@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -28,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.buzzar.appnative.activities.newpost.NewPostActivity;
 import org.buzzar.appnative.logic.cache.CacheEntity;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.Constants;
@@ -231,6 +233,17 @@ public class NearbyPostsFragment extends Fragment {
                 Helper.mergeDataToArrayAdapter(posts, adapter, true);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.fragment_me_add:
+                startActivity(new Intent(getActivity(), NewPostActivity.class));
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void recalculateDistances(){

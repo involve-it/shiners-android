@@ -2,62 +2,68 @@ package org.buzzar.appnative.activities.newpost;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
-import org.buzzar.appnative.App;
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.objects.Post;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import im.delight.android.ddp.MeteorSingleton;
 
-import static org.buzzar.appnative.App.keyMap;
+public class NewPostActivity extends NewPostBaseActivity {
+    @BindView(R.id.activity_new_post_txt_title) EditText txtTitle;
+    @BindView(R.id.activity_new_post_txt_description) EditText txtDescription;
+    @BindView(R.id.activity_new_post_spinner_category) AppCompatSpinner spCategory;
 
-public class NewPostActivity extends AppCompatActivity {
-
-    @BindView(R.id.editText1) EditText editText1;
-    @BindView(R.id.editText2) EditText editText2;
-    @BindView(R.id.spinner) AppCompatSpinner spinner;
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_posts_text);
+
+        if (mPost == null){
+            mPost = new Post();
+        }
+
+        setContentView(R.layout.activity_new_post_title);
         ButterKnife.bind(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
-        String test[]={"categ1","categ2","categ1","categ2"};
-        spinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
+        String test[]=getResources().getStringArray(R.array.post_categories);
+        spCategory.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
+    }
+
+    protected void populateUi(){
+        txtTitle.setText(mPost.details.title);
+        txtDescription.setText(mPost.details.description);
+        if (mPost.type != null) {
+            List<String> categories = Arrays.asList(getResources().getStringArray(R.array.post_categories));
+            int catIndex = categories.indexOf(mPost.type);
+            if (catIndex != -1){
+                spCategory.setSelection(catIndex);
+            }
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
-            onBackPressed();
-        }
-
-        if (item.getItemId()==R.id.next){
-            keyMap.clear();
-            keyMap.put("userId", MeteorSingleton.getInstance().getUserId());
-            keyMap.put("type","all");
-            App.keyDetails.put("title",editText1.getText().toString());
-            App.keyDetails.put("description",editText2.getText().toString());
-
-            startActivity(new Intent(NewPostActivity.this, WhereActivity.class));
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        }
-        return super.onOptionsItemSelected(item);
+    protected void populatePost() {
+        mPost.details.title = txtTitle.getText().toString();
+        mPost.details.description = txtDescription.getText().toString();
+        mPost.type = spCategory.getSelectedItem().toString();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.m_new_posts_text,menu);
-        return super.onCreateOptionsMenu(menu);
+    protected Intent getNextStepIntent() {
+        return new Intent(NewPostActivity.this, WhereActivity.class);
     }
-
 }

@@ -15,7 +15,7 @@
         android:lines="3"
         android:gravity="top"
         android:hint="@string/tap_here_to_give_post_a_title"
-        android:id="@+id/editText1"/>
+        android:id="@+id/activity_new_post_txt_title"/>
     <EditText
         android:layout_width="match_parent"
         android:gravity="top"
@@ -23,9 +23,9 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:hint="@string/optional_provide_more_details"
-        android:id="@+id/editText2"/>
+        android:id="@+id/activity_new_post_txt_description"/>
     <android.support.v7.widget.AppCompatSpinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"/>
+        android:id="@+id/activity_new_post_spinner_category"/>
 </LinearLayout>

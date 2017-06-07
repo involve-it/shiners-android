@@ -1,150 +1,169 @@
 package org.buzzar.appnative.activities.newpost;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import org.buzzar.appnative.App;
-import org.buzzar.appnative.activities.HomeActivity;
-import org.buzzar.appnative.R;
+import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.objects.Photo;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import im.delight.android.ddp.MeteorSingleton;
-import im.delight.android.ddp.ResultListener;
 
-import static org.buzzar.appnative.App.keyDetails;
-import static org.buzzar.appnative.App.keyMap;
+public class PhotoActivity extends NewPostBaseActivity {
+    private static final String TAG = "PhotoActivity";
+    private static final int PHOTO_REQUEST_ID = 2;
+    @BindView(R.id.activity_new_post_photo_btn_add_photo) Button mBtnAddPhoto;
+    @BindView(R.id.activity_new_post_photo_lst_images)
 
-public class PhotoActivity extends AppCompatActivity {
-
-    @BindView(R.id.button5) Button addPhoto;
-    @BindView(R.id.imageView) ImageView imageView;
+    ListView mLstImages;
+    PhotosArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_posts_photo);
+        setContentView(R.layout.activity_new_post_photo);
         ButterKnife.bind(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-        if (item.getItemId() == R.id.next) {
-            keyMap.put("details", keyDetails);
-
-            MeteorSingleton.getInstance().call("addPost", new Object[]{keyMap}, new ResultListener() {
-                @Override
-                public void onSuccess(String result) {
-                    Log.d("PhotoActivity=onSuccess", result);
-                }
-
-                @Override
-                public void onError(String error, String reason, String details) {
-
-                }
-            });
-
-            startActivity(new Intent(PhotoActivity.this, HomeActivity.class)
-                    .putExtra(App.homePositionFragment,1)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        }
-        return super.onOptionsItemSelected(item);
+        populateUi();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.m_new_posts_text, menu);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.m_new_posts_done, menu);
+        return true;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItem = menu.findItem(R.id.next);
-        menuItem.setTitle("Готово");
-        return super.onPrepareOptionsMenu(menu);
-    }
 
-    @OnClick(R.id.button5)
+    @OnClick(R.id.activity_new_post_photo_btn_add_photo)
     public void onClick() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, PHOTO_REQUEST_ID);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==1){
-            if (resultCode == RESULT_OK) {
-                File file=new File(data.getData().getPath());
-                new Async(file).execute();
-                imageView.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+        if (requestCode == PHOTO_REQUEST_ID && resultCode == RESULT_OK){
+            try {
+                InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
+                new AmazonUploadAsyncTask(this.getContentResolver().getType(data.getData())).execute(inputStream);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    class Async extends AsyncTask {
-        File file;
-        ProgressDialog progressDialog;
+    @Override
+    protected void populateUi() {
+        if (adapter == null) {
+            adapter = new PhotosArrayAdapter(this, R.layout.row_new_post_photo, mPost.details.photos);
+            mLstImages.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+    }
 
-        Async(File file){
-            this.file=file;
+    @Override
+    protected void populatePost() {
+
+    }
+
+    @Override
+    protected Intent getNextStepIntent() {
+        return null;
+    }
+
+    private class AmazonUploadAsyncTask extends AsyncTask<InputStream, Integer, String> {
+        ProgressDialog mProgressDialog;
+        String mContentType;
+
+        AmazonUploadAsyncTask(String contentType){
+            
+        }
+
+        @Override
+        protected String doInBackground(InputStream... params) {
+            InputStream inputStream = params[0];
+            AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials("AKIAJUHRBKTJ4FBPKQ6Q","m1c/Q80xbc+urqhZk6AeBymsK6rGF2TX6V0KVPfa"));
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(mContentType);
+            String fileName = UUID.randomUUID().toString();
+            s3Client.putObject(new PutObjectRequest("shiners/v1.0/public/images", fileName, inputStream, metadata).withCannedAcl(CannedAccessControlList.PublicRead));
+            return s3Client.getResourceUrl("shiners/v1.0/public/images", fileName);
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(PhotoActivity.this);
-            progressDialog.setMessage(PhotoActivity.this.getResources().getString(R.string.message_uploading_image));
-            progressDialog.show();
-            progressDialog.setCancelable(false);
+            mProgressDialog = new ProgressDialog(PhotoActivity.this);
+            mProgressDialog.setMessage(PhotoActivity.this.getResources().getString(R.string.message_uploading_image));
+            mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
-            AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials("AKIAJUHRBKTJ4FBPKQ6Q","m1c/Q80xbc+urqhZk6AeBymsK6rGF2TX6V0KVPfa"));
-            s3Client.putObject(new PutObjectRequest("shiners/v1.0/public/images", "AKIAJUHRBKTJ4FBPKQ6Q", new File(file.getPath())).withCannedAcl(CannedAccessControlList.PublicRead));
-            String resp=s3Client.getResourceUrl("shiners/v1.0/public/images", "AKIAJUHRBKTJ4FBPKQ6Q");
-            Log.d("PhotoActivity=onActivityResult", resp);
-            ArrayList arrayListPhotos=new ArrayList();
-            Map<String,Object> keyPhotos=new HashMap<String, Object>();
-            keyPhotos.put("data",resp);
-            arrayListPhotos.add(keyPhotos);
-            keyDetails.put("photos",arrayListPhotos);
-            return null;
+        protected void onPostExecute(String url) {
+            super.onPostExecute(url);
+
+            Photo photo = new Photo();
+            photo.original = url;
+            photo.imageUrl = url;
+            mPost.details.photos.add(photo);
+
+            populateUi();
+
+            mProgressDialog.dismiss();
+        }
+    }
+
+    private class PhotosArrayAdapter extends ArrayAdapter<Photo>{
+        public PhotosArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Photo> objects) {
+            super(context, resource, objects);
         }
 
+        @NonNull
         @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null){
+                LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                convertView = layoutInflater.inflate(R.layout.row_new_post_photo, parent, false);
+            }
+            ImageView imageView = (ImageView)convertView;
+            Photo photo = getItem(position);
+            Picasso.with(getContext()).load(photo.original).into(imageView);
 
-            progressDialog.dismiss();
+            return convertView;
         }
     }
 }

@@ -8,15 +8,44 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="org.buzzar.appnative.activities.newpost.WhenActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="Set to expire on"
+            android:textSize="16dp"
+            android:layout_marginRight="4dp"/>
+
+        <TextView
+            android:id="@+id/activity_new_post_when_txt_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="1/5/2016"
+            android:textSize="36dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/common_google_signin_btn_text_dark_disabled" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Pick when your ad expires"/>
+        android:text="@string/activity_new_post_when_lbl_ad_expires" android:layout_marginTop="5dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:padding="15dp"
+        android:padding="5dp"
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -27,11 +56,11 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/ic1d"/>
+                android:src="@drawable/ic1d" android:id="@+id/activity_new_post_when_btn_1d"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="asdasdds"/>
+                android:text="@string/activity_new_post_when_exp_1_day"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,11 +71,12 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/ic1d"/>
+                android:src="@drawable/ic2d"
+                android:id="@+id/activity_new_post_when_btn_2d"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="asdasdds"/>
+                android:text="@string/activity_new_post_when_exp_2_days"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -57,17 +87,18 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/ic1d"/>
+                android:src="@drawable/ic1w"
+                android:id="@+id/activity_new_post_when_btn_1w"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="asdasdds"/>
+                android:text="@string/activity_new_post_when_exp_1_week"/>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:padding="15dp"
+        android:padding="5dp"
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -78,11 +109,12 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/ic1d"/>
+                android:src="@drawable/ic2w"
+                android:id="@+id/activity_new_post_when_btn_2w"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="asdasdds"/>
+                android:text="@string/activity_new_post_when_exp_2_weeks"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -93,11 +125,12 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/ic1d"/>
+                android:src="@drawable/ic1m"
+                android:id="@+id/activity_new_post_when_btn_1m"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="asdasdds"/>
+                android:text="@string/activity_new_post_when_exp_1_month"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -108,18 +141,26 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/ic1d"/>
+                android:src="@drawable/ic1y"
+                android:id="@+id/activity_new_post_when_btn_1y"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="asdasdds"/>
+                android:text="@string/activity_new_post_when_exp_1_year"/>
         </LinearLayout>
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="@string/activity_new_post_when_lbl_or" android:layout_gravity="center" android:layout_margin="10dp" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="center" android:text="@string/activity_new_post_when_btn_pick_custom_date"
+        android:layout_margin="10dp" android:id="@+id/activity_new_post_when_btn_custom_date"/>
 
-    <DatePicker
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:calendarViewShown="false"
-        android:id="@+id/datePicker"/>
+    <!--<DatePicker-->
+        <!--android:id="@+id/datePicker"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
+
 
 </LinearLayout>

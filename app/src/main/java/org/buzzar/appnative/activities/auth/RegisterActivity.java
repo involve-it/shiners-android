@@ -20,8 +20,8 @@ import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class RegisterActivity extends AppCompatActivity {
-    @BindView(R.id.editText1) EditText editText1;
-    @BindView(R.id.editText2) EditText editText2;
+    @BindView(R.id.activity_new_post_txt_title) EditText editText1;
+    @BindView(R.id.activity_new_post_txt_description) EditText editText2;
     @BindView(R.id.editText3) EditText editText3;
     @BindView(R.id.editText4) EditText editText4;
     @BindView(R.id.button4) Button btnRegister;

@@ -19,24 +19,39 @@
             android:layout_height="match_parent"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:id="@+id/fragment"/>
-        <SearchView
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            tools:layout_editor_absoluteY="8dp"
-            tools:layout_editor_absoluteX="8dp"
-            android:background="#fff"
-            android:layout_gravity="top"
-            android:layout_margin="10dp"
-            android:layout_height="50dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:text="asdadasdda"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            android:background="#fff"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:id="@+id/textView9"/>
+            android:layout_margin="10dp"
+            app:cardCornerRadius="3dp"
+            >
+            <fragment
+                android:id="@+id/activity_where_place_autocomplete_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
+                />
+        </android.support.v7.widget.CardView>
+
+        <!--<SearchView-->
+            <!--android:id="@+id/activity_where_searchView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--tools:layout_editor_absoluteY="8dp"-->
+            <!--tools:layout_editor_absoluteX="8dp"-->
+            <!--android:background="#fff"-->
+            <!--android:layout_gravity="top"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:layout_height="50dp"/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:text="@string/activity_where_lbl_acquiring_location"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:padding="10dp"-->
+            <!--android:background="#fff"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:id="@+id/activity_where_txt_address"/>-->
     </FrameLayout>
 
     <LinearLayout
@@ -51,7 +66,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="match_parent"
-                android:text="Select location:"
+                android:text="@string/activity_where_lbl_select_location"
                 android:padding="15dp"
                 android:layout_height="match_parent"/>
         </LinearLayout>
@@ -70,7 +85,7 @@
                 android:layout_height="48dp"
                 app:srcCompat="@drawable/postcell_dynamic3x"/>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -78,19 +93,19 @@
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
-                    android:text="Dynamic post"
+                    android:text="@string/activity_where_lbl_dynamic_post"
                     android:textSize="16sp"
                     android:textColor="#000"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:textSize="11sp"
-                    android:text="adasddasdasdasdd\nasdasadadasdsad"
+                    android:text="@string/activity_where_lbl_expl_dynamic_post"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
             <Switch
                 android:layout_width="wrap_content"
-                android:id="@+id/switchDynamic"
+                android:id="@+id/activity_where_loc_dynamic"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
@@ -109,7 +124,7 @@
                 android:layout_height="48dp"
                 app:srcCompat="@drawable/posttype_static3x"/>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -117,19 +132,19 @@
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
-                    android:text="Dynamic post"
+                    android:text="@string/activity_where_lbl_static_post"
                     android:textSize="16sp"
                     android:textColor="#000"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:textSize="11sp"
-                    android:text="adasddasdasdasdd\nasdasadadasdsad"
+                    android:text="@string/activity_where_lbl_expl_static_post"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
             <Switch
                 android:layout_width="wrap_content"
-                android:id="@+id/switchStatic"
+                android:id="@+id/activity_where_loc_static"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 

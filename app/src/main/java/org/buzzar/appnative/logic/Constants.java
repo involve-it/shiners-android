@@ -1,5 +1,7 @@
 package org.buzzar.appnative.logic;
 
+import java.util.ArrayList;
+
 /**
  * Created by yury on 1/31/17.
  */
@@ -51,4 +53,6 @@ public class Constants {
         public static final String BASE_URL = "https://shiners.mobi";
         public static final String METEOR_URL = "wss://shiners.mobi/websocket";
     }
+
+    public static final String[] POST_CATEGORIES = new String[]{"jobs", "trainings", "connect", "trade", "housing", "events", "services", "help"};
 }

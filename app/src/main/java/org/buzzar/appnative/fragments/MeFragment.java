@@ -1,7 +1,9 @@
 package org.buzzar.appnative.fragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -33,6 +36,8 @@ import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Photo;
 import org.buzzar.appnative.logic.objects.Post;
 import org.buzzar.appnative.logic.objects.response.GetPostsResponse;
+import org.buzzar.appnative.logic.objects.response.ResponseBase;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,7 +47,9 @@ import java.util.List;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class MeFragment extends Fragment {
+public class MeFragment extends Fragment implements AdapterView.OnItemLongClickListener {
+    private static final String TAG = "MeFragment";
+
     View view;
     ListView listView;
     ProgressDialog progressDialog;
@@ -50,7 +57,6 @@ public class MeFragment extends Fragment {
     SwipeRefreshLayout layout;
     boolean loading = false;
     boolean moreAvailable = true;
-    ArrayList<Post> posts = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,11 +82,12 @@ public class MeFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (moreAvailable && totalItemCount - (firstVisibleItem + visibleItemCount) < 10){
+                if (moreAvailable && totalItemCount - (firstVisibleItem + visibleItemCount) < 10 && totalItemCount > 0){
                     getMyPosts(true);
                 }
             }
         });
+        listView.setOnItemLongClickListener(this);
         setHasOptionsMenu(true);
 
         CacheEntity<ArrayList<Post>> cache = CachingHandler.getCacheObject(getActivity(), CachingHandler.KEY_MY_POSTS);
@@ -98,8 +105,8 @@ public class MeFragment extends Fragment {
         }
 
         if (mPendingPostsRequest && MeteorSingleton.getInstance().isConnected()) {
-            getMyPosts(false);
             mPendingPostsRequest = false;
+            getMyPosts(false);
         }
 
         return view;
@@ -121,12 +128,14 @@ public class MeFragment extends Fragment {
         if (!loading && MeteorSingleton.getInstance().isConnected()) {
             loading = true;
             final MyPostsArrayAdapter adapter = (MyPostsArrayAdapter) listView.getAdapter();
+            int postsCount = 0;
             if (adapter != null){
+                postsCount = adapter.getCount();
                 adapter.notifyDataSetChanged();
             }
 
             HashMap<String, Object> map = new HashMap<>();
-            map.put("skip", (loadMore ? posts.size() : 0));
+            map.put("skip", (loadMore ? postsCount : 0));
             map.put("take", Constants.Defaults.DEFAULT_MY_POSTS_PAGE);
             map.put("type", "all");
 
@@ -207,8 +216,6 @@ public class MeFragment extends Fragment {
             case R.id.fragment_me_add:
                 startActivity(new Intent(getActivity(), NewPostActivity.class));
                 break;
-            case R.id.fragment_me_edit:
-                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -229,13 +236,78 @@ public class MeFragment extends Fragment {
         }
     };
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        new AlertDialog.Builder(getActivity()).setItems(R.array.me_post_actions_menu, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0){
+                    deletePost(position);
+                    dialog.dismiss();
+                }
+            }
+        }).show();
+
+        return true;
+    }
+
+    private void deletePost(final int index){
+        final MyPostsArrayAdapter adapter = (MyPostsArrayAdapter) listView.getAdapter();
+        final Post post = adapter.getItem(index);
+        if (post != null){
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setTitle(getString(R.string.dialog_deleting_post));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            MeteorSingleton.getInstance().call("deletePost", new Object[]{post.id}, new ResultListener() {
+                @Override
+                public void onSuccess(String result) {
+                    //Log.d(TAG, result);
+                    final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.success) {
+                                adapter.remove(post);
+                                adapter.notifyDataSetChanged();
+                                CachingHandler.setObject(getActivity(), CachingHandler.KEY_MY_POSTS, adapter.getPosts());
+                            } else {
+                                Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                            }
+
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(String error, String reason, String details) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     private class MyPostsArrayAdapter extends ArrayAdapter<Post>{
         private static final int VIEW_TYPE_POST = 0;
         private static final int VIEW_TYPE_LOADING = 1;
         private static final int VIEW_TYPE_COUNT = 2;
+        private List<Post> posts;
+
+        public  List<Post> getPosts(){
+            return posts;
+        }
 
         public MyPostsArrayAdapter(Context context, int resource, List<Post> objects) {
             super(context, resource, objects);
+            posts = objects;
         }
 
         @Override

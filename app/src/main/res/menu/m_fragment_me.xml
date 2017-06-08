@@ -6,9 +6,4 @@
         android:icon="@drawable/ic_add_black_36dp"
         android:title="add"
         app:showAsAction="always"/>
-    <item
-        android:id="@+id/fragment_me_edit"
-        android:icon="@drawable/ic_edit_black_36dp"
-        android:title="edit"
-        app:showAsAction="always"/>
 </menu>

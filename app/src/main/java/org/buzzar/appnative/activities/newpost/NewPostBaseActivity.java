@@ -1,5 +1,6 @@
 package org.buzzar.appnative.activities.newpost;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,12 +8,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.activities.HomeActivity;
+import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.LocationHandler;
+import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Location;
 import org.buzzar.appnative.logic.objects.Post;
+import org.buzzar.appnative.logic.objects.response.ResponseBase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +79,6 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
             case R.id.done:
                 if (isValid()) {
                     createPost();
-                    startActivity(new Intent(this, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 }
                 break;
         }
@@ -83,6 +87,11 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
     }
 
     protected void createPost(){
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle(getString(R.string.dialog_creating_post));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         Location.Coords coords = null;
         if (LocationHandler.getLatestReportedLocation() != null){
             coords = new Location.Coords();
@@ -93,13 +102,36 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
         MeteorSingleton.getInstance().call("addPost", new Object[]{mPost, coords}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
-                startActivity(new Intent(NewPostBaseActivity.this, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        if (response.success) {
+                            CachingHandler.removeObject(NewPostBaseActivity.this, CachingHandler.KEY_MY_POSTS);
+
+                            startActivity(new Intent(NewPostBaseActivity.this, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            finish();
+                        } else {
+                            Toast.makeText(NewPostBaseActivity.this, R.string.toast_error_occurred, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
                 Log.d(TAG, result);
             }
 
             @Override
             public void onError(String error, String reason, String details) {
                 Log.w(TAG, error);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        Toast.makeText(NewPostBaseActivity.this, R.string.toast_error_occurred, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }

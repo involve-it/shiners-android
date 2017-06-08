@@ -46,6 +46,10 @@
     <string name="hint_confirm_password">Confirm password</string>
     <string name="hint_email_address">Email address</string>
 
+    <string-array name="me_post_actions_menu">
+        <item>Delete</item>
+    </string-array>
+
     <string-array name="new_post_photos_menu">
         <item>Make this a default photo</item>
         <item>Delete photo</item>
@@ -136,4 +140,7 @@
     <string name="new_post_wizard_menu_next">Next</string>
     <string name="new_post_wizard_menu_create">Create</string>
     <string name="validation_post_title_empty">Please provide a post title</string>
+    <string name="dialog_creating_post">Creating post...</string>
+    <string name="toast_error_occurred">An error occurred</string>
+    <string name="dialog_deleting_post">Deleting post...</string>
 </resources>

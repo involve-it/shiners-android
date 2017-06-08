@@ -91,4 +91,6 @@
     <string name="tap_here_to_give_post_a_title">Нажмите здесь, чтобы создать заголовок</string>
     <string name="optional_provide_more_details">Детали (не обязательное)</string>
     <string name="new_post_header">Новый пост</string>
+    <string name="phone">Телефон</string>
+    <string name="not_set">Не указан</string>
 </resources>

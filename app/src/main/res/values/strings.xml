@@ -136,4 +136,6 @@
     <string name="new_post_wizard_menu_next">Next</string>
     <string name="new_post_wizard_menu_create">Create</string>
     <string name="validation_post_title_empty">Please provide a post title</string>
+    <string name="phone">Phone</string>
+    <string name="not_set">Not set</string>
 </resources>

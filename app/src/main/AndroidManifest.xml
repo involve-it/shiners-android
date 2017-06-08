@@ -119,5 +119,18 @@
                 <category android:name="com.involveit.shiners" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".activities.settings.MyProfileActivity"
+            android:label="@string/my_profile"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".activities.settings.AboutUsActivity"
+            android:label="@string/about_us"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait"></activity>
+
     </application>
+
 </manifest>

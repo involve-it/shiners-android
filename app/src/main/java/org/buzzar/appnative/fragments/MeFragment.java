@@ -241,7 +241,7 @@ public class MeFragment extends Fragment implements AdapterView.OnItemLongClickL
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        new AlertDialog.Builder(getActivity()).setItems(R.array.me_post_actions_menu, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(getActivity()).setItems(R.array.me_list_actions_menu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0){

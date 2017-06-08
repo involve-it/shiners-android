@@ -1,15 +1,16 @@
 package org.buzzar.appnative.fragments;
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import org.buzzar.appnative.logic.cache.CacheEntity;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Chat;
 import org.buzzar.appnative.logic.objects.response.GetChatsResponse;
+import org.buzzar.appnative.logic.objects.response.ResponseBase;
 import org.buzzar.appnative.logic.proxies.MessagesProxy;
 
 import com.squareup.picasso.Picasso;
@@ -45,7 +47,7 @@ import java.util.UUID;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class MessagesFragment extends Fragment {
+public class MessagesFragment extends Fragment implements AdapterView.OnItemLongClickListener {
     private static final String TAG = "MessagesFragment";
     public MessagesFragment() {
         // Required empty public constructor
@@ -56,12 +58,11 @@ public class MessagesFragment extends Fragment {
     private ListView listView;
     private SwipeRefreshLayout layout;
     private boolean loading = false;
-    private ArrayList<Chat> chats = new ArrayList<>();
+    //private ArrayList<Chat> chats = new ArrayList<>();
     private boolean moreAvailable = true;
 
     public static MessagesFragment newInstance() {
-        MessagesFragment fragment = new MessagesFragment();
-        return fragment;
+        return new MessagesFragment();
     }
 
     @Override
@@ -96,12 +97,12 @@ public class MessagesFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (moreAvailable && totalItemCount - (firstVisibleItem + visibleItemCount) < 10){
+                if (moreAvailable && totalItemCount - (firstVisibleItem + visibleItemCount) < 10 && totalItemCount > 0){
                     loadChats(true);
                 }
             }
         });
-
+        listView.setOnItemLongClickListener(this);
 
         layout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_layout);
         layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -159,7 +160,6 @@ public class MessagesFragment extends Fragment {
     }
 
     private void populateListView(ArrayList<Chat> chats, boolean append){
-
         ChatsArrayAdapter adapter = (ChatsArrayAdapter) listView.getAdapter();
         moreAvailable = chats.size() == Constants.Defaults.DEFAULT_DIALOGS_PAGE;
         if (adapter == null){
@@ -179,14 +179,16 @@ public class MessagesFragment extends Fragment {
         if (!loading && MeteorSingleton.getInstance().isConnected()) {
             loading = true;
             final ChatsArrayAdapter adapter = (ChatsArrayAdapter) listView.getAdapter();
+            int chatsCount = 0;
             if (adapter != null) {
+                chatsCount = adapter.getCount();
                 adapter.notifyDataSetChanged();
             }
 
             messagesRequestPending = false;
             HashMap<String, Object> map = new HashMap<>();
             map.put("take", Constants.Defaults.DEFAULT_DIALOGS_PAGE);
-            map.put("skip", (loadMore ? chats.size() : 0));
+            map.put("skip", (loadMore ? chatsCount : 0));
 
             MeteorSingleton.getInstance().call(Constants.MethodNames.GET_CHATS, new Object[]{map}, new ResultListener() {
                 @Override
@@ -242,13 +244,79 @@ public class MessagesFragment extends Fragment {
         }
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        new AlertDialog.Builder(getActivity()).setItems(R.array.chats_list_actions_menu, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0){
+                    deleteChat(position);
+                    dialog.dismiss();
+                }
+            }
+        }).show();
+
+        return true;
+    }
+
+    private void deleteChat(int index){
+        final ChatsArrayAdapter adapter = (ChatsArrayAdapter) listView.getAdapter();
+        final Chat chat = adapter.getItem(index);
+        if (chat != null){
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setTitle(getString(R.string.dialog_deleting_dialog));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            MeteorSingleton.getInstance().call("deleteChats", new Object[]{new String[]{chat.id}}, new ResultListener() {
+                @Override
+                public void onSuccess(String result) {
+                    final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.success){
+                                adapter.remove(chat);
+                                adapter.notifyDataSetChanged();
+                                CachingHandler.setObject(getActivity(), CachingHandler.KEY_DIALOGS, adapter.getChats());
+                            } else {
+                                Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                            }
+
+                            progressDialog.dismiss();
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onError(String error, String reason, String details) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     private class ChatsArrayAdapter extends ArrayAdapter<Chat>{
         private static final int VIEW_TYPE_CHAT = 0;
         private static final int VIEW_TYPE_LOADING = 1;
         private static final int VIEW_TYPE_COUNT = 2;
 
+        private List<Chat> chats;
+
         public ChatsArrayAdapter(Context context, int resource, List<Chat> objects) {
             super(context, resource, objects);
+            chats = objects;
+        }
+
+        public List<Chat> getChats(){
+            return chats;
         }
 
         @Override

@@ -259,7 +259,7 @@ public class MeFragment extends Fragment implements AdapterView.OnItemLongClickL
         final Post post = adapter.getItem(index);
         if (post != null){
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle(getString(R.string.dialog_deleting_post));
+            progressDialog.setMessage(getString(R.string.dialog_deleting_post));
             progressDialog.setCancelable(false);
             progressDialog.show();
 

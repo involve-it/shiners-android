@@ -88,7 +88,7 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
 
     protected void createPost(){
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle(getString(R.string.dialog_creating_post));
+        progressDialog.setMessage(getString(R.string.dialog_creating_post));
         progressDialog.setCancelable(false);
         progressDialog.show();
 

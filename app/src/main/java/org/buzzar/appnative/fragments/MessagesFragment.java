@@ -264,7 +264,7 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
         final Chat chat = adapter.getItem(index);
         if (chat != null){
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle(getString(R.string.dialog_deleting_dialog));
+            progressDialog.setMessage(getString(R.string.dialog_deleting_dialog));
             progressDialog.setCancelable(false);
             progressDialog.show();
 

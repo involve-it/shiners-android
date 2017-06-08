@@ -94,7 +94,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_posts_item);
+        setContentView(R.layout.activity_post_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

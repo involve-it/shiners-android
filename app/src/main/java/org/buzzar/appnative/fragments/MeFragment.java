@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.buzzar.appnative.activities.PostDetailsActivity;
 import org.buzzar.appnative.activities.newpost.NewPostActivity;
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.Constants;
@@ -47,7 +49,7 @@ import java.util.List;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class MeFragment extends Fragment implements AdapterView.OnItemLongClickListener {
+public class MeFragment extends Fragment implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
     private static final String TAG = "MeFragment";
 
     View view;
@@ -87,6 +89,7 @@ public class MeFragment extends Fragment implements AdapterView.OnItemLongClickL
                 }
             }
         });
+        listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
         setHasOptionsMenu(true);
 
@@ -293,6 +296,12 @@ public class MeFragment extends Fragment implements AdapterView.OnItemLongClickL
                 }
             });
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MyPostsArrayAdapter adapter = (MyPostsArrayAdapter) listView.getAdapter();
+        startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
     }
 
     private class MyPostsArrayAdapter extends ArrayAdapter<Post>{

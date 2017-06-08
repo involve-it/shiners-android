@@ -1,7 +1,9 @@
 package org.buzzar.appnative.activities.newpost;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PhotoActivity extends NewPostBaseActivity {
+public class PhotoActivity extends NewPostBaseActivity implements AdapterView.OnItemLongClickListener {
     private static final String TAG = "PhotoActivity";
     private static final int PHOTO_REQUEST_ID = 2;
     @BindView(R.id.activity_new_post_photo_btn_add_photo) Button mBtnAddPhoto;
@@ -52,6 +55,8 @@ public class PhotoActivity extends NewPostBaseActivity {
         ButterKnife.bind(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+
+        mLstImages.setOnItemLongClickListener(this);
 
         populateUi();
     }
@@ -104,6 +109,41 @@ public class PhotoActivity extends NewPostBaseActivity {
         return null;
     }
 
+    @Override
+    protected boolean isValid() {
+        return true;
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        new AlertDialog.Builder(this).setItems(R.array.new_post_photos_menu, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0){
+                    makeDefaultPhoto(position);
+                    dialog.dismiss();
+                } else if (which == 1){
+                    deletePhoto(position);
+                    dialog.dismiss();
+                }
+            }
+        }).show();
+
+        return true;
+    }
+
+    private void deletePhoto(int index){
+        mPost.details.photos.remove(index);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void makeDefaultPhoto(int index){
+        Photo photo = mPost.details.photos.remove(index);
+        mPost.details.photos.add(0, photo);
+        adapter.notifyDataSetChanged();
+        mLstImages.scrollTo(0,0);
+    }
+
     private class AmazonUploadAsyncTask extends AsyncTask<InputStream, Integer, String> {
         ProgressDialog mProgressDialog;
         String mContentType;
@@ -137,7 +177,7 @@ public class PhotoActivity extends NewPostBaseActivity {
             super.onPostExecute(url);
 
             Photo photo = new Photo();
-            photo.original = url;
+            photo.data = url;
             photo.imageUrl = url;
             mPost.details.photos.add(photo);
 
@@ -161,7 +201,8 @@ public class PhotoActivity extends NewPostBaseActivity {
             }
             ImageView imageView = (ImageView)convertView;
             Photo photo = getItem(position);
-            Picasso.with(getContext()).load(photo.original).into(imageView);
+
+            Picasso.with(getContext()).load(photo.data).resize(parent.getWidth(), 1000).centerCrop().into(imageView);
 
             return convertView;
         }

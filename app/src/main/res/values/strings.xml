@@ -46,6 +46,11 @@
     <string name="hint_confirm_password">Confirm password</string>
     <string name="hint_email_address">Email address</string>
 
+    <string-array name="new_post_photos_menu">
+        <item>Make this a default photo</item>
+        <item>Delete photo</item>
+    </string-array>
+
     <string-array name="post_categories">
         <item>Job market</item>
         <item>Need or provide training</item>
@@ -55,6 +60,17 @@
         <item>Local events</item>
         <item>Need or provide training</item>
         <item>Need or give help</item>
+    </string-array>
+    
+    <string-array name="post_categories_short">
+        <item>jobs</item>
+        <item>trainings</item>
+        <item>connect</item>
+        <item>trade</item>
+        <item>housing</item>
+        <item>events</item>
+        <item>services</item>
+        <item>help</item>
     </string-array>
 
     <string-array name="tab_titles">
@@ -119,4 +135,5 @@
     <string name="activity_new_post_when_btn_pick_custom_date">Pick custom date</string>
     <string name="new_post_wizard_menu_next">Next</string>
     <string name="new_post_wizard_menu_create">Create</string>
+    <string name="validation_post_title_empty">Please provide a post title</string>
 </resources>

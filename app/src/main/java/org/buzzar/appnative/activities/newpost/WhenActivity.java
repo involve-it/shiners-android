@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.Helper;
@@ -87,6 +88,17 @@ public class WhenActivity extends NewPostBaseActivity implements View.OnClickLis
     @Override
     protected Intent getNextStepIntent() {
         return new Intent(this, PhotoActivity.class);
+    }
+
+    @Override
+    protected boolean isValid() {
+        boolean valid = true;
+        Calendar today = Calendar.getInstance();
+        if (today.getTimeInMillis() >= mSelectedDate.getTimeInMillis()){
+            valid = false;
+            Toast.makeText(this, "Expiration date should be in the future", Toast.LENGTH_SHORT).show();
+        }
+        return valid;
     }
 
     @Override

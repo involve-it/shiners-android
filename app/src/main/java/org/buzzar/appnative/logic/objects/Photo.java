@@ -19,17 +19,17 @@ public class Photo implements Parcelable, Serializable {
     @SerializedName("name")
     public String name;
     @SerializedName("data")
-    public String original;
+    public String data;
     @SerializedName("thumbnail")
     public String thumbnail;
     @SerializedName("imageUrl")
     public String imageUrl;
 
     public String getImageUrl(){
-        if (original == null){
+        if (data == null){
             return imageUrl;
         } else {
-            return original;
+            return data;
         }
     }
 
@@ -39,7 +39,7 @@ public class Photo implements Parcelable, Serializable {
         _id = in.readString();
         userId = in.readString();
         name = in.readString();
-        original = in.readString();
+        data = in.readString();
         thumbnail = in.readString();
     }
 
@@ -65,7 +65,7 @@ public class Photo implements Parcelable, Serializable {
         parcel.writeString(_id);
         parcel.writeString(userId);
         parcel.writeString(name);
-        parcel.writeString(original);
+        parcel.writeString(data);
         parcel.writeString(thumbnail);
     }
 }

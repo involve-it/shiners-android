@@ -10,6 +10,8 @@ import android.view.MenuItem;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.activities.HomeActivity;
+import org.buzzar.appnative.logic.LocationHandler;
+import org.buzzar.appnative.logic.objects.Location;
 import org.buzzar.appnative.logic.objects.Post;
 
 import java.util.HashMap;
@@ -60,16 +62,20 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
                 onBackPressed();
                 break;
             case R.id.next:
-                populatePost();
+                if (isValid()) {
+                    populatePost();
 
-                Intent intent = getNextStepIntent();
-                intent.putExtra(EXTRA_POST, (Parcelable) mPost);
-                startActivityForResult(intent, REQUEST_BACK);
+                    Intent intent = getNextStepIntent();
+                    intent.putExtra(EXTRA_POST, (Parcelable) mPost);
+                    startActivityForResult(intent, REQUEST_BACK);
+                }
 
                 break;
             case R.id.done:
-                //createPost();
-                startActivity(new Intent(this, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                if (isValid()) {
+                    createPost();
+                    startActivity(new Intent(this, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                }
                 break;
         }
 
@@ -77,8 +83,14 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
     }
 
     protected void createPost(){
-        HashMap<String, Object> postMap = new HashMap<>();
-        MeteorSingleton.getInstance().call("addPost", new Object[]{postMap}, new ResultListener() {
+        Location.Coords coords = null;
+        if (LocationHandler.getLatestReportedLocation() != null){
+            coords = new Location.Coords();
+            coords.lat = LocationHandler.getLatestReportedLocation().getLatitude();
+            coords.lng = LocationHandler.getLatestReportedLocation().getLongitude();
+        }
+
+        MeteorSingleton.getInstance().call("addPost", new Object[]{mPost, coords}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
                 startActivity(new Intent(NewPostBaseActivity.this, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -105,4 +117,5 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
     protected abstract void populateUi();
     protected abstract void populatePost();
     protected abstract Intent getNextStepIntent();
+    protected abstract boolean isValid();
 }

@@ -153,7 +153,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
         textTitle.setText(post.details.title);
         //Photo
         Picasso.with(PostDetailsActivity.this)
-                .load(post.details.photos.get(0).original)
+                .load(post.details.photos.get(0).data)
                 .fit()
                 .centerCrop()
                 .into(imageView2);

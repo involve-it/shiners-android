@@ -373,7 +373,7 @@ public class NearbyPostsFragment extends Fragment {
 
                 Photo photo = post.getMainPhoto();
                 if (photo != null) {
-                    Picasso.with(getContext()).load(photo.original).into(viewHolder.imageView);
+                    Picasso.with(getContext()).load(photo.data).into(viewHolder.imageView);
                 } else {
                     viewHolder.imageView.setImageDrawable(null);
                 }

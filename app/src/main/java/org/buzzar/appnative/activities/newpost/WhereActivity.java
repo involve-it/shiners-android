@@ -147,6 +147,16 @@ public class WhereActivity extends NewPostBaseActivity implements OnMapReadyCall
     }
 
     @Override
+    protected boolean isValid() {
+        boolean valid = true;
+        if (!switchDynamic.isChecked() && !switchStatic.isChecked()){
+            valid = false;
+            Toast.makeText(this, "Please select location", Toast.LENGTH_SHORT).show();
+        }
+        return valid;
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         Location currentLocation = LocationHandler.getLatestReportedLocation();
         mGoogleMap = googleMap;

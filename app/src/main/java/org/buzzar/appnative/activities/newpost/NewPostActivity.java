@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.objects.Post;
@@ -41,13 +44,24 @@ public class NewPostActivity extends NewPostBaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         String test[]=getResources().getStringArray(R.array.post_categories);
         spCategory.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
+        spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mPost.type = getResources().getStringArray(R.array.post_categories_short)[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mPost.type = null;
+            }
+        });
     }
 
     protected void populateUi(){
         txtTitle.setText(mPost.details.title);
         txtDescription.setText(mPost.details.description);
         if (mPost.type != null) {
-            List<String> categories = Arrays.asList(getResources().getStringArray(R.array.post_categories));
+            List<String> categories = Arrays.asList(getResources().getStringArray(R.array.post_categories_short));
             int catIndex = categories.indexOf(mPost.type);
             if (catIndex != -1){
                 spCategory.setSelection(catIndex);
@@ -59,11 +73,21 @@ public class NewPostActivity extends NewPostBaseActivity {
     protected void populatePost() {
         mPost.details.title = txtTitle.getText().toString();
         mPost.details.description = txtDescription.getText().toString();
-        mPost.type = spCategory.getSelectedItem().toString();
     }
 
     @Override
     protected Intent getNextStepIntent() {
         return new Intent(NewPostActivity.this, WhereActivity.class);
+    }
+
+    @Override
+    protected boolean isValid() {
+        boolean valid = true;
+        if ("".equals(txtTitle.getText().toString())){
+            valid = false;
+            Toast.makeText(this, R.string.validation_post_title_empty, Toast.LENGTH_SHORT).show();
+            txtTitle.requestFocus();
+        }
+        return valid;
     }
 }

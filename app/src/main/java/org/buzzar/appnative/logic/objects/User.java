@@ -34,6 +34,9 @@ public class User implements Parcelable, Serializable {
     public boolean enableNearbyNotifications;
     public boolean isInvisible;
 
+    @SerializedName("emails")
+    public List<ProfileEmail> emails;
+
     public User (){}
 
     protected User(Parcel in) {
@@ -56,6 +59,8 @@ public class User implements Parcelable, Serializable {
         }
         enableNearbyNotifications = in.readByte() != 0;
         isInvisible = in.readByte() != 0;
+
+        emails = in.createTypedArrayList(ProfileEmail.CREATOR);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -111,6 +116,7 @@ public class User implements Parcelable, Serializable {
         //parcel.writeByte((byte)((isInvisible == null ? false : isInvisible) ? 1 : 0));
         parcel.writeByte((byte) (enableNearbyNotifications ? 1 : 0));
         parcel.writeByte((byte) (isInvisible ? 1 : 0));
+        parcel.writeTypedList(emails);
     }
 
     public static class ProfileDetail implements Parcelable, Serializable{
@@ -155,4 +161,41 @@ public class User implements Parcelable, Serializable {
             parcel.writeString(policy);
         }
     }
+
+    public static class ProfileEmail implements Parcelable, Serializable {
+
+        @SerializedName("address")
+        public String address;
+
+        @SerializedName("verified")
+        public boolean verified;
+
+        protected ProfileEmail(Parcel in) {
+            address = in.readString();
+            verified = in.readByte() != 0;
+        }
+
+        public static final Creator<ProfileEmail> CREATOR = new Creator<ProfileEmail>() {
+            @Override
+            public ProfileEmail createFromParcel(Parcel in) {
+                return new ProfileEmail(in);
+            }
+
+            public ProfileEmail[] newArray(int size) {
+                return new ProfileEmail[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(address);
+            parcel.writeByte((byte) (verified ? 1 : 0));
+        }
+    }
+
 }

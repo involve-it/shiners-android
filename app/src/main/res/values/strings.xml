@@ -143,4 +143,6 @@
     <string name="dialog_creating_post">Creating post...</string>
     <string name="toast_error_occurred">An error occurred</string>
     <string name="dialog_deleting_post">Deleting post...</string>
+    <string name="phone">Phone</string>
+    <string name="not_set">Not set</string>
 </resources>

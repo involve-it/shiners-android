@@ -140,6 +140,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
     }
 
     private void navigateUp(){

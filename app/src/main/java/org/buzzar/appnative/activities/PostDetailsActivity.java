@@ -205,7 +205,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
         txtMessage.setHint(R.string.hint_message);
         AlertDialog dialog = new AlertDialog.Builder(this)
                  .setView(txtMessage)
-                 .setMessage(getString(R.string.msg_send_message_to) + post.user.getFullName())
+                 .setMessage(getString(R.string.msg_send_message_to) + " " + post.user.getFullName())
                  .setPositiveButton(R.string.btn_label_send, new DialogInterface.OnClickListener() {
                      @Override
                      public void onClick(final DialogInterface dialog, int which) {

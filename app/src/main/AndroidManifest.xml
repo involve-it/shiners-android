@@ -45,7 +45,7 @@
             android:theme="@style/AppThemeAuth" />
         <activity
             android:name=".activities.auth.RegisterActivity"
-            android:label="Registration"
+            android:label="@string/registration"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeAuth" />
 
@@ -64,15 +64,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.newpost.WhereActivity"
-            android:label="Where is it located?"
+            android:label="@string/where_is_it_located"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.newpost.WhenActivity"
-            android:label="When does it expire?"
+            android:label="@string/when_does_it_expire"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.newpost.PhotoActivity"
-            android:label="How does it look like?"
+            android:label="@string/how_does_it_look_like"
             android:screenOrientation="portrait" />
 
         <service

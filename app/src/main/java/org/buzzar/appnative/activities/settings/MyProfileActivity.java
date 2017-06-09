@@ -2,8 +2,13 @@ package org.buzzar.appnative.activities.settings;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -15,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     User user;
 
@@ -25,14 +30,20 @@ public class MyProfileActivity extends AppCompatActivity {
     @BindView(R.id.userFullName)
     TextView userFullName;
 
+    @BindView(R.id.userFirstName)
+    EditText userFirstName;
+
+    @BindView(R.id.userLastName)
+    EditText userLastName;
+
     @BindView(R.id.userEmail)
-    TextView userEmail;
+    EditText userEmail;
 
     @BindView(R.id.userPhone)
-    TextView userPhone;
+    EditText userPhone;
 
     @BindView(R.id.userSkype)
-    TextView userSkype;
+    EditText userSkype;
 
 
     @Override
@@ -47,6 +58,22 @@ public class MyProfileActivity extends AppCompatActivity {
 
         fillProfile();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.activity_my_profile_save:
+                Toast.makeText(this, R.string.profile_saved,
+                        Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.m_activity_my_profile, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     protected void fillProfile() {
@@ -90,6 +117,12 @@ public class MyProfileActivity extends AppCompatActivity {
         }
 
         userFullName.setText(firstName + " " + lastName);
+        userFirstName.setText(firstName);
+        userLastName.setText(lastName);
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }

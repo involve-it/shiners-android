@@ -340,6 +340,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        this.googleMap.getUiSettings().setAllGesturesEnabled(false);
         updateMap();
     }
 

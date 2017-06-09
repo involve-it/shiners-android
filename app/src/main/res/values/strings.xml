@@ -161,4 +161,5 @@
     <string name="msg_error_while_sending_message">An error occurred while sending message</string>
     <string name="msg_sending_message">Sending message...</string>
     <string name="menu_posts_add_new">Create Post</string>
+    <string name="new_post_photo_error_upload">Error occurred during upload</string>
 </resources>

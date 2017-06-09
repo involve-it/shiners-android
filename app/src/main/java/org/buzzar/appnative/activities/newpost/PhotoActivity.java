@@ -19,19 +19,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.IOUtils;
 import com.squareup.picasso.Picasso;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.objects.Photo;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
@@ -83,6 +87,7 @@ public class PhotoActivity extends NewPostBaseActivity implements AdapterView.On
         if (requestCode == Constants.ActivityRequestCodes.NEW_POST_PHOTO && resultCode == RESULT_OK){
             try {
                 InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
+                File file  = new File(data.getData().toString());
                 new AmazonUploadAsyncTask(this.getContentResolver().getType(data.getData())).execute(inputStream);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -159,6 +164,12 @@ public class PhotoActivity extends NewPostBaseActivity implements AdapterView.On
             AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials("AKIAJUHRBKTJ4FBPKQ6Q","m1c/Q80xbc+urqhZk6AeBymsK6rGF2TX6V0KVPfa"));
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(mContentType);
+            try {
+                metadata.setContentLength(inputStream.available());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
             String fileName = UUID.randomUUID().toString();
             s3Client.putObject(new PutObjectRequest("shiners/v1.0/public/images", fileName, inputStream, metadata).withCannedAcl(CannedAccessControlList.PublicRead));
             return s3Client.getResourceUrl("shiners/v1.0/public/images", fileName);
@@ -177,12 +188,17 @@ public class PhotoActivity extends NewPostBaseActivity implements AdapterView.On
         protected void onPostExecute(String url) {
             super.onPostExecute(url);
 
-            Photo photo = new Photo();
-            photo.data = url;
-            photo.imageUrl = url;
-            mPost.details.photos.add(photo);
+            if (url == null){
+                Toast.makeText(PhotoActivity.this, R.string.new_post_photo_error_upload, Toast.LENGTH_SHORT).show();
+            } else {
 
-            populateUi();
+                Photo photo = new Photo();
+                photo.data = url;
+                photo.imageUrl = url;
+                mPost.details.photos.add(photo);
+
+                populateUi();
+            }
 
             mProgressDialog.dismiss();
         }

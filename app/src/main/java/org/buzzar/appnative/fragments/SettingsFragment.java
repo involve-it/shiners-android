@@ -11,18 +11,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.activities.settings.AboutUsActivity;
 import org.buzzar.appnative.logic.AccountHandler;
+import org.buzzar.appnative.logic.Constants;
+import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.objects.User;
 import org.buzzar.appnative.activities.settings.MyProfileActivity;
+import org.buzzar.appnative.logic.objects.response.ResponseBase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
@@ -34,6 +39,7 @@ public class SettingsFragment extends Fragment {
     @BindView(R.id.sw_invisible_mode)
     Switch swInvisibleMode;
 
+    boolean settingInitials = true;
 
     ProgressDialog progressDialog;
 
@@ -94,6 +100,7 @@ public class SettingsFragment extends Fragment {
             progressDialog.show();
             progressDialog.setCancelable(false);
         }
+
         return view;
     }
 
@@ -103,8 +110,53 @@ public class SettingsFragment extends Fragment {
             public void run() {
                 swNotifyNearby.setChecked(currentUser.enableNearbyNotifications);
                 swInvisibleMode.setChecked(currentUser.isInvisible);
+                settingInitials = false;
             }
         });
+    }
+
+    @OnCheckedChanged({R.id.sw_invisible_mode, R.id.sw_notify_nearby})
+    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked){
+        if (!settingInitials) {
+            User currentUser = AccountHandler.getCurrentUser();
+            if (buttonView.equals(swInvisibleMode)) {
+                currentUser.isInvisible = isChecked;
+            } else if (buttonView.equals(swNotifyNearby)) {
+                currentUser.enableNearbyNotifications = isChecked;
+            }
+
+            MeteorSingleton.getInstance().call(Constants.MethodNames.EDIT_USER, new Object[]{currentUser}, new ResultListener() {
+                @Override
+                public void onSuccess(String result) {
+                    final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!response.success) {
+                                settingInitials = true;
+                                buttonView.setChecked(!isChecked);
+                                settingInitials = false;
+                                Toast.makeText(getContext(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(String error, String reason, String details) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            settingInitials = true;
+                            buttonView.setChecked(!isChecked);
+                            settingInitials = false;
+                            Toast.makeText(getContext(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @OnClick({R.id.btn_logout, R.id.btn_my_profile, R.id.btn_contact_us, R.id.btn_about_us})

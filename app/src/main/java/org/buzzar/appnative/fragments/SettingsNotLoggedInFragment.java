@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.buzzar.appnative.R;
-import org.buzzar.appnative.activities.HomeActivity;
 import org.buzzar.appnative.activities.auth.LogInActivity;
+import org.buzzar.appnative.logic.Constants;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -53,7 +53,7 @@ public class SettingsNotLoggedInFragment extends Fragment {
     public void OnClick(View view){
         switch (view.getId()){
             case R.id.btn_login:
-                getActivity().startActivityForResult(new Intent(getActivity(), LogInActivity.class), HomeActivity.REQUEST_LOGIN);
+                getActivity().startActivityForResult(new Intent(getActivity(), LogInActivity.class), Constants.ActivityRequestCodes.LOGIN);
                 break;
         }
     }

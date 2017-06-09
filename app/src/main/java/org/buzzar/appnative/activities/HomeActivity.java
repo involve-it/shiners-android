@@ -2,6 +2,7 @@ package org.buzzar.appnative.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -27,6 +28,7 @@ import org.buzzar.appnative.fragments.NearbyPostsFragment;
 import org.buzzar.appnative.fragments.SettingsFragment;
 import org.buzzar.appnative.fragments.SettingsNotLoggedInFragment;
 import org.buzzar.appnative.logic.AccountHandler;
+import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.SettingsHandler;
 import org.buzzar.appnative.services.SimpleLocationService;
@@ -39,21 +41,21 @@ import butterknife.ButterKnife;
 import im.delight.android.ddp.MeteorSingleton;
 
 public class HomeActivity extends AppCompatActivity implements SettingsFragment.SettingsDelegate {
-    private static final int TAB_NEARBY_POSTS = 0;
-    private static final int TAB_ME = 1;
-    private static final int TAB_NEW_POST = 2;
-    private static final int TAB_MESSAGES = 3;
-    private static final int TAB_SETTINGS = 4;
-    private static final int TAB_SETTINGS_NOT_LOGGED_IN = 5;
+    public static final int TAB_NEARBY_POSTS = 0;
+    public static final int TAB_ME = 1;
+    public static final int TAB_NEW_POST = 2;
+    public static final int TAB_MESSAGES = 3;
+    public static final int TAB_SETTINGS = 4;
+    public static final int TAB_SETTINGS_NOT_LOGGED_IN = 5;
 
-    public static final int REQUEST_LOGIN = 1;
+    public static final String EXTRA_TAB = "org.buzzar.app.HomeActivity.EXTRA_TAB";
 
     @BindView(R.id.tabLayout) TabLayout tabLayout;
 
     private int mLastTabSelected = -1;
     private ArrayMap<Integer, Fragment> mFragments;
 
-    private boolean displayNearbyPosts = false;
+    private int mTabToDisplay = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +83,11 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
 
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        displayView(SettingsHandler.getIntSetting(this, SettingsHandler.HOME_PAGE_INDEX));
+
+        if (mTabToDisplay == -1){
+            mTabToDisplay = SettingsHandler.getIntSetting(this, SettingsHandler.HOME_PAGE_INDEX);
+        }
+        displayView(mTabToDisplay);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -218,17 +224,19 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         super.onResume();
         meteorBroadcastReceiver.register(this);
 
-        if (displayNearbyPosts){
-            displayView(TAB_NEARBY_POSTS);
+        if (mTabToDisplay != -1){
+            displayView(mTabToDisplay);
             refreshLoggedInStatus();
-            displayNearbyPosts = false;
+            mTabToDisplay = -1;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK){
-            displayNearbyPosts = true;
+        if (requestCode == Constants.ActivityRequestCodes.LOGIN && resultCode == Activity.RESULT_OK){
+            mTabToDisplay = TAB_NEARBY_POSTS;
+        } else if (requestCode == Constants.ActivityRequestCodes.NEARBY_POST_DETAILS && resultCode == Activity.RESULT_OK){
+            mTabToDisplay = data.getIntExtra(EXTRA_TAB, -1);
         }
 
         super.onActivityResult(requestCode, resultCode, data);

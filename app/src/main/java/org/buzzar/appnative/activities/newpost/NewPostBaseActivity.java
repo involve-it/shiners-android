@@ -29,7 +29,7 @@ import im.delight.android.ddp.ResultListener;
 public abstract class NewPostBaseActivity extends AppCompatActivity {
     private static final String TAG = "NewPostBaseActivity";
     public static final String EXTRA_POST = "org.buzzar.appnative.NewPostActivity.EXTRA_POST";
-    public static final int REQUEST_BACK = 1;
+
     protected Post mPost;
 
     @Override
@@ -73,7 +73,7 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
 
                     Intent intent = getNextStepIntent();
                     intent.putExtra(EXTRA_POST, (Parcelable) mPost);
-                    startActivityForResult(intent, REQUEST_BACK);
+                    startActivityForResult(intent, Constants.ActivityRequestCodes.NEW_POST_WIZARD);
                 }
 
                 break;
@@ -141,7 +141,7 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_BACK && resultCode == RESULT_OK){
+        if (requestCode == Constants.ActivityRequestCodes.NEW_POST_WIZARD && resultCode == RESULT_OK){
             mPost = data.getParcelableExtra(EXTRA_POST);
             populateUi();
         }

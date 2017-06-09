@@ -1,9 +1,11 @@
 package org.buzzar.appnative.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -12,6 +14,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
@@ -166,6 +169,28 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View v) {
                 callPhone();
+            }
+        });
+        btnMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User currentUser = AccountHandler.getCurrentUser();
+                if (currentUser == null){
+                    new AlertDialog.Builder(PostDetailsActivity.this).setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Not logged in")
+                            .setMessage("Please log in to send a message")
+                            .setPositiveButton("Log in", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra(HomeActivity.EXTRA_TAB, HomeActivity.TAB_SETTINGS);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
             }
         });
 

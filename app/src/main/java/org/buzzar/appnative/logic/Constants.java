@@ -58,4 +58,12 @@ public class Constants {
     }
 
     public static final String[] POST_CATEGORIES = new String[]{"jobs", "trainings", "connect", "trade", "housing", "events", "services", "help"};
+
+    public static class ActivityRequestCodes{
+        public static final int LOGIN = 1;
+        public static final int NEW_POST_WIZARD = 2;
+        public static final int NEARBY_POST_DETAILS = 3;
+        public static final int NEW_POST_PHOTO = 4;
+        public static final int REGISTER = 5;
+    }
 }

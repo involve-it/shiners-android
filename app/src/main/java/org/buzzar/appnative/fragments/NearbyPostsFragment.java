@@ -55,6 +55,7 @@ import im.delight.android.ddp.ResultListener;
 
 public class NearbyPostsFragment extends Fragment {
     private static final String TAG = "NearbyPostsFragment";
+
     TabLayout tabLayout;
     ListView listView;
     View view;
@@ -80,7 +81,8 @@ public class NearbyPostsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
-                startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
+
+                getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
             }
         });
 

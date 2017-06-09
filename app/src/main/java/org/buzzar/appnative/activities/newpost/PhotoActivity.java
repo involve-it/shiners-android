@@ -28,6 +28,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.squareup.picasso.Picasso;
 
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.objects.Photo;
 
 import java.io.FileNotFoundException;
@@ -41,7 +42,7 @@ import butterknife.OnClick;
 
 public class PhotoActivity extends NewPostBaseActivity implements AdapterView.OnItemLongClickListener {
     private static final String TAG = "PhotoActivity";
-    private static final int PHOTO_REQUEST_ID = 2;
+
     @BindView(R.id.activity_new_post_photo_btn_add_photo) Button mBtnAddPhoto;
     @BindView(R.id.activity_new_post_photo_lst_images)
 
@@ -73,13 +74,13 @@ public class PhotoActivity extends NewPostBaseActivity implements AdapterView.On
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, PHOTO_REQUEST_ID);
+        startActivityForResult(intent, Constants.ActivityRequestCodes.NEW_POST_PHOTO);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PHOTO_REQUEST_ID && resultCode == RESULT_OK){
+        if (requestCode == Constants.ActivityRequestCodes.NEW_POST_PHOTO && resultCode == RESULT_OK){
             try {
                 InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
                 new AmazonUploadAsyncTask(this.getContentResolver().getType(data.getData())).execute(inputStream);

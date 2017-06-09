@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.AccountHandler;
+import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.SettingsHandler;
 
@@ -26,8 +27,6 @@ import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class LogInActivity extends AppCompatActivity {
-    public static final int REQUEST_REGISTER = 2;
-
     @BindView(R.id.txtUsername) EditText editTextLogin;
     @BindView(R.id.txtPassword) EditText editTextPass;
     @BindView(R.id.button2) Button buttonLogIn;
@@ -97,7 +96,7 @@ public class LogInActivity extends AppCompatActivity {
                 });
                 break;
             case R.id.button3:
-                startActivityForResult(new Intent(this, RegisterActivity.class), REQUEST_REGISTER);
+                startActivityForResult(new Intent(this, RegisterActivity.class), Constants.ActivityRequestCodes.REGISTER);
                 break;
         }
     }
@@ -105,7 +104,7 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_REGISTER && resultCode == RESULT_OK){
+        if (requestCode == Constants.ActivityRequestCodes.REGISTER && resultCode == RESULT_OK){
             setResult(RESULT_OK);
             finish();
         }

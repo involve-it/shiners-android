@@ -10,11 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
@@ -26,6 +24,7 @@ import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,6 +36,7 @@ import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.Helper;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.LocationHandler;
+import org.buzzar.appnative.logic.objects.MessageToSend;
 import org.buzzar.appnative.logic.objects.Post;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,8 +48,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.buzzar.appnative.logic.objects.User;
 import org.buzzar.appnative.logic.objects.response.GetPostResponse;
+import org.buzzar.appnative.logic.objects.response.SendMessageResponse;
 import org.buzzar.appnative.services.SimpleLocationService;
-import org.w3c.dom.Text;
 
 import com.squareup.picasso.Picasso;
 
@@ -177,9 +177,9 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
                 User currentUser = AccountHandler.getCurrentUser();
                 if (currentUser == null){
                     new AlertDialog.Builder(PostDetailsActivity.this).setIcon(android.R.drawable.ic_dialog_alert)
-                            .setTitle("Not logged in")
-                            .setMessage("Please log in to send a message")
-                            .setPositiveButton("Log in", new DialogInterface.OnClickListener() {
+                            .setTitle(R.string.msg_not_logged_in)
+                            .setMessage(R.string.msg_please_log_in_to_send_message)
+                            .setPositiveButton(R.string.msg_log_in, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent intent = new Intent();
@@ -188,14 +188,64 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
                                     finish();
                                 }
                             })
-                            .setNegativeButton("Cancel", null)
+                            .setNegativeButton(R.string.msg_cancel, null)
                             .show();
+                } else {
+                    showSendMessageDialog();
                 }
             }
         });
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMaps);
         supportMapFragment.getMapAsync(PostDetailsActivity.this);
+    }
+
+    private void showSendMessageDialog(){
+        final EditText txtMessage = new EditText(this);
+        txtMessage.setHint(R.string.hint_message);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                 .setView(txtMessage)
+                 .setMessage(getString(R.string.msg_send_message_to) + post.user.getFullName())
+                 .setPositiveButton(R.string.btn_label_send, new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(final DialogInterface dialog, int which) {
+                         final ProgressDialog progressDialog = new ProgressDialog(PostDetailsActivity.this);
+                         progressDialog.setMessage(getString(R.string.msg_sending_message));
+                         progressDialog.setCancelable(false);
+                         progressDialog.show();
+
+                         MessageToSend message = new MessageToSend();
+                         message.destinationUserId = post.user.id;
+                         message.message = txtMessage.getText().toString();
+                         message.associatedPostId = post.id;
+
+                         MeteorSingleton.getInstance().call(Constants.MethodNames.ADD_MESSAGE, new Object[]{message}, new ResultListener() {
+                             @Override
+                             public void onSuccess(String result) {
+                                 final SendMessageResponse response = JsonProvider.defaultGson.fromJson(result, SendMessageResponse.class);
+                                 runOnUiThread(new Runnable() {
+                                     @Override
+                                     public void run() {
+                                         progressDialog.dismiss();
+                                         if (response.success){
+                                             Toast.makeText(PostDetailsActivity.this, R.string.msg_message_sent, Toast.LENGTH_SHORT).show();
+                                         } else {
+                                             Toast.makeText(PostDetailsActivity.this, R.string.msg_error_while_sending_message, Toast.LENGTH_SHORT).show();
+                                         }
+                                     }
+                                 });
+                             }
+
+                             @Override
+                             public void onError(String error, String reason, String details) {
+                                 Toast.makeText(PostDetailsActivity.this, R.string.msg_error_while_sending_message, Toast.LENGTH_SHORT).show();
+                                 progressDialog.dismiss();
+                             }
+                         });
+                     }
+                 })
+                 .setNegativeButton(R.string.msg_cancel, null)
+                 .show();
     }
 
     private void callPhone() {

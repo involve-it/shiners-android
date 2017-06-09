@@ -346,7 +346,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                             }
                         });
                     } else {
-                        Toast.makeText(DialogActivity.this, "An error occurred while sending message", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DialogActivity.this, R.string.msg_error_while_sending_message, Toast.LENGTH_SHORT).show();
                     }
 
                     enableControls(true);
@@ -355,7 +355,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onError(String error, String reason, String details) {
                     enableControls(true);
-                    Toast.makeText(DialogActivity.this, "An error occurred while sending message", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DialogActivity.this, R.string.msg_error_while_sending_message, Toast.LENGTH_SHORT).show();
                 }
             });
         }

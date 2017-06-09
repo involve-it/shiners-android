@@ -47,7 +47,5 @@ public class App extends Application {
         MeteorSingleton.getInstance().addCallback(this.meteorCallbackHandler);
 
         MeteorSingleton.getInstance().connect();
-
-
     }
 }

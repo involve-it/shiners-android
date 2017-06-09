@@ -66,7 +66,7 @@ public class NearbyPostsFragment extends Fragment {
     ProgressDialog progressDialog;
     SwipeRefreshLayout layout;
 
-    ArrayList<Post> posts = new ArrayList<>();
+    //ArrayList<Post> posts = new ArrayList<>();
     boolean moreAvailable = true;
 
     @Override
@@ -94,7 +94,7 @@ public class NearbyPostsFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (moreAvailable && totalItemCount - (firstVisibleItem + visibleItemCount) < 10){
+                if (moreAvailable && totalItemCount - (firstVisibleItem + visibleItemCount) < 10 && totalItemCount > 0){
                     getNearbyPosts(true);
                 }
             }
@@ -161,7 +161,9 @@ public class NearbyPostsFragment extends Fragment {
         if (!loading && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null) {
             loading = true;
             final PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
+            int count = 0;
             if (adapter != null) {
+                count = adapter.getCount();
                 adapter.notifyDataSetChanged();
             }
             Location currentLocation = LocationHandler.getLatestReportedLocation();
@@ -169,10 +171,11 @@ public class NearbyPostsFragment extends Fragment {
             map.put("lat", currentLocation.getLatitude());
             map.put("lng", currentLocation.getLongitude());
             map.put("radius", 10000);
-            map.put("take", Constants.Defaults.DEFAULT_POSTS_PAGE);
             if (loadMore){
-                map.put("skip", posts.size());
+                map.put("skip", count);
             }
+            map.put("take", Constants.Defaults.DEFAULT_POSTS_PAGE);
+
 
             MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
                 @Override
@@ -187,11 +190,6 @@ public class NearbyPostsFragment extends Fragment {
                     GetPostsResponse res = JsonProvider.defaultGson.fromJson(result, GetPostsResponse.class);
                     if (res.success) {
                         CachingHandler.setObject(getActivity(), CachingHandler.KEY_NEARBY_POSTS, res.result);
-                        if (loadMore) {
-                            posts.addAll(res.result);
-                        } else {
-                            posts = res.result;
-                        }
                         populateListView(res.result, loadMore);
                     } else {
                         Toast.makeText(NearbyPostsFragment.this.getActivity(), R.string.message_internal_error, Toast.LENGTH_SHORT).show();

@@ -151,4 +151,13 @@
     <string name="not_set">Not set</string>
     <string name="dialog_deleting_dialog">Deleting dialog...</string>
     <string name="toast_unable_to_make_call">Unable to make a call</string>
+    <string name="msg_not_logged_in">Not logged in</string>
+    <string name="msg_please_log_in_to_send_message">Please log in to send a message</string>
+    <string name="msg_log_in">Log in</string>
+    <string name="msg_cancel">Cancel</string>
+    <string name="hint_message">Message</string>
+    <string name="msg_send_message_to">Send message to</string>
+    <string name="msg_message_sent">Message sent</string>
+    <string name="msg_error_while_sending_message">An error occurred while sending message</string>
+    <string name="msg_sending_message">Sending message...</string>
 </resources>

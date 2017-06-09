@@ -19,6 +19,7 @@ import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Location;
 import org.buzzar.appnative.logic.objects.Post;
 import org.buzzar.appnative.logic.objects.response.ResponseBase;
+import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.Map;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public abstract class NewPostBaseActivity extends AppCompatActivity {
+public abstract class NewPostBaseActivity extends MeteorActivityBase {
     private static final String TAG = "NewPostBaseActivity";
     public static final String EXTRA_POST = "org.buzzar.appnative.NewPostActivity.EXTRA_POST";
 
@@ -100,7 +101,7 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
             coords.lng = LocationHandler.getLatestReportedLocation().getLongitude();
         }
 
-        MeteorSingleton.getInstance().call(Constants.MethodNames.ADD_POST, new Object[]{mPost, coords}, new ResultListener() {
+        callMeteorMethod(Constants.MethodNames.ADD_POST, new Object[]{mPost, coords}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
                 final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);

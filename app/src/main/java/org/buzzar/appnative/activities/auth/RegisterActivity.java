@@ -12,6 +12,7 @@ import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.SettingsHandler;
+import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +20,7 @@ import butterknife.OnClick;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends MeteorActivityBase {
     @BindView(R.id.activity_new_post_txt_title) EditText editText1;
     @BindView(R.id.activity_new_post_txt_description) EditText editText2;
     @BindView(R.id.editText3) EditText editText3;
@@ -35,18 +36,6 @@ public class RegisterActivity extends AppCompatActivity {
         if (MeteorSingleton.getInstance().isConnected()){
             btnRegister.setEnabled(true);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        this.meteorBroadcastReceiver.unregister(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        this.meteorBroadcastReceiver.register(this);
     }
 
     @OnClick(R.id.button4)
@@ -90,15 +79,15 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
-        @Override
-        public void connected() {
-            btnRegister.setEnabled(true);
-        }
+    @Override
+    protected void meteorConnected() {
+        super.meteorConnected();
+        btnRegister.setEnabled(true);
+    }
 
-        @Override
-        public void disconnected() {
-            btnRegister.setEnabled(false);
-        }
-    };
+    @Override
+    protected void meteorDisconnected() {
+        super.meteorDisconnected();
+        btnRegister.setEnabled(false);
+    }
 }

@@ -37,6 +37,7 @@ import org.buzzar.appnative.logic.objects.response.GetChatResponse;
 import org.buzzar.appnative.logic.objects.response.ResponseBase;
 import org.buzzar.appnative.logic.objects.response.SendMessageResponse;
 import org.buzzar.appnative.logic.proxies.MessagesProxy;
+import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ import java.util.UUID;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class DialogActivity extends AppCompatActivity implements View.OnClickListener {
+public class DialogActivity extends MeteorActivityBase implements View.OnClickListener {
     private static final String TAG = "DialogActivity";
 
     public static final String EXTRA_CHAT = "com.involveit.shiners.DialogActivity.extras.CHAT";
@@ -101,7 +102,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 loading = true;
                 if (chat == null) {
-                    MeteorSingleton.getInstance().call(Constants.MethodNames.GET_CHAT, new Object[]{chatId}, new ResultListener() {
+                    callMeteorMethod(Constants.MethodNames.GET_CHAT, new Object[]{chatId}, new ResultListener() {
                         @Override
                         public void onSuccess(String result) {
                             GetChatResponse response = JsonProvider.defaultGson.fromJson(result, GetChatResponse.class);
@@ -138,9 +139,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
             navigateUp();
         }
 
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+        setActivityDefaults(true);
     }
 
     private void navigateUp(){
@@ -156,8 +155,6 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         intentFilter.addAction(MessagesProxy.BROADCAST_GET_MESSAGES);
         intentFilter.addAction(MeteorCallbackHandler.BROADCAST_MESSAGE_ADDED);
         LocalBroadcastManager.getInstance(this).registerReceiver(messagesBroadcastReceiver, intentFilter);
-
-        meteorBroadcastReceiver.register(this);
     }
 
     @Override
@@ -165,7 +162,6 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         super.onPause();
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messagesBroadcastReceiver);
-        meteorBroadcastReceiver.unregister(this);
     }
 
     private void setAllMessagesSeen(){
@@ -181,7 +177,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 if (messageIds.size() > 0) {
                     HashMap<String, Object> request = new HashMap<>();
                     request.put("messageIds", messageIds);
-                    MeteorSingleton.getInstance().call(Constants.MethodNames.MESSAGES_SET_SEEN, new Object[]{request}, new ResultListener() {
+                    callMeteorMethod(Constants.MethodNames.MESSAGES_SET_SEEN, new Object[]{request}, new ResultListener() {
                         @Override
                         public void onSuccess(String result) {
                             ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
@@ -192,13 +188,13 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                                     }
                                 }
                             } else {
-                                Log.d(TAG, "Failed to set 'seen' on messages");
+                                Log.w(TAG, "Failed to set 'seen' on messages");
                             }
                         }
 
                         @Override
                         public void onError(String error, String reason, String details) {
-                            Log.d(TAG, "Failed to set 'seen' on messages");
+                            Log.w(TAG, "Failed to set 'seen' on messages");
                         }
                     });
                 }
@@ -248,48 +244,11 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 adapter.notifyDataSetChanged();
 
                 listView.setSelection(messages.size());
-                //listView.scrollTo(1, 100);
             }
         });
-        /*if (messages.size() > 0) {
-            messages.get(0).text += "---------";
-        }*/
-
-
-        //
-        /*listView.post(new Runnable() {
-            @Override
-            public void run() {*/
-        //listView.clearFocus();
-        //listView.requestFocusFromTouch();
-                //listView.setSelectionFromTop(5, 10);
-        //listView.setSelection(messages.size());
-        //listView.requestFocus();
-            /*}
-        });*/
-        //listView.smoothScrollToPosition(messages.size(), 0);
-        //listView.setSelectionFromTop(messages.size(), 0);
-
-
-        //Log.d(TAG, "Total count: " + adapter.getCount());
-
-        /*listView.setSelectionFromTop(initialPosition + messages.size(), top);
-        Log.d(TAG, "Scrolling, initial position: " + initialPosition + ", messages count: " + messages.size() + ", top: " + top);*/
 
         requestId = null;
     }
-
-    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
-        @Override
-        public void connected() {
-
-        }
-
-        @Override
-        public void disconnected() {
-
-        }
-    };
 
     private BroadcastReceiver messagesBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -334,7 +293,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
             request.put("type", "message");
             request.put("destinationUserId", chat.getOtherParty()._id);
 
-            MeteorSingleton.getInstance().call(Constants.MethodNames.ADD_MESSAGE, new Object[]{request}, new ResultListener() {
+            callMeteorMethod(Constants.MethodNames.ADD_MESSAGE, new Object[]{request}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     SendMessageResponse response = JsonProvider.defaultGson.fromJson(result, SendMessageResponse.class);

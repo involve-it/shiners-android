@@ -39,6 +39,7 @@ import org.buzzar.appnative.logic.objects.Photo;
 import org.buzzar.appnative.logic.objects.Post;
 import org.buzzar.appnative.logic.objects.response.GetPostsResponse;
 import org.buzzar.appnative.logic.objects.response.ResponseBase;
+import org.buzzar.appnative.logic.ui.MeteorFragmentBase;
 
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +50,7 @@ import java.util.List;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class MeFragment extends Fragment implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+public class MeFragment extends MeteorFragmentBase implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
     private static final String TAG = "MeFragment";
 
     View view;
@@ -142,7 +143,7 @@ public class MeFragment extends Fragment implements AdapterView.OnItemLongClickL
             map.put("take", Constants.Defaults.DEFAULT_MY_POSTS_PAGE);
             map.put("type", "all");
 
-            MeteorSingleton.getInstance().call(Constants.MethodNames.GET_MY_POSTS, new Object[]{map}, new ResultListener() {
+            callMeteorMethod(Constants.MethodNames.GET_MY_POSTS, new Object[]{map}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     loading = false;
@@ -263,7 +264,7 @@ public class MeFragment extends Fragment implements AdapterView.OnItemLongClickL
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            MeteorSingleton.getInstance().call(Constants.MethodNames.DELETE_POST, new Object[]{post._id}, new ResultListener() {
+            callMeteorMethod(Constants.MethodNames.DELETE_POST, new Object[]{post._id}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     //Log.d(TAG, result);

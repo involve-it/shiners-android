@@ -7,13 +7,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AboutUsActivity extends AppCompatActivity {
+public class AboutUsActivity extends MeteorActivityBase {
 
     @BindView(R.id.about_us_webview)
     WebView aboutUsWebView;
@@ -22,11 +23,8 @@ public class AboutUsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
 
-        ButterKnife.bind(this);
+        setActivityDefaults(true);
 
         aboutUsWebView.setWebChromeClient(new WebChromeClient());
         aboutUsWebView.setWebViewClient(new WebViewClient());

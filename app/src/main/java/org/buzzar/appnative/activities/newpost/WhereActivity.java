@@ -54,9 +54,7 @@ public class WhereActivity extends NewPostBaseActivity implements OnMapReadyCall
 
         setContentView(R.layout.activity_new_post_where);
 
-        ButterKnife.bind(this);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+        setActivityDefaults(true);
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         supportMapFragment.getMapAsync(this);
 

@@ -18,6 +18,7 @@ import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.SettingsHandler;
+import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +27,7 @@ import butterknife.OnEditorAction;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends MeteorActivityBase {
     @BindView(R.id.txtUsername) EditText editTextLogin;
     @BindView(R.id.txtPassword) EditText editTextPass;
     @BindView(R.id.button2) Button buttonLogIn;
@@ -43,18 +44,6 @@ public class LogInActivity extends AppCompatActivity {
         }
 
         editTextLogin.requestFocus();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        meteorBroadcastReceiver.unregister(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        meteorBroadcastReceiver.register(this);
     }
 
     @OnClick({R.id.button2, R.id.button3})
@@ -130,15 +119,15 @@ public class LogInActivity extends AppCompatActivity {
         return handled;
     }
 
-    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
-        @Override
-        public void connected() {
-            buttonLogIn.setEnabled(true);
-        }
+    @Override
+    protected void meteorConnected() {
+        super.meteorConnected();
+        buttonLogIn.setEnabled(true);
+    }
 
-        @Override
-        public void disconnected() {
-            buttonLogIn.setEnabled(false);
-        }
-    };
+    @Override
+    protected void meteorDisconnected() {
+        super.meteorDisconnected();
+        buttonLogIn.setEnabled(false);
+    }
 }

@@ -42,6 +42,7 @@ import org.buzzar.appnative.logic.objects.Photo;
 import org.buzzar.appnative.logic.objects.Post;
 import org.buzzar.appnative.activities.PostDetailsActivity;
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.ui.MeteorFragmentBase;
 import org.buzzar.appnative.services.SimpleLocationService;
 import com.squareup.picasso.Picasso;
 
@@ -53,7 +54,7 @@ import java.util.Map;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class NearbyPostsFragment extends Fragment {
+public class NearbyPostsFragment extends MeteorFragmentBase {
     private static final String TAG = "NearbyPostsFragment";
 
     TabLayout tabLayout;
@@ -104,10 +105,8 @@ public class NearbyPostsFragment extends Fragment {
         layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (!loading && MeteorSingleton.getInstance().isConnected()) {
+                if (!loading) {
                     getNearbyPosts(false);
-                } else if (!MeteorSingleton.getInstance().isConnected()){
-                    postsPending = true;
                 }
             }
         });
@@ -127,7 +126,7 @@ public class NearbyPostsFragment extends Fragment {
             }
         }
 
-        if (postsPending && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null){
+        if (postsPending && LocationHandler.getLatestReportedLocation() != null){
             getNearbyPosts(false);
             postsPending = false;
         }
@@ -138,14 +137,12 @@ public class NearbyPostsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        this.meteorBroadcastReceiver.register(getActivity());
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(this.locationBroadcastReceiver, new IntentFilter(SimpleLocationService.BROADCAST_LOCATION_REPORTED));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        this.meteorBroadcastReceiver.unregister(getActivity());
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this.locationBroadcastReceiver);
     }
 
@@ -158,7 +155,7 @@ public class NearbyPostsFragment extends Fragment {
     }
 
     public void getNearbyPosts(final boolean loadMore){
-        if (!loading && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null) {
+        if (!loading && LocationHandler.getLatestReportedLocation() != null) {
             loading = true;
             final PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
             int count = 0;
@@ -176,8 +173,7 @@ public class NearbyPostsFragment extends Fragment {
             }
             map.put("take", Constants.Defaults.DEFAULT_POSTS_PAGE);
 
-
-            MeteorSingleton.getInstance().call(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
+            callMeteorMethod(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     //Log.d(TAG, result);
@@ -271,21 +267,6 @@ public class NearbyPostsFragment extends Fragment {
                     recalculateDistances();
                 }
             }
-        }
-    };
-
-    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
-        @Override
-        public void connected() {
-            if (postsPending && LocationHandler.getLatestReportedLocation() != null){
-                getNearbyPosts(false);
-                postsPending = false;
-            }
-        }
-
-        @Override
-        public void disconnected() {
-
         }
     };
 

@@ -49,6 +49,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.buzzar.appnative.logic.objects.User;
 import org.buzzar.appnative.logic.objects.response.GetPostResponse;
 import org.buzzar.appnative.logic.objects.response.SendMessageResponse;
+import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 import org.buzzar.appnative.services.SimpleLocationService;
 
 import com.squareup.picasso.Picasso;
@@ -59,7 +60,7 @@ import butterknife.OnClick;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class PostDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class PostDetailsActivity extends MeteorActivityBase implements OnMapReadyCallback {
 
     public static final String EXTRA_POST = "shiners:PostDetailsActivity.EXTRA_POST";
 
@@ -141,7 +142,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
                 progressDialog.show();
                 progressDialog.setCancelable(false);
 
-                MeteorSingleton.getInstance().call(Constants.MethodNames.GET_POST, new Object[]{postId}, new ResultListener() {
+                callMeteorMethod(Constants.MethodNames.GET_POST, new Object[]{postId}, new ResultListener() {
                     @Override
                     public void onSuccess(String result) {
                         progressDialog.dismiss();
@@ -219,7 +220,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
                          message.message = txtMessage.getText().toString();
                          message.associatedPostId = post._id;
 
-                         MeteorSingleton.getInstance().call(Constants.MethodNames.ADD_MESSAGE, new Object[]{message}, new ResultListener() {
+                         callMeteorMethod(Constants.MethodNames.ADD_MESSAGE, new Object[]{message}, new ResultListener() {
                              @Override
                              public void onSuccess(String result) {
                                  final SendMessageResponse response = JsonProvider.defaultGson.fromJson(result, SendMessageResponse.class);

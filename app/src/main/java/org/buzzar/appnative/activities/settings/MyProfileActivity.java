@@ -22,6 +22,7 @@ import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.objects.User;
 import org.buzzar.appnative.logic.objects.response.ResponseBase;
+import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +30,7 @@ import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends MeteorActivityBase {
     User user;
 
     @BindView(R.id.userImageView)
@@ -58,10 +59,8 @@ public class MyProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_my_profile);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
-        ButterKnife.bind(this);
+
+        setActivityDefaults(true);
 
         userEmail.setInputType(InputType.TYPE_NULL);
         userEmail.setEnabled(false);
@@ -124,7 +123,7 @@ public class MyProfileActivity extends AppCompatActivity {
             user.setProfileDetail(User.ProfileDetail.SKYPE, value);
         }
 
-        MeteorSingleton.getInstance().call(Constants.MethodNames.EDIT_USER, new Object[]{user}, new ResultListener() {
+        callMeteorMethod(Constants.MethodNames.EDIT_USER, new Object[]{user}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
                 final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);

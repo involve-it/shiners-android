@@ -31,6 +31,7 @@ import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.SettingsHandler;
+import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 import org.buzzar.appnative.services.SimpleLocationService;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import im.delight.android.ddp.MeteorSingleton;
 
-public class HomeActivity extends AppCompatActivity implements SettingsFragment.SettingsDelegate {
+public class HomeActivity extends MeteorActivityBase implements SettingsFragment.SettingsDelegate {
     public static final int TAB_NEARBY_POSTS = 0;
     public static final int TAB_ME = 1;
     public static final int TAB_NEW_POST = 2;
@@ -214,15 +215,8 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        meteorBroadcastReceiver.unregister(this);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        meteorBroadcastReceiver.register(this);
 
         if (mTabToDisplay != -1){
             displayView(mTabToDisplay);
@@ -249,20 +243,15 @@ public class HomeActivity extends AppCompatActivity implements SettingsFragment.
         displayView(0);
     }
 
-    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
-        @Override
-        public void connected() {
-            refreshLoggedInStatus();
-            if (MeteorSingleton.getInstance().isLoggedIn()){
-                SettingsHandler.setStringSetting(HomeActivity.this, SettingsHandler.USER_ID, MeteorSingleton.getInstance().getUserId());
-            } else {
-                SettingsHandler.removeSetting(HomeActivity.this, SettingsHandler.USER_ID);
-            }
-        }
+    @Override
+    protected void meteorConnected() {
+        super.meteorConnected();
 
-        @Override
-        public void disconnected() {
-
+        refreshLoggedInStatus();
+        if (MeteorSingleton.getInstance().isLoggedIn()){
+            SettingsHandler.setStringSetting(HomeActivity.this, SettingsHandler.USER_ID, MeteorSingleton.getInstance().getUserId());
+        } else {
+            SettingsHandler.removeSetting(HomeActivity.this, SettingsHandler.USER_ID);
         }
-    };
+    }
 }

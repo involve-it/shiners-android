@@ -24,6 +24,7 @@ import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.objects.User;
 import org.buzzar.appnative.activities.settings.MyProfileActivity;
 import org.buzzar.appnative.logic.objects.response.ResponseBase;
+import org.buzzar.appnative.logic.ui.MeteorFragmentBase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +33,7 @@ import butterknife.OnClick;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends MeteorFragmentBase {
     @BindView(R.id.sw_notify_nearby)
     Switch swNotifyNearby;
 
@@ -125,7 +126,7 @@ public class SettingsFragment extends Fragment {
                 currentUser.enableNearbyNotifications = isChecked;
             }
 
-            MeteorSingleton.getInstance().call(Constants.MethodNames.EDIT_USER, new Object[]{currentUser}, new ResultListener() {
+            callMeteorMethod(Constants.MethodNames.EDIT_USER, new Object[]{currentUser}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);

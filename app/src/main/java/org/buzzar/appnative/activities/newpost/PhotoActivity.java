@@ -57,9 +57,7 @@ public class PhotoActivity extends NewPostBaseActivity implements AdapterView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post_photo);
-        ButterKnife.bind(this);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+        setActivityDefaults(true);
 
         mLstImages.setOnItemLongClickListener(this);
 

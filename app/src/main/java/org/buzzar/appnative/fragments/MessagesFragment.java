@@ -35,6 +35,7 @@ import org.buzzar.appnative.logic.objects.Chat;
 import org.buzzar.appnative.logic.objects.response.GetChatsResponse;
 import org.buzzar.appnative.logic.objects.response.ResponseBase;
 import org.buzzar.appnative.logic.proxies.MessagesProxy;
+import org.buzzar.appnative.logic.ui.MeteorFragmentBase;
 
 import com.squareup.picasso.Picasso;
 
@@ -47,7 +48,7 @@ import java.util.UUID;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
-public class MessagesFragment extends Fragment implements AdapterView.OnItemLongClickListener {
+public class MessagesFragment extends MeteorFragmentBase implements AdapterView.OnItemLongClickListener {
     private static final String TAG = "MessagesFragment";
     public MessagesFragment() {
         // Required empty public constructor
@@ -140,23 +141,11 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
             }
         }
 
-        if (messagesRequestPending && MeteorSingleton.getInstance().isConnected()){
+        if (messagesRequestPending){
             loadChats(false);
         }
 
         return view;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        meteorBroadcastReceiver.unregister(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        meteorBroadcastReceiver.register(getActivity());
     }
 
     private void populateListView(ArrayList<Chat> chats, boolean append){
@@ -176,7 +165,7 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
     }
 
     private void loadChats(final boolean loadMore){
-        if (!loading && MeteorSingleton.getInstance().isConnected()) {
+        if (!loading) {
             loading = true;
             final ChatsArrayAdapter adapter = (ChatsArrayAdapter) listView.getAdapter();
             int chatsCount = 0;
@@ -190,7 +179,7 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
             map.put("take", Constants.Defaults.DEFAULT_DIALOGS_PAGE);
             map.put("skip", (loadMore ? chatsCount : 0));
 
-            MeteorSingleton.getInstance().call(Constants.MethodNames.GET_CHATS, new Object[]{map}, new ResultListener() {
+            callMeteorMethod(Constants.MethodNames.GET_CHATS, new Object[]{map}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     loading = false;
@@ -268,7 +257,7 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            MeteorSingleton.getInstance().call(Constants.MethodNames.DELETE_CHATS, new Object[]{new String[]{chat._id}}, new ResultListener() {
+            callMeteorMethod(Constants.MethodNames.DELETE_CHATS, new Object[]{new String[]{chat._id}}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
@@ -382,18 +371,4 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
             private ImageView mImgAccountPhoto;
         }
     }
-
-    private MeteorBroadcastReceiver meteorBroadcastReceiver = new MeteorBroadcastReceiver() {
-        @Override
-        public void connected() {
-            if (messagesRequestPending){
-                loadChats(false);
-            }
-        }
-
-        @Override
-        public void disconnected() {
-
-        }
-    };
 }

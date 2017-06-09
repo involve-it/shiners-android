@@ -39,9 +39,7 @@ public class NewPostActivity extends NewPostBaseActivity {
         }
 
         setContentView(R.layout.activity_new_post_title);
-        ButterKnife.bind(this);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+        setActivityDefaults(true);
         String test[]=getResources().getStringArray(R.array.post_categories);
         spCategory.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

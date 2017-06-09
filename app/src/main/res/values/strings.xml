@@ -161,4 +161,13 @@
     <string name="msg_error_while_sending_message">An error occurred while sending message</string>
     <string name="msg_sending_message">Sending message...</string>
     <string name="menu_posts_add_new">Create Post</string>
+    <string name="save">Save</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="profile_saved">Profile saved</string>
+    <string name="add">Add</string>
+    <string name="where_is_it_located">Where is it located?</string>
+    <string name="registration">Registration</string>
+    <string name="when_does_it_expire">When does it expire?</string>
+    <string name="how_does_it_look_like">How does it look like?</string>
 </resources>

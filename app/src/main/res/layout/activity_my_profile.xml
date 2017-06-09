@@ -28,7 +28,8 @@
         android:maxLines="2"
         android:text="First name / Last name"
         android:textColor="#000"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -37,68 +38,74 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:background="#fff">
+
+        <TextView
+            android:text="@string/first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+        <EditText
+            android:id="@+id/userFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:text="@string/last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+        <EditText
+            android:id="@+id/userLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
         <TextView
             android:text="Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="end"/>
-        <TextView
-            android:text="@string/not_set"
+        <EditText
+            android:id="@+id/userEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:id="@+id/userEmail"
-            android:textColor="#000"
-            android:textSize="18sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="#fff">
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
         <TextView
             android:text="@string/phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="end"/>
-        <TextView
-            android:text="@string/not_set"
+
+        <EditText
+            android:id="@+id/userPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:id="@+id/userPhone"
-            android:textColor="#000"
-            android:textSize="18sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="#fff">
+            android:ems="10"
+            android:inputType="phone"/>
+
         <TextView
             android:text="Skype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="end"/>
-        <TextView
-            android:text="@string/not_set"
+        <EditText
+            android:id="@+id/userSkype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:id="@+id/userSkype"
-            android:textColor="#000"
-            android:textSize="18sp" />
+            android:ems="10"
+            android:inputType="textEmailAddress" />
     </LinearLayout>
+
 
 
 </LinearLayout>

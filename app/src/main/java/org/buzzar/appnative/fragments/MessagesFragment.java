@@ -268,7 +268,7 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            MeteorSingleton.getInstance().call("deleteChats", new Object[]{new String[]{chat.id}}, new ResultListener() {
+            MeteorSingleton.getInstance().call(Constants.MethodNames.DELETE_CHATS, new Object[]{new String[]{chat.id}}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);

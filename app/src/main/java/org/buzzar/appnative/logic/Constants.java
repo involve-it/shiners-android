@@ -22,8 +22,11 @@ public class Constants {
         public static final String GET_NEARBY_POSTS = "getNearbyPostsTest";
         public static final String GET_MY_POSTS = "getMyPosts";
         public static final String GET_POST = "getPost";
+        public static final String DELETE_POST = "deletePost";
+        public static final String ADD_POST = "addPost";
         public static final String GET_CHATS = "getChats";
         public static final String GET_CHAT = "getChat";
+        public static final String DELETE_CHATS = "deleteChats";
         public static final String GET_MESSAGES = "getMessages";
         public static final String ADD_MESSAGE = "addMessage";
         public static final String GET_USER = "getUser";

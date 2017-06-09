@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.activities.HomeActivity;
+import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.LocationHandler;
 import org.buzzar.appnative.logic.cache.CachingHandler;
@@ -99,7 +100,7 @@ public abstract class NewPostBaseActivity extends AppCompatActivity {
             coords.lng = LocationHandler.getLatestReportedLocation().getLongitude();
         }
 
-        MeteorSingleton.getInstance().call("addPost", new Object[]{mPost, coords}, new ResultListener() {
+        MeteorSingleton.getInstance().call(Constants.MethodNames.ADD_POST, new Object[]{mPost, coords}, new ResultListener() {
             @Override
             public void onSuccess(String result) {
                 final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);

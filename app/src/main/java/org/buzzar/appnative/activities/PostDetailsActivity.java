@@ -1,38 +1,53 @@
 package org.buzzar.appnative.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.media.Image;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.Helper;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.LocationHandler;
 import org.buzzar.appnative.logic.objects.Post;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.buzzar.appnative.logic.objects.User;
 import org.buzzar.appnative.logic.objects.response.GetPostResponse;
 import org.buzzar.appnative.services.SimpleLocationService;
+import org.w3c.dom.Text;
+
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -73,9 +88,21 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
     ImageView imageLocation;
     @BindView(R.id.textLocation)
     TextView textLocation;
-    Post post;
+    @BindView(R.id.txtUserFullName)
+    TextView txtUserFullName;
+    @BindView(R.id.imgUserPhoto)
+    ImageView imgUserPhoto;
+    @BindView(R.id.btnCall)
+    Button btnCall;
+    @BindView(R.id.btnMessage)
+    Button btnMessage;
+    @BindView(R.id.cardUser)
+    CardView cardUser;
     @BindView(R.id.toolBar)
     Toolbar toolBar;
+
+    Post post;
+
     private ProgressDialog progressDialog;
     private GoogleMap googleMap;
 
@@ -105,7 +132,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
             populatePost();
         } else {
             String postId = getIntent().getStringExtra(Constants.Gcm.EXTRA_ID);
-            if (postId != null){
+            if (postId != null) {
                 progressDialog = new ProgressDialog(this);
                 progressDialog.setMessage(getResources().getText(R.string.message_loading_posts));
                 progressDialog.show();
@@ -116,7 +143,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
                     public void onSuccess(String result) {
                         progressDialog.dismiss();
                         GetPostResponse response = JsonProvider.defaultGson.fromJson(result, GetPostResponse.class);
-                        if (response.success){
+                        if (response.success) {
                             post = response.result;
                             populatePost();
                             updateMap();
@@ -135,8 +162,41 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
             }
         }
 
+        btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPhone();
+            }
+        });
+
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMaps);
         supportMapFragment.getMapAsync(PostDetailsActivity.this);
+    }
+
+    private void callPhone() {
+        String phoneNumber = post.user.getProfileDetail(User.ProfileDetail.PHONE);
+        if (phoneNumber != null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 1);
+                } else {
+                    Toast.makeText(PostDetailsActivity.this, R.string.toast_unable_to_make_call, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(intent);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1 && (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)) {
+            callPhone();
+        } else {
+            Toast.makeText(PostDetailsActivity.this, R.string.toast_unable_to_make_call, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void navigateUp(){
@@ -174,6 +234,24 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
         recalculateDistances();
 
         ((TextView) toolBar.getChildAt(0)).setText(post.details.title);
+
+        if (post.user != null) {
+            User currentUser = AccountHandler.getCurrentUser();
+            if (post.user.id != null && currentUser != null && post.user.id.equals(currentUser.id)){
+                cardUser.setVisibility(View.GONE);
+            } else {
+                txtUserFullName.setText(post.user.getFullName());
+                if (post.user.image != null && post.user.image.getImageUrl() != null) {
+                    Picasso.with(this).load(post.user.image.getImageUrl()).fit().centerCrop().into(imgUserPhoto);
+                }
+                String phoneNumber = post.user.getProfileDetail(User.ProfileDetail.PHONE);
+                if (phoneNumber == null){
+                    btnCall.setVisibility(View.INVISIBLE);
+                }
+            }
+        } else {
+            cardUser.setVisibility(View.GONE);
+        }
     }
 
     @Override

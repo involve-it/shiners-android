@@ -63,6 +63,39 @@ public class User implements Parcelable, Serializable {
         emails = in.createTypedArrayList(ProfileEmail.CREATOR);
     }
 
+    public String getProfileDetail(String key){
+        if (profileDetails != null && key != null){
+            for (ProfileDetail profileDetail : profileDetails) {
+                if (key.equals(profileDetail.key)){
+                    return profileDetail.value;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public String getFullName(){
+        String firstName = getProfileDetail(ProfileDetail.FIRST_NAME);
+        String lastName = getProfileDetail(ProfileDetail.LAST_NAME);
+        String fullName = null;
+        if (firstName != null){
+            fullName = firstName;
+        }
+        if (lastName != null){
+            if (fullName == null){
+                fullName = lastName;
+            } else {
+                fullName += " " + lastName;
+            }
+        }
+
+        if (fullName != null)
+            return fullName;
+        else
+            return username;
+    }
+
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
@@ -120,6 +153,15 @@ public class User implements Parcelable, Serializable {
     }
 
     public static class ProfileDetail implements Parcelable, Serializable{
+        public static final String LAST_NAME = "lastName";
+        public static final String FIRST_NAME = "firstName";
+        public static final String CITY = "city";
+        public static final String PHONE = "phone";
+        public static final String SKYPE = "skype";
+        public static final String VK = "vk";
+        public static final String TWITTER = "twitter";
+        public static final String FACEBOOK ="facebook";
+
         @SerializedName("_id")
         public String id;
         public String userId;

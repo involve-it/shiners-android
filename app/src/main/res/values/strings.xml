@@ -150,4 +150,5 @@
     <string name="phone">Phone</string>
     <string name="not_set">Not set</string>
     <string name="dialog_deleting_dialog">Deleting dialog...</string>
+    <string name="toast_unable_to_make_call">Unable to make a call</string>
 </resources>

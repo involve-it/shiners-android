@@ -41,6 +41,7 @@ public class Photo implements Parcelable, Serializable {
         name = in.readString();
         data = in.readString();
         thumbnail = in.readString();
+        imageUrl = in.readString();
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {
@@ -67,5 +68,6 @@ public class Photo implements Parcelable, Serializable {
         parcel.writeString(name);
         parcel.writeString(data);
         parcel.writeString(thumbnail);
+        parcel.writeString(imageUrl);
     }
 }

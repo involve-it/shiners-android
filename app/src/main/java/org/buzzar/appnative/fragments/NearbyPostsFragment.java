@@ -147,6 +147,14 @@ public class NearbyPostsFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this.locationBroadcastReceiver);
     }
 
+    public static void longLog(String tag, String str) {
+        if (str.length() > 4000) {
+            Log.d(tag, str.substring(0, 4000));
+            longLog(tag, str.substring(4000));
+        } else
+            Log.d(tag, str);
+    }
+
     public void getNearbyPosts(final boolean loadMore){
         if (!loading && MeteorSingleton.getInstance().isConnected() && LocationHandler.getLatestReportedLocation() != null) {
             loading = true;
@@ -168,6 +176,7 @@ public class NearbyPostsFragment extends Fragment {
                 @Override
                 public void onSuccess(String result) {
                     //Log.d(TAG, result);
+                    //longLog(TAG, result);
                     loading = false;
                     if (adapter != null) {
                         adapter.notifyDataSetChanged();

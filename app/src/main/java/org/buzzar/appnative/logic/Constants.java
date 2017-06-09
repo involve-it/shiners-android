@@ -30,6 +30,7 @@ public class Constants {
         public static final String GET_MESSAGES = "getMessages";
         public static final String ADD_MESSAGE = "addMessage";
         public static final String GET_USER = "getUser";
+        public static final String EDIT_USER = "editUser";
         public static final String MESSAGES_SET_SEEN = "messagesSetSeen";
         public static final String REGISTER_PUSH_TOKEN = "registerPushToken";
         public static final String REGISTER_PUSH_TOKEN_RAIX = "raix:push-update";
@@ -46,7 +47,7 @@ public class Constants {
             public static final String COMMENT = "comment";
             public static final String POST = "post";
         }
-        public static final String EXTRA_ID = "id";
+        public static final String EXTRA_ID = "_id";
     }
 
     public static class Urls{

@@ -66,7 +66,7 @@ public class MeteorCallbackHandler implements MeteorCallback {
         String broadcast = null;
         if (Constants.CollectionNames.MESSAGES.equals(collectionName)){
             object = JsonProvider.defaultGson.fromJson(newValuesJson, Message.class);
-            ((Message)object).id = documentID;
+            ((Message)object)._id = documentID;
             broadcast = BROADCAST_MESSAGE_ADDED;
         } /*else if (Constants.CollectionNames.COMMENTS.equals(collectionName)){
             object = JsonProvider.defaultGson.fromJson(newValuesJson, Comment.class);

@@ -215,9 +215,9 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
                          progressDialog.show();
 
                          MessageToSend message = new MessageToSend();
-                         message.destinationUserId = post.user.id;
+                         message.destinationUserId = post.user._id;
                          message.message = txtMessage.getText().toString();
-                         message.associatedPostId = post.id;
+                         message.associatedPostId = post._id;
 
                          MeteorSingleton.getInstance().call(Constants.MethodNames.ADD_MESSAGE, new Object[]{message}, new ResultListener() {
                              @Override
@@ -249,7 +249,7 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void callPhone() {
-        String phoneNumber = post.user.getProfileDetail(User.ProfileDetail.PHONE);
+        String phoneNumber = post.user.getProfileDetailValue(User.ProfileDetail.PHONE);
         if (phoneNumber != null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -312,14 +312,14 @@ public class PostDetailsActivity extends AppCompatActivity implements OnMapReady
 
         if (post.user != null) {
             User currentUser = AccountHandler.getCurrentUser();
-            if (post.user.id != null && currentUser != null && post.user.id.equals(currentUser.id)){
+            if (post.user._id != null && currentUser != null && post.user._id.equals(currentUser._id)){
                 cardUser.setVisibility(View.GONE);
             } else {
                 txtUserFullName.setText(post.user.getFullName());
                 if (post.user.image != null && post.user.image.getImageUrl() != null) {
                     Picasso.with(this).load(post.user.image.getImageUrl()).fit().centerCrop().into(imgUserPhoto);
                 }
-                String phoneNumber = post.user.getProfileDetail(User.ProfileDetail.PHONE);
+                String phoneNumber = post.user.getProfileDetailValue(User.ProfileDetail.PHONE);
                 if (phoneNumber == null){
                     btnCall.setVisibility(View.INVISIBLE);
                 }

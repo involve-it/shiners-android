@@ -263,7 +263,7 @@ public class MeFragment extends Fragment implements AdapterView.OnItemLongClickL
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            MeteorSingleton.getInstance().call(Constants.MethodNames.DELETE_POST, new Object[]{post.id}, new ResultListener() {
+            MeteorSingleton.getInstance().call(Constants.MethodNames.DELETE_POST, new Object[]{post._id}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     //Log.d(TAG, result);

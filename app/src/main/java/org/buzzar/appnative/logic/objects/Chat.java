@@ -15,7 +15,7 @@ import java.util.Date;
 
 public class Chat implements Parcelable, Serializable, UniqueIdContainer {
     @SerializedName("_id")
-    public String id;
+    public String _id;
     @SerializedName("userId")
     public String userId;
     @SerializedName("users")
@@ -42,7 +42,7 @@ public class Chat implements Parcelable, Serializable, UniqueIdContainer {
     }
 
     protected Chat(Parcel in) {
-        id = in.readString();
+        _id = in.readString();
         userId = in.readString();
         otherUserIds = in.createStringArrayList();
         activated = in.readByte() != 0;
@@ -80,7 +80,7 @@ public class Chat implements Parcelable, Serializable, UniqueIdContainer {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
+        parcel.writeString(_id);
         parcel.writeString(userId);
         parcel.writeStringList(otherUserIds);
         parcel.writeByte((byte) (activated ? 1 : 0));
@@ -103,6 +103,6 @@ public class Chat implements Parcelable, Serializable, UniqueIdContainer {
 
     @Override
     public String getId() {
-        return id;
+        return _id;
     }
 }

@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class Post implements Parcelable, Serializable, UniqueIdContainer {
     @SerializedName("_id")
-    public String id;
+    public String _id;
     @SerializedName("type")
     public String type;
     @SerializedName("tags")
@@ -55,7 +55,7 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
     }
 
     protected Post(Parcel in) {
-        id = in.readString();
+        _id = in.readString();
         type = in.readString();
         tags = new ArrayList<>();
         in.readStringList(tags);
@@ -109,7 +109,7 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
+        parcel.writeString(_id);
         parcel.writeString(type);
         if (tags != null){
             parcel.writeStringList(tags);
@@ -151,7 +151,7 @@ public class Post implements Parcelable, Serializable, UniqueIdContainer {
 
     @Override
     public String getId() {
-        return id;
+        return _id;
     }
 
     public static class PostDetails implements Parcelable, Serializable {

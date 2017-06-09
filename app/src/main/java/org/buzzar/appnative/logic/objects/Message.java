@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class Message implements Parcelable, Serializable, UniqueIdContainer {
     @SerializedName("_id")
-    public String id;
+    public String _id;
     @SerializedName("userId")
     public String userId;
     @SerializedName("toUserId")
@@ -35,7 +35,7 @@ public class Message implements Parcelable, Serializable, UniqueIdContainer {
     public Message(){}
 
     protected Message(Parcel in) {
-        id = in.readString();
+        _id = in.readString();
         userId = in.readString();
         toUserId = in.readString();
         chatId = in.readString();
@@ -68,7 +68,7 @@ public class Message implements Parcelable, Serializable, UniqueIdContainer {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
+        parcel.writeString(_id);
         parcel.writeString(userId);
         parcel.writeString(toUserId);
         parcel.writeString(chatId);
@@ -85,6 +85,6 @@ public class Message implements Parcelable, Serializable, UniqueIdContainer {
 
     @Override
     public String getId() {
-        return id;
+        return _id;
     }
 }

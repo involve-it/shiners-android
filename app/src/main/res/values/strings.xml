@@ -171,4 +171,6 @@
     <string name="registration">Registration</string>
     <string name="when_does_it_expire">When does it expire?</string>
     <string name="how_does_it_look_like">How does it look like?</string>
+    <string name="my_profile_txt_email">Email</string>
+    <string name="my_profile_txt_skype">Skype</string>
 </resources>

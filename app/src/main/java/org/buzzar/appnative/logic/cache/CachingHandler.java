@@ -39,18 +39,18 @@ public final class CachingHandler {
     private static void updateFile(final Context context){
         if (_cache != null) {
             if (timerTask != null){
-                Log.d(TAG, "Cancelling task with id: " + timerTask.mId);
+                Log.d(TAG, "Cancelling task with _id: " + timerTask.mId);
                 timerTask.cancel();
             }
 
             UUID taskId = UUID.randomUUID();
-            Log.d(TAG, "Scheduling task with id: " + taskId);
+            Log.d(TAG, "Scheduling task with _id: " + taskId);
 
             timerTask = new CacheTimerTask(taskId) {
                 @Override
                 public void run() {
                     try {
-                        Log.d(TAG, "Running task with id: " + this.getId());
+                        Log.d(TAG, "Running task with _id: " + this.getId());
                         FileOutputStream file = new FileOutputStream(new File(context.getFilesDir(), FILENAME), false);
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(file);
                         objectOutputStream.writeObject(_cache);

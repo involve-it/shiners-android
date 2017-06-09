@@ -9,6 +9,6 @@ import com.google.gson.annotations.SerializedName;
 public class GcmPayload {
     @SerializedName("type")
     public String type;
-    @SerializedName("id")
-    public String id;
+    @SerializedName("_id")
+    public String _id;
 }

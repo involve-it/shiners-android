@@ -16,7 +16,7 @@ public class Location implements Parcelable, Serializable {
     public static final String LOCATION_TYPE_DYNAMIC = "dynamic";
 
     @SerializedName("_id")
-    public String id;
+    public String _id;
     @SerializedName("coords")
     public Coords coords;
     @SerializedName("name")
@@ -25,7 +25,7 @@ public class Location implements Parcelable, Serializable {
     public String placeType;
 
     protected Location(Parcel in) {
-        id = in.readString();
+        _id = in.readString();
         name = in.readString();
         placeType = in.readString();
         this.coords = new Coords();
@@ -58,7 +58,7 @@ public class Location implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
+        parcel.writeString(_id);
         parcel.writeString(name);
         parcel.writeString(placeType);
         parcel.writeDouble(this.coords.lat);

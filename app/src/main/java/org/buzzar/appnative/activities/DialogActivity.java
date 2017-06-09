@@ -82,7 +82,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                     Log.d(TAG, "Getting more messages...");
                     loading = true;
                     ((MessagesArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
-                    requestId = MessagesProxy.startGettingMessagesAsync(DialogActivity.this, chat.id, chat.messages.size(), Constants.Defaults.DEFAULT_MESSAGES_PAGE);
+                    requestId = MessagesProxy.startGettingMessagesAsync(DialogActivity.this, chat._id, chat.messages.size(), Constants.Defaults.DEFAULT_MESSAGES_PAGE);
                     //listView.setSelection(0);
                 }
             }
@@ -175,7 +175,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                 final ArrayList<String> messageIds = new ArrayList<>();
                 for (Message message:chat.messages){
                     if (!message.seen){
-                        messageIds.add(message.id);
+                        messageIds.add(message._id);
                     }
                 }
                 if (messageIds.size() > 0) {
@@ -187,7 +187,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                             ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);
                             if (response.success){
                                 for (Message message:chat.messages){
-                                    if (messageIds.contains(message.id)){
+                                    if (messageIds.contains(message._id)){
                                         message.seen = true;
                                     }
                                 }
@@ -297,7 +297,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
             String action = intent.getAction();
             if (MessagesProxy.BROADCAST_GET_MESSAGES.equals(action)){
                 UUID receivedRequestId = (UUID) intent.getSerializableExtra(MessagesProxy.EXTRA_REQUEST_ID);
-                Log.d(TAG, "messages received for id: " + receivedRequestId);
+                Log.d(TAG, "messages received for _id: " + receivedRequestId);
 
                 if (receivedRequestId.equals(requestId)){
                     ArrayList<Message> messages = MessagesProxy.getMessagesResult(receivedRequestId);
@@ -312,9 +312,9 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
                     Message message = intent.getParcelableExtra(MeteorCallbackHandler.EXTRA_COLLECTION_OBJECT);
                     ArrayList<String> messageIds = new ArrayList<>();
                     for (Message msg : chat.messages) {
-                        messageIds.add(msg.id);
+                        messageIds.add(msg._id);
                     }
-                    if (!messageIds.contains(message.id) && message.chatId.equals(chat.id)){
+                    if (!messageIds.contains(message._id) && message.chatId.equals(chat._id)){
                         adapter.add(message);
                         adapter.notifyDataSetChanged();
                         setAllMessagesSeen();
@@ -332,7 +332,7 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
             HashMap<String, Object> request = new HashMap<>();
             request.put("message", txtMessage.getText().toString());
             request.put("type", "message");
-            request.put("destinationUserId", chat.getOtherParty().id);
+            request.put("destinationUserId", chat.getOtherParty()._id);
 
             MeteorSingleton.getInstance().call(Constants.MethodNames.ADD_MESSAGE, new Object[]{request}, new ResultListener() {
                 @Override

@@ -87,7 +87,6 @@ public class PhotoActivity extends NewPostBaseActivity implements AdapterView.On
         if (requestCode == Constants.ActivityRequestCodes.NEW_POST_PHOTO && resultCode == RESULT_OK){
             try {
                 InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
-                File file  = new File(data.getData().toString());
                 new AmazonUploadAsyncTask(this.getContentResolver().getType(data.getData())).execute(inputStream);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

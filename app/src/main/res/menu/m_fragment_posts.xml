@@ -7,7 +7,7 @@
         android:title="@string/menu_posts_add_new"
         app:showAsAction="always"/>
     <!--<item-->
-        <!--android:id="@+id/search_bar"-->
+        <!--android:_id="@+_id/search_bar"-->
         <!--android:icon="@drawable/ic_search_black_36dp"-->
         <!--android:title="search"-->
         <!--app:showAsAction="always"/>-->

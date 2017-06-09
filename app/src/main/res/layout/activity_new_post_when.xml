@@ -158,7 +158,7 @@
         android:layout_margin="10dp" android:id="@+id/activity_new_post_when_btn_custom_date"/>
 
     <!--<DatePicker-->
-        <!--android:id="@+id/datePicker"-->
+        <!--android:_id="@+_id/datePicker"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content" />-->
 

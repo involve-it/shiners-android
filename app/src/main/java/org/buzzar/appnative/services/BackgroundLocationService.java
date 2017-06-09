@@ -151,7 +151,7 @@ public class BackgroundLocationService extends Service {
                     LocationReport locationReport = new LocationReport();
                     locationReport.lat = loc.getLatitude();
                     locationReport.lng = loc.getLongitude();
-                    locationReport.userId = AccountHandler.getCurrentUser().id;
+                    locationReport.userId = AccountHandler.getCurrentUser()._id;
                     locationReport.deviceId = SettingsHandler.getDeviceId(BackgroundLocationService.this);
                     locationReport.notify = true;
 

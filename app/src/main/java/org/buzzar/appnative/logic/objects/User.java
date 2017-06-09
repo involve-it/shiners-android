@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,9 +16,8 @@ import java.util.List;
 
 public class User implements Parcelable, Serializable {
     private  static final int LOCATION_REPORT_EXPIRATION = 20*60*1000;
-
     @SerializedName("_id")
-    public String id;
+    public String _id;
     @SerializedName("createdAt")
     public Date createdAt;
     @SerializedName("username")
@@ -40,7 +40,7 @@ public class User implements Parcelable, Serializable {
     public User (){}
 
     protected User(Parcel in) {
-        id = in.readString();
+        _id = in.readString();
         username = in.readString();
         online = in.readByte() != 0;
         image = in.readParcelable(Photo.class.getClassLoader());
@@ -63,11 +63,30 @@ public class User implements Parcelable, Serializable {
         emails = in.createTypedArrayList(ProfileEmail.CREATOR);
     }
 
-    public String getProfileDetail(String key){
+    public void deleteProfileDetail(String key){
+        ProfileDetail profileDetail = getProfileDetail(key);
+        if (profileDetail != null){
+            profileDetails.remove(profileDetail);
+        }
+    }
+
+    public void setProfileDetail(String key, String value){
+        if (this.profileDetails == null){
+            this.profileDetails = new ArrayList<>();
+        }
+        ProfileDetail profileDetail = getProfileDetail(key);
+        if (profileDetail == null){
+            profileDetail = new ProfileDetail();
+            this.profileDetails.add(profileDetail);
+        }
+        profileDetail.value = value;
+    }
+
+    public ProfileDetail getProfileDetail(String key){
         if (profileDetails != null && key != null){
             for (ProfileDetail profileDetail : profileDetails) {
                 if (key.equals(profileDetail.key)){
-                    return profileDetail.value;
+                    return profileDetail;
                 }
             }
         }
@@ -75,9 +94,18 @@ public class User implements Parcelable, Serializable {
         return null;
     }
 
+    public String getProfileDetailValue(String key){
+        ProfileDetail profileDetail = this.getProfileDetail(key);
+        if (profileDetail == null){
+            return null;
+        } else {
+            return profileDetail.value;
+        }
+    }
+
     public String getFullName(){
-        String firstName = getProfileDetail(ProfileDetail.FIRST_NAME);
-        String lastName = getProfileDetail(ProfileDetail.LAST_NAME);
+        String firstName = getProfileDetailValue(ProfileDetail.FIRST_NAME);
+        String lastName = getProfileDetailValue(ProfileDetail.LAST_NAME);
         String fullName = null;
         if (firstName != null){
             fullName = firstName;
@@ -126,7 +154,7 @@ public class User implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
+        parcel.writeString(_id);
         parcel.writeString(username);
         parcel.writeByte((byte) (online ? 1 : 0));
         parcel.writeParcelable(image, i);
@@ -163,14 +191,16 @@ public class User implements Parcelable, Serializable {
         public static final String FACEBOOK ="facebook";
 
         @SerializedName("_id")
-        public String id;
+        public String _id;
         public String userId;
         public String key;
         public String value;
         public String policy;
 
+        public ProfileDetail(){}
+
         protected ProfileDetail(Parcel in) {
-            id = in.readString();
+            _id = in.readString();
             userId = in.readString();
             key = in.readString();
             value = in.readString();
@@ -196,7 +226,7 @@ public class User implements Parcelable, Serializable {
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(id);
+            parcel.writeString(_id);
             parcel.writeString(userId);
             parcel.writeString(key);
             parcel.writeString(value);

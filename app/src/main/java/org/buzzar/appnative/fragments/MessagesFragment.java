@@ -81,7 +81,7 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Chat chat = ((ChatsArrayAdapter)listView.getAdapter()).getItem(i);
-                UUID requestId = MessagesProxy.startGettingMessagesAsync(getActivity(), chat.id, 0, Constants.Defaults.DEFAULT_MESSAGES_PAGE);
+                UUID requestId = MessagesProxy.startGettingMessagesAsync(getActivity(), chat._id, 0, Constants.Defaults.DEFAULT_MESSAGES_PAGE);
                 Intent intent = new Intent(getActivity(), DialogActivity.class);
                 intent.putExtra(DialogActivity.EXTRA_CHAT, (Parcelable) chat);
                 intent.putExtra(DialogActivity.EXTRA_REQUEST_ID, requestId);
@@ -268,7 +268,7 @@ public class MessagesFragment extends Fragment implements AdapterView.OnItemLong
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            MeteorSingleton.getInstance().call(Constants.MethodNames.DELETE_CHATS, new Object[]{new String[]{chat.id}}, new ResultListener() {
+            MeteorSingleton.getInstance().call(Constants.MethodNames.DELETE_CHATS, new Object[]{new String[]{chat._id}}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     final ResponseBase response = JsonProvider.defaultGson.fromJson(result, ResponseBase.class);

@@ -57,7 +57,7 @@ public class GcmNotificationService extends GcmListenerService {
 
         }
         if (intent != null) {
-            intent.putExtra(Constants.Gcm.EXTRA_ID, payload.id);
+            intent.putExtra(Constants.Gcm.EXTRA_ID, payload._id);
             return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
 

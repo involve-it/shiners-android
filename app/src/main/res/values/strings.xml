@@ -66,11 +66,11 @@
         <item>Buy &amp; sell</item>
         <item>Housing market</item>
         <item>Local events</item>
-        <item>Need or provide training</item>
+        <item>Need or provide service</item>
         <item>Need or give help</item>
     </string-array>
     
-    <string-array name="post_categories_short">
+    <string-array name="post_categories_short" translatable="false">
         <item>jobs</item>
         <item>trainings</item>
         <item>connect</item>
@@ -171,6 +171,6 @@
     <string name="registration">Registration</string>
     <string name="when_does_it_expire">When does it expire?</string>
     <string name="how_does_it_look_like">How does it look like?</string>
-    <string name="my_profile_txt_email">Email</string>
-    <string name="my_profile_txt_skype">Skype</string>
+    <string name="my_profile_txt_email" translatable="false">Email</string>
+    <string name="my_profile_txt_skype" translatable="false">Skype</string>
 </resources>

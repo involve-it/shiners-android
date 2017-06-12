@@ -66,5 +66,6 @@ public class Constants {
         public static final int NEARBY_POST_DETAILS = 3;
         public static final int NEW_POST_PHOTO = 4;
         public static final int REGISTER = 5;
+        public static final int PROFILE = 6;
     }
 }

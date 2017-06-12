@@ -13,11 +13,11 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.activities.settings.MyProfileActivity;
 import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.Helper;
@@ -57,14 +58,13 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class PostDetailsActivity extends MeteorActivityBase implements OnMapReadyCallback {
 
     public static final String EXTRA_POST = "shiners:PostDetailsActivity.EXTRA_POST";
 
-    @BindView(R.id.imageView2)
+    @BindView(R.id.imgPostPhoto)
     ImageView imageView2;
     @BindView(R.id.textTitle)
     TextView textTitle;

@@ -1,6 +1,7 @@
 package org.buzzar.appnative.activities.settings;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -31,6 +32,7 @@ import im.delight.android.ddp.ResultListener;
 
 
 public class MyProfileActivity extends MeteorActivityBase {
+    public static final String EXTRA_USER = "org.buzzar.app.MyProfileActivity.EXTRA_USER";
     User user;
 
     @BindView(R.id.userImageView)
@@ -54,6 +56,10 @@ public class MyProfileActivity extends MeteorActivityBase {
     @BindView(R.id.userSkype)
     EditText userSkype;
 
+    private boolean isCurrentUser(){
+        return this.user != null && AccountHandler.getCurrentUser() != null && AccountHandler.getCurrentUser()._id.equals(this.user._id);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +71,24 @@ public class MyProfileActivity extends MeteorActivityBase {
         userEmail.setInputType(InputType.TYPE_NULL);
         userEmail.setEnabled(false);
 
-        this.user = AccountHandler.getCurrentUser();
+        this.user = getIntent().getParcelableExtra(EXTRA_USER);
+        if (this.user == null) {
+            this.user = AccountHandler.getCurrentUser();
+        }
         if (this.user == null){
             onBackPressed();
         }
 
+        setEnabled(isCurrentUser());
+
         fillProfile();
+    }
+
+    private void setEnabled(boolean enabled){
+        userFirstName.setEnabled(enabled);
+        userLastName.setEnabled(enabled);
+        userPhone.setEnabled(enabled);
+        userSkype.setEnabled(enabled);
     }
 
     @Override
@@ -155,7 +173,9 @@ public class MyProfileActivity extends MeteorActivityBase {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.m_activity_my_profile, menu);
+        if (isCurrentUser()) {
+            getMenuInflater().inflate(R.menu.m_activity_my_profile, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

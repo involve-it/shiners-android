@@ -41,7 +41,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:src="@color/colorAccent"
-                android:id="@+id/imageView2"
+                android:id="@+id/imgPostPhoto"
                 android:layout_height="200dp"/>
 
             <android.support.v7.widget.CardView

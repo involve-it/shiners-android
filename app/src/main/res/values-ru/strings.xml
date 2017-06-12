@@ -46,6 +46,30 @@
     <string name="hint_confirm_password">Подтвердите пароль</string>
     <string name="hint_email_address">Email адрес</string>
 
+    <string-array name="chats_list_actions_menu">
+        <item>Удалить</item>
+    </string-array>
+
+    <string-array name="me_list_actions_menu">
+        <item>Удалить</item>
+    </string-array>
+
+    <string-array name="new_post_photos_menu">
+        <item>Сделать основным фото</item>
+        <item>Удалить фото</item>
+    </string-array>
+
+    <string-array name="post_categories">
+        <item>Работа</item>
+        <item>Тренинги</item>
+        <item>Связи и знакомства</item>
+        <item>Покупка и продажа</item>
+        <item>Рынок жилья</item>
+        <item>Местные события</item>
+        <item>Услуги</item>
+        <item>Помощь</item>
+    </string-array>
+
     <string-array name="tab_titles">
         <item>Светлячки</item>
         <item>Я</item>
@@ -135,4 +159,5 @@
     <string name="when_does_it_expire">Срок действия</string>
     <string name="how_does_it_look_like">Как будет выглядеть?</string>
     <string name="activity_new_post_when_btn_pick_custom_date">Произвольная дата</string>
+    <string name="new_post_photo_error_upload">Возникла ошибка при загрузке фото</string>
 </resources>

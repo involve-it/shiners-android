@@ -288,11 +288,14 @@ public class PostDetailsActivity extends MeteorActivityBase implements OnMapRead
         //Title
         textTitle.setText(post.details.title);
         //Photo
-        Picasso.with(PostDetailsActivity.this)
+        if(post.details.photos.size() > 0)
+            Picasso.with(PostDetailsActivity.this)
                 .load(post.details.photos.get(0).data)
                 .fit()
                 .centerCrop()
                 .into(imageView2);
+        else
+            imageView2.setVisibility(View.GONE);
 
         //Date
         textDesc.setText(Helper.formatDate(this, post.timestamp));

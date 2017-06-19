@@ -173,4 +173,5 @@
     <string name="how_does_it_look_like">How does it look like?</string>
     <string name="my_profile_txt_email" translatable="false">Email</string>
     <string name="my_profile_txt_skype" translatable="false">Skype</string>
+    <string name="message">Message</string>
 </resources>

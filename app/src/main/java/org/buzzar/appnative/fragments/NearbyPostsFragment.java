@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.buzzar.appnative.activities.newpost.NewPostActivity;
+import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.cache.CacheEntity;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.Constants;
@@ -217,7 +218,10 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.m_fragment_posts,menu);
+        if (AccountHandler.isLoggedIn()) {
+            inflater.inflate(R.menu.m_fragment_posts, menu);
+        }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 

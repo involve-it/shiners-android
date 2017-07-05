@@ -174,4 +174,7 @@
     <string name="my_profile_txt_email" translatable="false">Email</string>
     <string name="my_profile_txt_skype" translatable="false">Skype</string>
     <string name="message">Message</string>
+    <string name="msg_not_connected">Seems like you are not connected to Internet. Please try again later.</string>
+    <string name="title_oops">Oops</string>
+    <string name="txt_ok">OK</string>
 </resources>

@@ -75,7 +75,6 @@
         android:layout_marginLeft="64dp"
         android:backgroundTint="#2E9AE2"
         android:alpha="0.8"
-        android:enabled="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse"/>
 
     <TextView

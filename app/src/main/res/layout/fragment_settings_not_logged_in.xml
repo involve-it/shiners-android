@@ -5,8 +5,7 @@
     android:id="@+id/activity_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login_page_2"
-    tools:context=".activities.auth.SplashActivity">
+    android:background="@drawable/bg_login_page_2">
 
 
     <TextView

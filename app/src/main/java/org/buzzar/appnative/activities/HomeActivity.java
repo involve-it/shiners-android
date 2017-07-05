@@ -14,9 +14,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -34,6 +37,7 @@ import org.buzzar.appnative.logic.SettingsHandler;
 import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 import org.buzzar.appnative.services.SimpleLocationService;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,6 +46,8 @@ import butterknife.ButterKnife;
 import im.delight.android.ddp.MeteorSingleton;
 
 public class HomeActivity extends MeteorActivityBase implements SettingsFragment.SettingsDelegate {
+    private static final String TAG = "HomeActivity";
+
     public static final int TAB_NEARBY_POSTS = 0;
     public static final int TAB_ME = 1;
     public static final int TAB_NEW_POST = 2;

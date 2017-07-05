@@ -1,16 +1,15 @@
 package org.buzzar.appnative.activities.auth;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.AccountHandler;
-import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.SettingsHandler;
 import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
@@ -40,7 +39,12 @@ public class RegisterActivity extends MeteorActivityBase {
 
     @OnClick(R.id.button4)
     public void onClick() {
-        if (editText3.getText().toString().equals(editText4.getText().toString())){
+        if (editText3.getText().toString().equals(editText4.getText().toString()) && !"".equals(editText3.getText().toString())){
+            if (!MeteorSingleton.getInstance().isConnected()) {
+                new AlertDialog.Builder(this).setMessage(R.string.msg_not_connected).setTitle(R.string.title_oops).setPositiveButton(R.string.txt_ok, null).show();
+                return;
+            }
+
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setMessage(getResources().getText(R.string.message_registering));
             progressDialog.show();

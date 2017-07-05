@@ -1,10 +1,10 @@
 package org.buzzar.appnative.activities.auth;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -16,7 +16,6 @@ import android.widget.Toast;
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.Constants;
-import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.SettingsHandler;
 import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
@@ -39,10 +38,6 @@ public class LogInActivity extends MeteorActivityBase {
         setContentView(R.layout.activity_log_in);
         ButterKnife.bind(this);
 
-        if (MeteorSingleton.getInstance().isConnected()){
-            buttonLogIn.setEnabled(true);
-        }
-
         editTextLogin.requestFocus();
     }
 
@@ -50,6 +45,11 @@ public class LogInActivity extends MeteorActivityBase {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button2:
+                if (!MeteorSingleton.getInstance().isConnected()) {
+                    new AlertDialog.Builder(this).setMessage(R.string.msg_not_connected).setTitle(R.string.title_oops).setPositiveButton(R.string.txt_ok, null).show();
+                    return;
+                }
+
                 final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setMessage(getResources().getText(R.string.message_logging_in));
                 progressDialog.show();
@@ -122,12 +122,10 @@ public class LogInActivity extends MeteorActivityBase {
     @Override
     protected void meteorConnected() {
         super.meteorConnected();
-        buttonLogIn.setEnabled(true);
     }
 
     @Override
     protected void meteorDisconnected() {
         super.meteorDisconnected();
-        buttonLogIn.setEnabled(false);
     }
 }

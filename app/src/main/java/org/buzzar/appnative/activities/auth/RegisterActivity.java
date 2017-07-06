@@ -41,6 +41,7 @@ public class RegisterActivity extends MeteorActivityBase {
     public void onClick() {
         if (editText3.getText().toString().equals(editText4.getText().toString()) && !"".equals(editText3.getText().toString())){
             if (!MeteorSingleton.getInstance().isConnected()) {
+                MeteorSingleton.getInstance().reconnect();
                 new AlertDialog.Builder(this).setMessage(R.string.msg_not_connected).setTitle(R.string.title_oops).setPositiveButton(R.string.txt_ok, null).show();
                 return;
             }

@@ -37,6 +37,8 @@ import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.Helper;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.LocationHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.objects.MessageToSend;
 import org.buzzar.appnative.logic.objects.Post;
 
@@ -120,6 +122,8 @@ public class PostDetailsActivity extends MeteorActivityBase implements OnMapRead
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(this.locationBroadcastReceiver, new IntentFilter(SimpleLocationService.BROADCAST_LOCATION_REPORTED));
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.POST_DETAILS);
     }
 
     @Override
@@ -193,6 +197,7 @@ public class PostDetailsActivity extends MeteorActivityBase implements OnMapRead
                             .show();
                 } else {
                     showSendMessageDialog();
+                    AnalyticsProvider.LogButtonClick(PostDetailsActivity.this, TrackingKeys.Buttons.POST_DETAILS_SEND_MESSAGE_DIALOG);
                 }
             }
         });
@@ -210,6 +215,7 @@ public class PostDetailsActivity extends MeteorActivityBase implements OnMapRead
                  .setPositiveButton(R.string.btn_label_send, new DialogInterface.OnClickListener() {
                      @Override
                      public void onClick(final DialogInterface dialog, int which) {
+                         AnalyticsProvider.LogButtonClick(PostDetailsActivity.this, TrackingKeys.Buttons.POST_DETAILS_SEND_MESSAGE);
                          final ProgressDialog progressDialog = new ProgressDialog(PostDetailsActivity.this);
                          progressDialog.setMessage(getString(R.string.msg_sending_message));
                          progressDialog.setCancelable(false);
@@ -247,6 +253,7 @@ public class PostDetailsActivity extends MeteorActivityBase implements OnMapRead
                  })
                  .setNegativeButton(R.string.msg_cancel, null)
                  .show();
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.POST_DETAILS_SEND_MESSAGE);
     }
 
     private void callPhone() {

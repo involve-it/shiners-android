@@ -33,6 +33,8 @@ import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.Helper;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.cache.CacheEntity;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Photo;
@@ -112,6 +114,8 @@ public class MeFragment extends MeteorFragmentBase implements AdapterView.OnItem
             mPendingPostsRequest = false;
             getMyPosts(false);
         }
+
+        AnalyticsProvider.LogScreen(getActivity(), TrackingKeys.Screens.ME);
 
         return view;
     }

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,11 @@ import android.widget.Toast;
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.activities.settings.AboutUsActivity;
 import org.buzzar.appnative.logic.AccountHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.objects.User;
 import org.buzzar.appnative.activities.settings.MyProfileActivity;
 import org.buzzar.appnative.logic.objects.response.ResponseBase;
@@ -102,6 +103,8 @@ public class SettingsFragment extends MeteorFragmentBase {
             progressDialog.setCancelable(false);
         }
 
+        AnalyticsProvider.LogScreen(getActivity(), TrackingKeys.Screens.SETTINGS);
+
         return view;
     }
 
@@ -122,8 +125,18 @@ public class SettingsFragment extends MeteorFragmentBase {
             User currentUser = AccountHandler.getCurrentUser();
             if (buttonView.equals(swInvisibleMode)) {
                 currentUser.isInvisible = isChecked;
+                if (isChecked){
+                    AnalyticsProvider.LogEvent(getActivity(), TrackingKeys.Events.INVISIBLE_SETTING_ON);
+                } else {
+                    AnalyticsProvider.LogEvent(getActivity(), TrackingKeys.Events.INVISIBLE_SETTING_OFF);
+                }
             } else if (buttonView.equals(swNotifyNearby)) {
                 currentUser.enableNearbyNotifications = isChecked;
+                if (isChecked){
+                    AnalyticsProvider.LogEvent(getActivity(), TrackingKeys.Events.NOTIFICATIONS_SETTING_ON);
+                } else {
+                    AnalyticsProvider.LogEvent(getActivity(), TrackingKeys.Events.NOTIFICATIONS_SETTING_OFF);
+                }
             }
 
             callMeteorMethod(Constants.MethodNames.EDIT_USER, new Object[]{currentUser}, new ResultListener() {
@@ -175,10 +188,12 @@ public class SettingsFragment extends MeteorFragmentBase {
                         })
                         .setNegativeButton(R.string.btl_label_no, null)
                         .show();
+                AnalyticsProvider.LogButtonClick(getActivity(), TrackingKeys.Buttons.LOGOUT);
                 break;
 
             case R.id.btn_my_profile:
                 startActivity(new Intent(getActivity(), MyProfileActivity.class));
+                AnalyticsProvider.LogButtonClick(getActivity(), TrackingKeys.Buttons.MY_PROFILE);
                 break;
             case R.id.btn_contact_us:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
@@ -188,9 +203,11 @@ public class SettingsFragment extends MeteorFragmentBase {
                 } catch (android.content.ActivityNotFoundException ex) {
                     Toast.makeText(getActivity(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                 }
+                AnalyticsProvider.LogButtonClick(getActivity(), TrackingKeys.Buttons.CONTACT_US);
                 break;
             case R.id.btn_about_us:
                 startActivity(new Intent(getActivity(), AboutUsActivity.class));
+                AnalyticsProvider.LogButtonClick(getActivity(), TrackingKeys.Buttons.ABOUT_US);
                 break;
         }
     }

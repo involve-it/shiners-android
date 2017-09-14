@@ -15,6 +15,8 @@ import org.buzzar.appnative.activities.HomeActivity;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.LocationHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Location;
 import org.buzzar.appnative.logic.objects.Post;
@@ -119,7 +121,7 @@ public abstract class NewPostBaseActivity extends MeteorActivityBase {
                         }
                     }
                 });
-
+                AnalyticsProvider.LogEvent(NewPostBaseActivity.this, TrackingKeys.Events.NEW_POST_CREATED);
 
                 Log.d(TAG, result);
             }

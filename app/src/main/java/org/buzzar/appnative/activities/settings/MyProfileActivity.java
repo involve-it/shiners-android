@@ -21,6 +21,8 @@ import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.JsonProvider;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.objects.User;
 import org.buzzar.appnative.logic.objects.response.ResponseBase;
 import org.buzzar.appnative.logic.ui.MeteorActivityBase;
@@ -169,6 +171,13 @@ public class MyProfileActivity extends MeteorActivityBase {
                 });
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.MY_PROFILE);
     }
 
     @Override

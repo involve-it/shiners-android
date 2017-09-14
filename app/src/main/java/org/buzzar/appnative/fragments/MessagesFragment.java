@@ -29,6 +29,8 @@ import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.Helper;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.cache.CacheEntity;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Chat;
@@ -144,6 +146,8 @@ public class MessagesFragment extends MeteorFragmentBase implements AdapterView.
         if (messagesRequestPending){
             loadChats(false);
         }
+
+        AnalyticsProvider.LogScreen(getActivity(), TrackingKeys.Screens.MESSAGES);
 
         return view;
     }

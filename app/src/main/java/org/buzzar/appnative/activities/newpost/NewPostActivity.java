@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.objects.Post;
 
 import java.util.Arrays;
@@ -53,6 +55,13 @@ public class NewPostActivity extends NewPostBaseActivity {
                 mPost.type = null;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.NEW_POST_TITLE);
     }
 
     protected void populateUi(){

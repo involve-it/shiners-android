@@ -31,6 +31,8 @@ import com.squareup.picasso.Picasso;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.Constants;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.objects.Photo;
 
 import java.io.File;
@@ -62,6 +64,13 @@ public class PhotoActivity extends NewPostBaseActivity implements AdapterView.On
         mLstImages.setOnItemLongClickListener(this);
 
         populateUi();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.NEW_POST_PHOTO);
     }
 
     @Override

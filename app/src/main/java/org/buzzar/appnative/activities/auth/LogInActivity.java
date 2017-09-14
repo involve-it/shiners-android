@@ -17,6 +17,8 @@ import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.SettingsHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import butterknife.BindView;
@@ -39,6 +41,13 @@ public class LogInActivity extends MeteorActivityBase {
         ButterKnife.bind(this);
 
         editTextLogin.requestFocus();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.LOG_IN);
     }
 
     @OnClick({R.id.button2, R.id.button3})
@@ -65,6 +74,7 @@ public class LogInActivity extends MeteorActivityBase {
                                 Toast.makeText(LogInActivity.this, R.string.message_authentication_successful, Toast.LENGTH_SHORT).show();
                                 setResult(Activity.RESULT_OK);
                                 progressDialog.dismiss();
+                                AnalyticsProvider.LogLogIn(LogInActivity.this);
                                 finish();
                             }
 
@@ -87,6 +97,7 @@ public class LogInActivity extends MeteorActivityBase {
                 break;
             case R.id.button3:
                 startActivityForResult(new Intent(this, RegisterActivity.class), Constants.ActivityRequestCodes.REGISTER);
+                AnalyticsProvider.LogButtonClick(this, TrackingKeys.Buttons.REGISTER);
                 break;
         }
     }

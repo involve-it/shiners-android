@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import org.buzzar.appnative.activities.newpost.NewPostActivity;
 import org.buzzar.appnative.logic.AccountHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.cache.CacheEntity;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.Constants;
@@ -131,6 +133,8 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
             getNearbyPosts(false);
             postsPending = false;
         }
+
+        AnalyticsProvider.LogScreen(getActivity(), TrackingKeys.Screens.NEARBY_POSTS);
 
         return view;
     }
@@ -248,6 +252,7 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.fragment_me_add:
+                AnalyticsProvider.LogButtonClick(getActivity(), TrackingKeys.Buttons.NEW_POST);
                 startActivity(new Intent(getActivity(), NewPostActivity.class));
                 break;
         }

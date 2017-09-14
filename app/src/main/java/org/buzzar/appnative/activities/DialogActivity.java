@@ -29,6 +29,8 @@ import org.buzzar.appnative.logic.Helper;
 import org.buzzar.appnative.logic.JsonProvider;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.MeteorCallbackHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.cache.CacheEntity;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.Chat;
@@ -155,6 +157,8 @@ public class DialogActivity extends MeteorActivityBase implements View.OnClickLi
         intentFilter.addAction(MessagesProxy.BROADCAST_GET_MESSAGES);
         intentFilter.addAction(MeteorCallbackHandler.BROADCAST_MESSAGE_ADDED);
         LocalBroadcastManager.getInstance(this).registerReceiver(messagesBroadcastReceiver, intentFilter);
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.DIALOG);
     }
 
     @Override
@@ -292,6 +296,8 @@ public class DialogActivity extends MeteorActivityBase implements View.OnClickLi
             request.put("message", txtMessage.getText().toString());
             request.put("type", "message");
             request.put("destinationUserId", chat.getOtherParty()._id);
+
+            AnalyticsProvider.LogButtonClick(this, TrackingKeys.Buttons.DIALOG_SEND_MESSAGE);
 
             callMeteorMethod(Constants.MethodNames.ADD_MESSAGE, new Object[]{request}, new ResultListener() {
                 @Override

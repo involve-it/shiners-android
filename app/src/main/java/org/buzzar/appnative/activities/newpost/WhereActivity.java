@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.buzzar.appnative.logic.LocationHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,6 +89,13 @@ public class WhereActivity extends NewPostBaseActivity implements OnMapReadyCall
         });
 
         populateUi();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.NEW_POST_WHERE);
     }
 
     protected void populateUi(){

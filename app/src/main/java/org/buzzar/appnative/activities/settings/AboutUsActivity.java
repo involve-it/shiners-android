@@ -7,6 +7,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import java.util.Locale;
@@ -34,5 +36,12 @@ public class AboutUsActivity extends MeteorActivityBase {
             aboutUsWebView.loadUrl("https://shiners.ru/about-us?isiframe=true");
         else
             aboutUsWebView.loadUrl("https://shiners.mobi/about-us?lat=37&lng=-120&isiframe=true");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.ABOUT_US);
     }
 }

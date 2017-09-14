@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.activities.auth.LogInActivity;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
 import org.buzzar.appnative.logic.Constants;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,6 +48,8 @@ public class SettingsNotLoggedInFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings_not_logged_in, container, false);
         ButterKnife.bind(this, view);
 
+        AnalyticsProvider.LogScreen(getActivity(), TrackingKeys.Screens.SETTINGS_NOT_LOGGED_IN);
+
         return view;
     }
 
@@ -54,6 +58,7 @@ public class SettingsNotLoggedInFragment extends Fragment {
         switch (view.getId()){
             case R.id.btn_login:
                 getActivity().startActivityForResult(new Intent(getActivity(), LogInActivity.class), Constants.ActivityRequestCodes.LOGIN);
+                AnalyticsProvider.LogButtonClick(getActivity(), TrackingKeys.Buttons.LOGIN);
                 break;
         }
     }

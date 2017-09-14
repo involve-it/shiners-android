@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.Helper;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -57,6 +59,13 @@ public class WhenActivity extends NewPostBaseActivity implements View.OnClickLis
                 R.id.activity_new_post_when_btn_1y}){
             findViewById(id).setOnClickListener(this);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.NEW_POST_WHEN);
     }
 
     private void setSelectedDate(){

@@ -11,6 +11,8 @@ import android.widget.Toast;
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.SettingsHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 
 import butterknife.BindView;
@@ -35,6 +37,13 @@ public class RegisterActivity extends MeteorActivityBase {
         if (MeteorSingleton.getInstance().isConnected()){
             btnRegister.setEnabled(true);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsProvider.LogScreen(this, TrackingKeys.Screens.REGISTER);
     }
 
     @OnClick(R.id.button4)
@@ -62,6 +71,7 @@ public class RegisterActivity extends MeteorActivityBase {
                                 Toast.makeText(RegisterActivity.this, R.string.message_registration_success, Toast.LENGTH_SHORT).show();
                                 setResult(Activity.RESULT_OK);
                                 progressDialog.dismiss();
+                                AnalyticsProvider.LogRegister(RegisterActivity.this);
                                 finish();
                             }
 

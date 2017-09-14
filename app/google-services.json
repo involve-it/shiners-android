@@ -1,113 +1,27 @@
 {
   "project_info": {
-    "project_number": "218885288507",
-    "firebase_url": "https://fir-shiners.firebaseio.com",
-    "project_id": "firebase-shiners",
-    "storage_bucket": "firebase-shiners.appspot.com"
+    "project_number": "105138476925",
+    "firebase_url": "https://shiners-android.firebaseio.com",
+    "project_id": "shiners-android",
+    "storage_bucket": "shiners-android.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:218885288507:android:713f8643472ffbea",
-        "android_client_info": {
-          "package_name": "com.involveit.shiners"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "218885288507-76b7im1s2q3h9epnu8bkku30a1i7naaq.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "218885288507-e7k30pd5s1123scleash19jeu77nss2f.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "218885288507-0pbvlpcog7822f785k32fgorbqudfq2h.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAEt7ar0bX0QyWiadACIA2hQJi6O7VENKA"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:218885288507:android:7cd147a018863cef",
-        "android_client_info": {
-          "package_name": "org.buzzar.app"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "218885288507-76b7im1s2q3h9epnu8bkku30a1i7naaq.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "218885288507-e7k30pd5s1123scleash19jeu77nss2f.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "218885288507-0pbvlpcog7822f785k32fgorbqudfq2h.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAEt7ar0bX0QyWiadACIA2hQJi6O7VENKA"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:218885288507:android:653368f8d28d8dd9",
+        "mobilesdk_app_id": "1:105138476925:android:653368f8d28d8dd9",
         "android_client_info": {
           "package_name": "org.buzzar.appnative"
         }
       },
       "oauth_client": [
         {
-          "client_id": "218885288507-76b7im1s2q3h9epnu8bkku30a1i7naaq.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "218885288507-e7k30pd5s1123scleash19jeu77nss2f.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "218885288507-0pbvlpcog7822f785k32fgorbqudfq2h.apps.googleusercontent.com",
+          "client_id": "105138476925-i9msitmkhvl0v8ab3m0dgrdbfh2cl64c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAEt7ar0bX0QyWiadACIA2hQJi6O7VENKA"
+          "current_key": "AIzaSyC5ScGQ7rwMw6n5LxWYBL8yhO4DrLMZ7Q8"
         }
       ],
       "services": {

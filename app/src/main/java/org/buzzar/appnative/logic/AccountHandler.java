@@ -60,6 +60,8 @@ public class AccountHandler {
         accountLoaded = false;
 
         CachingHandler.removeObject(context, CachingHandler.KEY_CURRENT_USER);
+        CachingHandler.removeObject(context, CachingHandler.KEY_MY_POSTS);
+        CachingHandler.removeObject(context, CachingHandler.KEY_DIALOGS);
     }
 
     public static boolean isLoggedIn(){

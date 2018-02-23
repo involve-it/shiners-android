@@ -24,6 +24,13 @@ public class LocationHandler {
 
     private static Location latestReportedLocation;
 
+    public static Location fakeGetUserLocation() {
+        Location Fake = null;
+        Fake = new Location("");
+        Fake.setLatitude(0);
+        Fake.setLongitude(0);
+        return Fake;
+    }
     public static void init(Context context){
         if (latestReportedLocation == null) {
             SharedPreferences prefs = context.getSharedPreferences(LOCATION_SETTINGS_FILENAME, Context.MODE_PRIVATE);
@@ -47,7 +54,13 @@ public class LocationHandler {
     }
 
     public static Location getLatestReportedLocation(){
-        return latestReportedLocation;
+        Location result;
+        if(latestReportedLocation != null){
+            result = latestReportedLocation;
+        }else{
+            result = fakeGetUserLocation();
+        }
+        return result;
     }
 
     public static String distanceFormatted(Context context, float distance){

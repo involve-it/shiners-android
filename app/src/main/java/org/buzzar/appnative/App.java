@@ -38,7 +38,7 @@ public class App extends Application {
             }
         });
 
-        LocationHandler.init(this);
+        //LocationHandler.init(this);
         AccountHandler.initFromCache(this);
 
         this.meteorCallbackHandler = new MeteorCallbackHandler(this);

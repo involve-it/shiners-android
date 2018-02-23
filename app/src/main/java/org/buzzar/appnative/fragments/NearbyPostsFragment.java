@@ -3,6 +3,7 @@ package org.buzzar.appnative.fragments;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
@@ -120,7 +121,13 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getResources().getText(R.string.message_loading_posts));
             progressDialog.show();
-            progressDialog.setCancelable(false);
+            progressDialog.setCancelable(true);
+            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
         } else {
             populateListView(cacheEntity.getObject(), false);
 

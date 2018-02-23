@@ -101,7 +101,7 @@ public class MeFragment extends MeteorFragmentBase implements AdapterView.OnItem
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getResources().getString(R.string.message_loading_posts));
             progressDialog.show();
-            progressDialog.setCancelable(false);
+            progressDialog.setCancelable(true);
         } else {
             populateListView(cache.getObject(), false);
 

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class Constants {
     public static class Defaults{
         public static final int DEFAULT_MESSAGES_PAGE = 40;
-        public static final int DEFAULT_POSTS_PAGE = 40;
+        public static final int DEFAULT_POSTS_PAGE = 5;//40
         public static final int DEFAULT_DIALOGS_PAGE = 50;
-        public static final int DEFAULT_MY_POSTS_PAGE = 40;
+        public static final int DEFAULT_MY_POSTS_PAGE = 5;//40;
     }
 
     public static class Tags{
@@ -51,8 +51,8 @@ public class Constants {
     }
 
     public static class Urls{
-        /*public static final String BASE_URL = "http://192.168.1.73:3000";
-        public static final String METEOR_URL = "ws://192.168.1.73:3000/websocket";*/
+       /* public static final String BASE_URL = "http://192.168.43.21:3000";
+        public static final String METEOR_URL = "ws://192.168.43.21:3000/websocket";*/
 
         public static final String BASE_URL = "https://shiners.mobi";
         public static final String METEOR_URL = "wss://shiners.mobi/websocket";

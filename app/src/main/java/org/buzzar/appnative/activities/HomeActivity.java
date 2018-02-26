@@ -24,6 +24,7 @@ import android.view.Window;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.activities.auth.LogInActivity;
 import org.buzzar.appnative.activities.newpost.NewPostActivity;
 import org.buzzar.appnative.fragments.MeFragment;
 import org.buzzar.appnative.fragments.MessagesFragment;
@@ -34,6 +35,8 @@ import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.Constants;
 import org.buzzar.appnative.logic.MeteorBroadcastReceiver;
 import org.buzzar.appnative.logic.SettingsHandler;
+import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
+import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.ui.MeteorActivityBase;
 import org.buzzar.appnative.services.SimpleLocationService;
 
@@ -154,11 +157,22 @@ public class HomeActivity extends MeteorActivityBase implements SettingsFragment
         }
 
         if (isLoggedIn){
+            ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(0).setVisibility(View.VISIBLE);
             ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(1).setVisibility(View.VISIBLE);
+            ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(2).setVisibility(View.VISIBLE);
             ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(3).setVisibility(View.VISIBLE);
+            ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(4).setVisibility(View.VISIBLE);
         } else {
+            ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(0).setVisibility(View.GONE);
             ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
+            ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
             ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(3).setVisibility(View.GONE);
+            ((ViewGroup)tabLayout.getChildAt(0)).getChildAt(4).setVisibility(View.GONE);
+            //setContentView(R.layout.fragment_settings_not_logged_in);
+            //displayView(TAB_SETTINGS_NOT_LOGGED_IN);
+            tabLayout.getTabAt(TAB_SETTINGS).select();
+            SettingsHandler.setIntSetting(HomeActivity.this, SettingsHandler.HOME_PAGE_INDEX, TAB_SETTINGS);
+            displayView(TAB_SETTINGS);
         }
     }
 
@@ -246,7 +260,8 @@ public class HomeActivity extends MeteorActivityBase implements SettingsFragment
     public void onLogout() {
         SettingsHandler.removeSetting(this, SettingsHandler.USER_ID);
         refreshLoggedInStatus();
-        displayView(0);
+        startActivity(new Intent(this, LogInActivity.class));
+        //displayView(TAB_SETTINGS);
     }
 
     @Override

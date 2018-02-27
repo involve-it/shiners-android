@@ -9,6 +9,10 @@
 
     <string name="message_loading_account">Загрузка учетной записи</string>
 
+    <string name="message_empty_phone">Пожалуйста введите номер телефона</string>
+    <string name="message_empty_regCode">Пожалуйста введите регистрационный код</string>
+    <string name="title_empty_field">Не все поля заполнены</string>
+
     <string name="message_loading_chats">Загрузка</string>
 
     <string name="message_authentication_successful">Аутенитфикация успешна!</string>
@@ -42,6 +46,8 @@
 
     <string name="hint_password">Пароль</string>
     <string name="hint_username">Имя пользователя</string>
+    <string name="hint_phone_number">Номер телефона</string>
+    <string name="hint_reg_code">Регистрационный код</string>
     <string name="btn_do_register">Ок</string>
     <string name="hint_confirm_password">Подтвердите пароль</string>
     <string name="hint_email_address">Email адрес</string>

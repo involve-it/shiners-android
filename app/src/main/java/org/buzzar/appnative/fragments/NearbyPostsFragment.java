@@ -120,14 +120,16 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
         if (cacheEntity == null) {
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getResources().getText(R.string.message_loading_posts));
-            progressDialog.show();
-            progressDialog.setCancelable(true);
             progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }
             });
+            progressDialog.show();
+            progressDialog.setCancelable(true);
+
+
         } else {
             populateListView(cacheEntity.getObject(), false);
 

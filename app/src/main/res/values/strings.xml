@@ -11,9 +11,16 @@
 
     <string name="message_empty_phone">Please enter phone number</string>
     <string name="message_empty_regCode">Please enter registration code</string>
+    <string name="message_city_not_selected">Please select your city</string>
     <string name="title_empty_field">Not all fields are filled</string>
-
+    <string name="city_spinner">Select your city</string>
     <string name="message_loading_chats">Loading conversations</string>
+    <string-array name="cities">
+        <item>Select your city</item>
+        <item>Lipetsk</item>
+        <item>Yelets</item>
+        <item>Voronezh</item>
+    </string-array>
 
     <string name="message_authentication_successful">Success!</string>
     <string name="message_authentication_error">Authentication error</string>

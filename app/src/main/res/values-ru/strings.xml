@@ -11,7 +11,15 @@
 
     <string name="message_empty_phone">Пожалуйста введите номер телефона</string>
     <string name="message_empty_regCode">Пожалуйста введите регистрационный код</string>
+    <string name="message_city_not_selected">Пожалуйста выберите свой город</string>
+    <string name="city_spinner">Выберите свой город</string>
     <string name="title_empty_field">Не все поля заполнены</string>
+    <string-array name="cities">
+        <item>Выберите ваш город</item>
+        <item>Липецк</item>
+        <item>Елец</item>
+        <item>Воронеж</item>
+    </string-array>
 
     <string name="message_loading_chats">Загрузка</string>
 

@@ -154,6 +154,8 @@
     <string name="activity_new_post_when_lbl_ad_expires">Pick when your ad expires</string>
     <string name="activity_new_post_when_lbl_or">OR</string>
     <string name="activity_new_post_when_btn_pick_custom_date">Pick custom date</string>
+    <string name="activity_new_post_event_when_btn_choose_date">Pick exact date</string>
+    <string name="activity_new_post_event_when_btn_choose_time">Pick exact time</string>
     <string name="new_post_wizard_menu_next">Next</string>
     <string name="new_post_wizard_menu_create">Create</string>
     <string name="validation_post_title_empty">Please provide a post title</string>

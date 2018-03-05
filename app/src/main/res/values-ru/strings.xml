@@ -173,6 +173,8 @@
     <string name="when_does_it_expire">Срок действия</string>
     <string name="how_does_it_look_like">Как будет выглядеть?</string>
     <string name="activity_new_post_when_btn_pick_custom_date">Произвольная дата</string>
+    <string name="activity_new_post_event_when_btn_choose_date">Выберите дату</string>
+    <string name="activity_new_post_event_when_btn_choose_time">Выберите время</string>
     <string name="new_post_photo_error_upload">Возникла ошибка при загрузке фото</string>
     <string name="message">Сообщение</string>
     <string name="msg_not_connected">Похоже, что у вас отсутствует соединение с Интернетом. Пожалуйста, попробуйте позже.</string>

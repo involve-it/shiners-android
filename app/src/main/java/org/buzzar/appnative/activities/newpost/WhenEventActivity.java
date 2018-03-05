@@ -1,6 +1,7 @@
 package org.buzzar.appnative.activities.newpost;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,44 +21,50 @@ import org.buzzar.appnative.logic.analytics.TrackingKeys;
 
 import java.util.Calendar;
 import java.util.Date;
+import android.text.format.Time;
+import android.text.format.DateFormat;
+
 
 import butterknife.BindView;
 
 public class WhenEventActivity extends NewPostBaseActivity implements View.OnClickListener {
-    @BindView(R.id.activity_new_post_when_btn_custom_date)
-    Button mBtnCustomDate;
+    @BindView(R.id.activity_new_post_event_when_btn_choose_date)
+    Button mBtnChooseDate;
+    @BindView(R.id.activity_new_post_event_when_btn_choose_time)
+    Button mBtnChooseTime;
     @BindView(R.id.activity_new_post_when_txt_date)
     TextView mTxtDate;
+    @BindView(R.id.activity_new_post_when_txt_time)
+    TextView mTxtTime;
 
     Calendar mSelectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_post_when);
+        setContentView(R.layout.activity_new_post_event_when);
         setActivityDefaults(true);
 
         setSelectedDate();
 
         populateUi();
 
-        mBtnCustomDate.setOnClickListener(new View.OnClickListener() {
+        mBtnChooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerFragment fragment = new DatePickerFragment();
                 fragment.show(getSupportFragmentManager(), "datePicker");
+//                DatePickerFragment fragment = new DatePickerFragment();
+//                fragment.show(getSupportFragmentManager(), "datePicker");
             }
         });
-
-        for(int id : new int[] {
-                R.id.activity_new_post_when_btn_1d,
-                R.id.activity_new_post_when_btn_2d,
-                R.id.activity_new_post_when_btn_1w,
-                R.id.activity_new_post_when_btn_2w,
-                R.id.activity_new_post_when_btn_1m,
-                R.id.activity_new_post_when_btn_1y}){
-            findViewById(id).setOnClickListener(this);
-        }
+        mBtnChooseTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerFragment fragment = new TimePickerFragment();
+                fragment.show(getSupportFragmentManager(), "timePicker");
+            }
+        });
     }
 
     @Override
@@ -80,13 +88,17 @@ public class WhenEventActivity extends NewPostBaseActivity implements View.OnCli
     @Override
     protected void populateUi() {
         if (mSelectedDate != null){
-            Date endDate = new Date(mSelectedDate.getTimeInMillis());
-            mTxtDate.setText(Helper.formatDate(this, endDate));
+            Date date = new Date(mSelectedDate.getTimeInMillis());
+            //Time time = new Time(mSelectedDate.getTime());
+            mTxtDate.setText(Helper.formatDate(this, date));
+//            mTxtDate.setText(Helper.formatDate(this, date));
+//            mTxtTime.setText(Helper.formatDate(this, time));
         }
     }
 
     @Override
     protected void populatePost() {
+
         mPost.endDatePost = new Date(mSelectedDate.getTimeInMillis());
     }
 
@@ -108,32 +120,7 @@ public class WhenEventActivity extends NewPostBaseActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.activity_new_post_when_btn_1d:
-                mSelectedDate = Calendar.getInstance();
-                mSelectedDate.add(Calendar.DAY_OF_MONTH, 1);
-                break;
-            case R.id.activity_new_post_when_btn_2d:
-                mSelectedDate = Calendar.getInstance();
-                mSelectedDate.add(Calendar.DAY_OF_MONTH, 2);
-                break;
-            case R.id.activity_new_post_when_btn_1w:
-                mSelectedDate = Calendar.getInstance();
-                mSelectedDate.add(Calendar.DAY_OF_MONTH, 7);
-                break;
-            case R.id.activity_new_post_when_btn_2w:
-                mSelectedDate = Calendar.getInstance();
-                mSelectedDate.add(Calendar.DAY_OF_MONTH, 14);
-                break;
-            case R.id.activity_new_post_when_btn_1m:
-                mSelectedDate = Calendar.getInstance();
-                mSelectedDate.add(Calendar.MONTH, 1);
-                break;
-            case R.id.activity_new_post_when_btn_1y:
-                mSelectedDate = Calendar.getInstance();
-                mSelectedDate.add(Calendar.YEAR, 1);
-                break;
-        }
+
 
         populateUi();
     }
@@ -160,6 +147,36 @@ public class WhenEventActivity extends NewPostBaseActivity implements View.OnCli
             WhenEventActivity activity = ((WhenEventActivity)getActivity());
             activity.mSelectedDate = calendar;
             activity.populateUi();
+        }
+    }
+    public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            //return super.onCreateDialog(savedInstanceState);
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR);
+            int minute = c.get(Calendar.MINUTE);
+//            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new TimePickerDialog(getActivity(),this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+//            return new TimePickerDialog(getActivity(), this, hour, minute);
+        }
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.set(hourOfDay, minute);
+//            WhenEventActivity activity = ((WhenEventActivity)getActivity());
+//            activity.mSelectedDate = calendar;
+//            activity.populateUi();
+
+            TextView tv = (TextView) getActivity().findViewById(R.id.activity_new_post_when_txt_time);
+            //Display the user changed time on TextView
+            tv.setText(String.valueOf(hourOfDay) + " : " + String.valueOf(minute));
         }
     }
 }

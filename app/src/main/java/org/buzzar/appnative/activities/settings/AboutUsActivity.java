@@ -33,7 +33,8 @@ public class AboutUsActivity extends MeteorActivityBase {
         aboutUsWebView.getSettings().setJavaScriptEnabled(true);
         String lang = Locale.getDefault().getLanguage();
         if("ru".equals(lang))
-            aboutUsWebView.loadUrl("https://shiners.ru/about-us?isiframe=true");
+//            aboutUsWebView.loadUrl("https://shiners.ru/about-us?isiframe=true");
+            aboutUsWebView.loadUrl("https://shiners.mobi/about-us?lat=37&lng=-120&isiframe=true");
         else
             aboutUsWebView.loadUrl("https://shiners.mobi/about-us?lat=37&lng=-120&isiframe=true");
     }

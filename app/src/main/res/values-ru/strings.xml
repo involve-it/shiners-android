@@ -43,7 +43,7 @@
 
     <string name="label_current_location">Текущее местоположение</string>
 
-    <string name="tab_title_posts">События</string>
+    <string name="tab_title_posts">Вокруг</string>
     <string name="tab_title_me">Мои посты</string>
     <string name="tab_title_messages">Сообщения</string>
     <string name="tab_title_settings">Настройки</string>
@@ -79,7 +79,6 @@
         <item>Связи и знакомства</item>
         <item>Покупка и продажа</item>
         <item>Рынок жилья</item>
-        <item>Местные события</item>
         <item>Услуги</item>
         <item>Помощь</item>
     </string-array>

@@ -94,6 +94,8 @@ public class HomeActivity extends MeteorActivityBase implements SettingsFragment
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        refreshLoggedInStatus();
+
         if (mTabToDisplay == -1){
             mTabToDisplay = SettingsHandler.getIntSetting(this, SettingsHandler.HOME_PAGE_INDEX);
         }
@@ -128,8 +130,6 @@ public class HomeActivity extends MeteorActivityBase implements SettingsFragment
 
             }
         });
-
-        refreshLoggedInStatus();
 
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int result = googleApiAvailability.isGooglePlayServicesAvailable(this);

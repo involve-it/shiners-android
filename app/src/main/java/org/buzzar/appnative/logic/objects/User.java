@@ -59,7 +59,6 @@ public class User implements Parcelable, Serializable {
         profile = in.readParcelable(UserProfile.class.getClassLoader());
         image = in.readParcelable(Photo.class.getClassLoader());
         profileDetails = in.createTypedArrayList(ProfileDetail.CREATOR);
-        test=in.readString();
         long temp = in.readLong();
         if (temp != 0){
             this.createdAt = new Date(temp);
@@ -172,6 +171,7 @@ public class User implements Parcelable, Serializable {
         parcel.writeString(_id);
         parcel.writeString(username);
         parcel.writeByte((byte) (online ? 1 : 0));
+        parcel.writeParcelable(profile, i);
         parcel.writeParcelable(image, i);
         parcel.writeTypedList(profileDetails);
         if (this.createdAt != null)

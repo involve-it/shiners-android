@@ -10,14 +10,15 @@
     tools:context="org.buzzar.appnative.activities.newpost.PhotoActivity">
 
     <Button
-        android:text="Add photo"
+        android:id="@+id/activity_new_post_photo_btn_add_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/activity_new_post_photo_btn_add_photo"
         android:backgroundTint="#FF3B2F"
-        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"/>
+        android:text="Добавить изображение"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
     <ListView
+        android:id="@+id/activity_new_post_photo_lst_images"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:id="@+id/activity_new_post_photo_lst_images" />
+        android:layout_height="match_parent" />
 </LinearLayout>

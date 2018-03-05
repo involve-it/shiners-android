@@ -8,6 +8,21 @@
     android:layout_height="match_parent"
     tools:context="org.buzzar.appnative.activities.newpost.NewPostActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Тип Создаваемого Поста" />
+
+    <Spinner
+        android:id="@+id/activity_new_post_spinner_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Название Поста" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +31,12 @@
         android:gravity="top"
         android:hint="@string/tap_here_to_give_post_a_title"
         android:id="@+id/activity_new_post_txt_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Детали Поста" />
+
     <EditText
         android:layout_width="match_parent"
         android:gravity="top"
@@ -24,8 +45,5 @@
         android:inputType="textMultiLine"
         android:hint="@string/optional_provide_more_details"
         android:id="@+id/activity_new_post_txt_description"/>
-    <android.support.v7.widget.AppCompatSpinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/activity_new_post_spinner_category"/>
+
 </LinearLayout>

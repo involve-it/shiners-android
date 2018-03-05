@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Светлячки</string>
+    <string name="app_name">Притяжение</string>
 
     <string name="message_na">…</string>
 
@@ -43,8 +43,8 @@
 
     <string name="label_current_location">Текущее местоположение</string>
 
-    <string name="tab_title_posts">Посты</string>
-    <string name="tab_title_me">Я</string>
+    <string name="tab_title_posts">События</string>
+    <string name="tab_title_me">Мои посты</string>
     <string name="tab_title_messages">Сообщения</string>
     <string name="tab_title_settings">Настройки</string>
 
@@ -74,8 +74,8 @@
     </string-array>
 
     <string-array name="post_categories">
+        <item>События</item>
         <item>Работа</item>
-        <item>Тренинги</item>
         <item>Связи и знакомства</item>
         <item>Покупка и продажа</item>
         <item>Рынок жилья</item>
@@ -85,8 +85,8 @@
     </string-array>
 
     <string-array name="tab_titles">
-        <item>Светлячки</item>
-        <item>Я</item>
+        <item>Притяжение</item>
+        <item>Мои Посты</item>
         <item></item>
         <item>Сообщения</item>
         <item>Настройки</item>
@@ -119,7 +119,7 @@
     <string name="contact_us">Связаться с нами</string>
     <string name="my_profile">Мой профиль</string>
     <string name="notify_me_of_nearby_events">Оповещать меня о событиях рядом</string>
-    <string name="invisible_mode">Невидимка</string>
+    <string name="invisible_mode">Открыт для встреч</string>
     <string name="log_out">Выйти</string>
     <string name="like">Нравится</string>
     <string name="add_a_comment">Комментарий</string>
@@ -162,7 +162,7 @@
     <string name="activity_where_lbl_dynamic_post">Динамический пост</string>
     <string name="activity_where_lbl_expl_dynamic_post">Подключено к Вашему телефону, перемещается вместе с Вами</string>
     <string name="activity_where_lbl_expl_static_post">Подключено к выбранному месту</string>
-    <string name="activity_where_lbl_select_location">Выберите местоположение</string>
+    <string name="activity_where_lbl_select_location">Включить статус онлайн для поста:</string>
     <string name="activity_where_lbl_static_post">Статический пост</string>
     <string name="dialog_creating_post">Создание поста...</string>
     <string name="dialog_deleting_dialog">Удаление диалога...</string>

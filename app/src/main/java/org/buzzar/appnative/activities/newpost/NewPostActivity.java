@@ -43,6 +43,7 @@ public class NewPostActivity extends NewPostBaseActivity {
         setContentView(R.layout.activity_new_post_title);
         setActivityDefaults(true);
         String test[]=getResources().getStringArray(R.array.post_categories);
+        spCategory.setEnabled(false);
         spCategory.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -84,7 +85,11 @@ public class NewPostActivity extends NewPostBaseActivity {
 
     @Override
     protected Intent getNextStepIntent() {
-        return new Intent(NewPostActivity.this, WhereActivity.class);
+        if (mPost.type.compareTo("events") == 0) {
+            return new Intent(NewPostActivity.this, WhereEventActivity.class);
+        } else {
+            return new Intent(NewPostActivity.this, WhereActivity.class);
+        }
     }
 
     @Override

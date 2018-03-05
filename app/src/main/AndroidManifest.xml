@@ -67,7 +67,15 @@
             android:label="@string/where_is_it_located"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activities.newpost.WhereEventActivity"
+            android:label="@string/where_is_it_located"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activities.newpost.WhenActivity"
+            android:label="@string/when_does_it_expire"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.newpost.WhenEventActivity"
             android:label="@string/when_does_it_expire"
             android:screenOrientation="portrait" />
         <activity

@@ -113,7 +113,7 @@ public class SettingsFragment extends MeteorFragmentBase {
             @Override
             public void run() {
                 swNotifyNearby.setChecked(currentUser.enableNearbyNotifications);
-                swInvisibleMode.setChecked(currentUser.isInvisible);
+                swInvisibleMode.setChecked(!currentUser.isInvisible);
                 settingInitials = false;
             }
         });
@@ -124,7 +124,7 @@ public class SettingsFragment extends MeteorFragmentBase {
         if (!settingInitials) {
             User currentUser = AccountHandler.getCurrentUser();
             if (buttonView.equals(swInvisibleMode)) {
-                currentUser.isInvisible = isChecked;
+                currentUser.isInvisible = !isChecked;
                 if (isChecked){
                     AnalyticsProvider.LogEvent(getActivity(), TrackingKeys.Events.INVISIBLE_SETTING_ON);
                 } else {
@@ -197,7 +197,7 @@ public class SettingsFragment extends MeteorFragmentBase {
                 break;
             case R.id.btn_contact_us:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                emailIntent.setData(Uri.parse("mailto:developer@example.com"));
+                emailIntent.setData(Uri.parse("mailto:shiners.test@gmail.com"));
                 try {
                     startActivity(Intent.createChooser(emailIntent, "Send mail..."));
                 } catch (android.content.ActivityNotFoundException ex) {

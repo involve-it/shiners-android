@@ -84,12 +84,12 @@
     </string-array>
     
     <string-array name="post_categories_short" translatable="false">
+        <item>events</item>
         <item>jobs</item>
         <item>trainings</item>
         <item>connect</item>
         <item>trade</item>
         <item>housing</item>
-        <item>events</item>
         <item>services</item>
         <item>help</item>
     </string-array>

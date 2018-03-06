@@ -21,6 +21,9 @@
         <item>Воронеж</item>
     </string-array>
 
+    <string name="message_temporarily_block">Функция временно доступна только для тренеров</string>
+    <string name="title_temporarily_block">Временно не доступно</string>
+
     <string name="message_loading_chats">Загрузка</string>
 
     <string name="message_authentication_successful">Аутенитфикация успешна!</string>

@@ -1,5 +1,9 @@
 package org.buzzar.appnative.activities.newpost;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
@@ -11,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.logic.AccountHandler;
 import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
 import org.buzzar.appnative.logic.analytics.TrackingKeys;
 import org.buzzar.appnative.logic.objects.Post;
@@ -35,7 +40,6 @@ public class NewPostActivity extends NewPostBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (mPost == null){
             mPost = new Post();
         }
@@ -45,6 +49,15 @@ public class NewPostActivity extends NewPostBaseActivity {
         String test[]=getResources().getStringArray(R.array.post_categories);
         spCategory.setEnabled(false);
         spCategory.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
+        String role = AccountHandler.getRole();
+        if (role.equals("user")) {
+            new AlertDialog.Builder(this).setMessage(R.string.message_temporarily_block).setTitle(R.string.title_temporarily_block)
+                    .setPositiveButton(R.string.txt_ok, new OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    } ).show();
+        }
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

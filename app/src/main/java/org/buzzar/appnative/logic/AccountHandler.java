@@ -10,6 +10,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import org.buzzar.appnative.R;
+import org.buzzar.appnative.activities.HomeActivity;
 import org.buzzar.appnative.logic.cache.CacheEntity;
 import org.buzzar.appnative.logic.cache.CachingHandler;
 import org.buzzar.appnative.logic.objects.User;
@@ -64,8 +65,16 @@ public class AccountHandler {
         CachingHandler.removeObject(context, CachingHandler.KEY_DIALOGS);
     }
 
-    public static boolean isLoggedIn(){
-        return currentUser != null;
+    public static boolean isLoggedIn(){return currentUser != null;}
+
+    public static String getRole(){
+        String result;
+        if (currentUser.profile.role==null){
+            result="user";
+        }else{
+            result = currentUser.profile.role;
+        }
+        return result;
     }
 
     private static void gcmRegistrationFailed(){

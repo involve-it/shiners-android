@@ -45,6 +45,7 @@ import org.buzzar.appnative.logic.objects.response.GetPostsResponse;
 import org.buzzar.appnative.logic.objects.Photo;
 import org.buzzar.appnative.logic.objects.Post;
 import org.buzzar.appnative.activities.PostDetailsActivity;
+import org.buzzar.appnative.activities.PostDetailsActivityEvent;
 import org.buzzar.appnative.R;
 import org.buzzar.appnative.logic.ui.MeteorFragmentBase;
 import org.buzzar.appnative.services.SimpleLocationService;
@@ -86,8 +87,12 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
+                if (true) {
+                    getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivityEvent.class).putExtra(PostDetailsActivityEvent.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
 
-                getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
+                } else {
+                    getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
+                }
             }
         });
 

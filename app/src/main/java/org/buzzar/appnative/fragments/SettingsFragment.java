@@ -112,9 +112,11 @@ public class SettingsFragment extends MeteorFragmentBase {
         swNotifyNearby.post(new Runnable() {
             @Override
             public void run() {
-                swNotifyNearby.setChecked(currentUser.enableNearbyNotifications);
-                swInvisibleMode.setChecked(!currentUser.isInvisible);
-                settingInitials = false;
+                if(currentUser != null) {
+                    swNotifyNearby.setChecked(currentUser.enableNearbyNotifications);
+                    swInvisibleMode.setChecked(!currentUser.isInvisible);
+                    settingInitials = false;
+                }
             }
         });
     }

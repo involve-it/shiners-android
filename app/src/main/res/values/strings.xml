@@ -22,6 +22,9 @@
         <item>Voronezh</item>
     </string-array>
 
+    <string name="message_temporarily_block">The function is temporarily available only to trainers</string>
+    <string name="title_temporarily_block">Temporarily not available</string>
+
     <string name="message_authentication_successful">Success!</string>
     <string name="message_authentication_error">Authentication error</string>
     <string name="message_internal_error">Internal error</string>

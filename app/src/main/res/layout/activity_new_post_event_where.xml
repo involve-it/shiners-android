@@ -15,6 +15,11 @@
         android:layout_weight="1"
         android:layout_height="match_parent">
 
+        <fragment
+            android:id="@+id/fragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,32 +33,6 @@
                 android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
                 />
         </android.support.v7.widget.CardView>
-
-        <fragment
-            android:id="@+id/fragment"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <!--<SearchView-->
-            <!--android:_id="@+_id/activity_where_searchView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--tools:layout_editor_absoluteY="8dp"-->
-            <!--tools:layout_editor_absoluteX="8dp"-->
-            <!--android:background="#fff"-->
-            <!--android:layout_gravity="top"-->
-            <!--android:layout_margin="10dp"-->
-            <!--android:layout_height="50dp"/>-->
-
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:text="@string/activity_where_lbl_acquiring_location"-->
-            <!--android:layout_margin="10dp"-->
-            <!--android:padding="10dp"-->
-            <!--android:background="#fff"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="bottom"-->
-            <!--android:_id="@+_id/activity_where_txt_address"/>-->
     </FrameLayout>
 
     <AutoCompleteTextView

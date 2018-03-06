@@ -113,7 +113,7 @@ public class WhenEventActivity extends NewPostBaseActivity implements View.OnCli
         Calendar today = Calendar.getInstance();
         if (today.getTimeInMillis() >= mSelectedDate.getTimeInMillis()){
             valid = false;
-            Toast.makeText(this, "Expiration date should be in the future", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Дата события должна быть в будущем", Toast.LENGTH_SHORT).show();
         }
         return valid;
     }

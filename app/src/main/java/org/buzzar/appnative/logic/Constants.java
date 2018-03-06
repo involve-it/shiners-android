@@ -51,11 +51,14 @@ public class Constants {
     }
 
     public static class Urls{
-       /* public static final String BASE_URL = "http://192.168.43.21:3000";
-        public static final String METEOR_URL = "ws://192.168.43.21:3000/websocket";*/
+        public static final String BASE_URL = "http://172.20.10.13:3000";
+        public static final String METEOR_URL = "ws://172.20.10.13:3000/websocket";
 
-        public static final String BASE_URL = "https://shiners.mobi";
-        public static final String METEOR_URL = "wss://shiners.mobi/websocket";
+//        public static final String BASE_URL = "http://localhost:3000";
+//        public static final String METEOR_URL = "ws://localhost:3000/websocket";
+
+//        public static final String BASE_URL = "https://shiners.mobi";
+//        public static final String METEOR_URL = "wss://shiners.mobi/websocket";
     }
 
     public static final String[] POST_CATEGORIES = new String[]{"jobs", "trainings", "connect", "trade", "housing", "events", "services", "help"};

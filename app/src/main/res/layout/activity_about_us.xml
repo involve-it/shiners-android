@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.buzzar.appnative.activities.settings.AboutUsActivity">
+    tools:context="org.buzzar.appPrityazhenie.activities.settings.AboutUsActivity">
 
     <WebView
         android:layout_width="match_parent"

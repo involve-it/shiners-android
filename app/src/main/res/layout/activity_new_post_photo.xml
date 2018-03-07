@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context="org.buzzar.appnative.activities.newpost.PhotoActivity">
+    tools:context="org.buzzar.appPrityazhenie.activities.newpost.PhotoActivity">
 
     <Button
         android:id="@+id/activity_new_post_photo_btn_add_photo"

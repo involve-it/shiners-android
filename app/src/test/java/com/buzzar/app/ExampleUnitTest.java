@@ -1,4 +1,4 @@
-package org.buzzar.appnative;
+package org.buzzar.appPrityazhenie;
 
 import org.junit.Test;
 

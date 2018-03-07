@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.buzzar.appnative">
+    package="org.buzzar.appPrityazhenie">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,13 +10,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission
-        android:name="org.buzzar.appnative.permission.C2D_MESSAGE"
+        android:name="org.buzzar.appPrityazhenie.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.involveit.shiners.permission.C2D_MESSAGE" />
 
     <application
-        android:name=".App"
+        android:name="org.buzzar.appPrityazhenie.App"
         android:allowBackup="true"
         android:icon="@drawable/shiners_add3x"
         android:label="@string/app_name"
@@ -28,7 +28,7 @@
             android:value="AIzaSyA_x2qZmBzH2XJFIsfU8vab99jwiG_u-2g" />
 
         <activity
-            android:name=".activities.HomeActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.HomeActivity"
             android:icon="@drawable/shiners_add3x"
             android:label="Shiners"
             android:screenOrientation="portrait">
@@ -39,47 +39,47 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.auth.LogInActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.auth.LogInActivity"
             android:label="@string/msg_log_in"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeAuth" />
         <activity
-            android:name=".activities.auth.RegisterActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.auth.RegisterActivity"
             android:label="@string/registration"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeAuth" />
 
         <service
-            android:name=".services.SimpleLocationService"
+            android:name="org.buzzar.appPrityazhenie.services.SimpleLocationService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".activities.PostDetailsActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.PostDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.newpost.NewPostActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.newpost.NewPostActivity"
             android:label="@string/new_post_header"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.newpost.WhereActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.newpost.WhereActivity"
             android:label="@string/where_is_it_located"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.newpost.WhereEventActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.newpost.WhereEventActivity"
             android:label="@string/where_is_it_located"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.newpost.WhenActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.newpost.WhenActivity"
             android:label="@string/when_does_it_expire"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.newpost.WhenEventActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.newpost.WhenEventActivity"
             android:label="@string/when_does_it_expire"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.newpost.PhotoActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.newpost.PhotoActivity"
             android:label="@string/how_does_it_look_like"
             android:screenOrientation="portrait" />
 
@@ -88,28 +88,28 @@
             android:enabled="true" />
 
         <activity
-            android:name=".activities.DialogActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.DialogActivity"
             android:label="Dialog"
-            android:parentActivityName=".activities.HomeActivity"
+            android:parentActivityName="org.buzzar.appPrityazhenie.activities.HomeActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.buzzar.appnative.activities.DialogActivity" />
+                android:value="org.buzzar.appPrityazhenie.activities.DialogActivity" />
         </activity>
 
         <service
-            android:name=".services.BackgroundLocationService"
+            android:name="org.buzzar.appPrityazhenie.services.BackgroundLocationService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".services.GcmNotificationService"
+            android:name="org.buzzar.appPrityazhenie.services.GcmNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".services.GcmIdListenerService"
+            android:name="org.buzzar.appPrityazhenie.services.GcmIdListenerService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -130,15 +130,15 @@
         </receiver>
 
         <activity
-            android:name=".activities.settings.MyProfileActivity"
+            android:name="org.buzzar.appPrityazhenie.activities.settings.MyProfileActivity"
             android:label="@string/my_profile"
-            android:parentActivityName=".activities.HomeActivity"
+            android:parentActivityName="org.buzzar.appPrityazhenie.activities.HomeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name=".activities.settings.AboutUsActivity"
+        <activity android:name="org.buzzar.appPrityazhenie.activities.settings.AboutUsActivity"
             android:label="@string/about_us"
-            android:parentActivityName=".activities.HomeActivity"
+            android:parentActivityName="org.buzzar.appPrityazhenie.activities.HomeActivity"
             android:screenOrientation="portrait"/>
 
     </application>

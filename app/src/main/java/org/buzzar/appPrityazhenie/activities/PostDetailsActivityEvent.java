@@ -1,4 +1,4 @@
-package org.buzzar.appnative.activities;
+package org.buzzar.appPrityazhenie.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -21,7 +21,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -39,26 +38,24 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-import org.buzzar.appnative.R;
-import org.buzzar.appnative.logic.AccountHandler;
-import org.buzzar.appnative.logic.Constants;
-import org.buzzar.appnative.logic.Helper;
-import org.buzzar.appnative.logic.JsonProvider;
-import org.buzzar.appnative.logic.LocationHandler;
-import org.buzzar.appnative.logic.analytics.AnalyticsProvider;
-import org.buzzar.appnative.logic.analytics.TrackingKeys;
-import org.buzzar.appnative.logic.objects.Message;
-import org.buzzar.appnative.logic.objects.MessageToSend;
-import org.buzzar.appnative.logic.objects.Post;
-import org.buzzar.appnative.logic.objects.User;
-import org.buzzar.appnative.logic.objects.response.GetPostResponse;
-import org.buzzar.appnative.logic.objects.response.ResponseBase;
-import org.buzzar.appnative.logic.objects.response.SendMessageResponse;
-import org.buzzar.appnative.logic.ui.MeteorActivityBase;
-import org.buzzar.appnative.services.SimpleLocationService;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.buzzar.appPrityazhenie.R;
+import org.buzzar.appPrityazhenie.R;
+import org.buzzar.appPrityazhenie.logic.AccountHandler;
+import org.buzzar.appPrityazhenie.logic.Constants;
+import org.buzzar.appPrityazhenie.logic.Helper;
+import org.buzzar.appPrityazhenie.logic.JsonProvider;
+import org.buzzar.appPrityazhenie.logic.LocationHandler;
+import org.buzzar.appPrityazhenie.logic.analytics.AnalyticsProvider;
+import org.buzzar.appPrityazhenie.logic.analytics.TrackingKeys;
+import org.buzzar.appPrityazhenie.logic.objects.Message;
+import org.buzzar.appPrityazhenie.logic.objects.MessageToSend;
+import org.buzzar.appPrityazhenie.logic.objects.Post;
+import org.buzzar.appPrityazhenie.logic.objects.User;
+import org.buzzar.appPrityazhenie.logic.objects.response.GetPostResponse;
+import org.buzzar.appPrityazhenie.logic.objects.response.ResponseBase;
+import org.buzzar.appPrityazhenie.logic.objects.response.SendMessageResponse;
+import org.buzzar.appPrityazhenie.logic.ui.MeteorActivityBase;
+import org.buzzar.appPrityazhenie.services.SimpleLocationService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -436,7 +433,7 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
     private void recalculateDistances(){
         Location currentLocation = LocationHandler.getLatestReportedLocation();
         if (currentLocation != null && post != null) {
-            org.buzzar.appnative.logic.objects.Location location = post.getLocation();
+            org.buzzar.appPrityazhenie.logic.objects.Location location = post.getLocation();
             if (location != null) {
                 float distance = location.distanceFrom(currentLocation.getLatitude(), currentLocation.getLongitude());
 

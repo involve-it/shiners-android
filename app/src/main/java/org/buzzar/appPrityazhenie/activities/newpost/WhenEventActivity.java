@@ -99,6 +99,7 @@ public class WhenEventActivity extends NewPostBaseActivity implements View.OnCli
     @Override
     protected void populatePost() {
 
+        //int t = mSelectedTime.getTimeInMillis();
         mPost.endDatePost = new Date(mSelectedDate.getTimeInMillis());
     }
 
@@ -113,7 +114,7 @@ public class WhenEventActivity extends NewPostBaseActivity implements View.OnCli
         Calendar today = Calendar.getInstance();
         if (today.getTimeInMillis() >= mSelectedDate.getTimeInMillis()){
             valid = false;
-            Toast.makeText(this, "Expiration date should be in the future", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Дата события должна быть в будущем", Toast.LENGTH_SHORT).show();
         }
         return valid;
     }
@@ -172,6 +173,13 @@ public class WhenEventActivity extends NewPostBaseActivity implements View.OnCli
 //            calendar.set(hourOfDay, minute);
 //            WhenEventActivity activity = ((WhenEventActivity)getActivity());
 //            activity.mSelectedDate = calendar;
+//            activity.populateUi();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(hourOfDay, minute);
+            WhenEventActivity activity = ((WhenEventActivity)getActivity());
+            activity.mSelectedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            activity.mSelectedDate.set(Calendar.MINUTE, minute);
 //            activity.populateUi();
 
             TextView tv = (TextView) getActivity().findViewById(R.id.activity_new_post_when_txt_time);

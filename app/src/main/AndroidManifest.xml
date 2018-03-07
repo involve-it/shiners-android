@@ -30,7 +30,7 @@
         <activity
             android:name="org.buzzar.appPrityazhenie.activities.HomeActivity"
             android:icon="@drawable/shiners_add3x"
-            android:label="Shiners"
+            android:label="Притяжение"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,6 +56,10 @@
 
         <activity
             android:name="org.buzzar.appPrityazhenie.activities.PostDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.PostDetailsActivityEvent"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

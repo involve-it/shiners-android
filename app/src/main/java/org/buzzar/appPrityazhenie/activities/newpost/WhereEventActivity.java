@@ -139,10 +139,14 @@ public class WhereEventActivity extends NewPostBaseActivity implements OnMapRead
             location = new org.buzzar.appPrityazhenie.logic.objects.Location(org.buzzar.appPrityazhenie.logic.objects.Location.LOCATION_TYPE_STATIC);
         }
 
-        location.coords.lat = staticLatLng.latitude;
-        location.coords.lng = staticLatLng.longitude;
-        location.name = mStaticLocationMarker.getTitle();
-        mPost.details.locations.add(location);
+        if (mStaticLocationMarker != null) {
+            location.name = mStaticLocationMarker.getTitle();
+        }
+        if (staticLatLng != null) {
+            location.coords.lat = staticLatLng.latitude;
+            location.coords.lng = staticLatLng.longitude;
+            mPost.details.locations.add(location);
+        }
     }
 
     @Override
@@ -169,11 +173,12 @@ public class WhereEventActivity extends NewPostBaseActivity implements OnMapRead
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
                 } else {
+                    // for users simply use cities location!
                     Toast.makeText(this, "Unable to determine location", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                //mGoogleMap.setMyLocationEnabled(true);
-                //displayCurrentLocation();
+                mGoogleMap.setMyLocationEnabled(true);
+                displayCurrentLocation();
                 //switchDynamic.setChecked(true);
                 populateUi();
             }

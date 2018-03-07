@@ -1,4 +1,4 @@
-package org.buzzar.appPrityazhenie.fragments;
+package org.buzzar.appnative.fragments;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
@@ -43,6 +44,7 @@ import org.buzzar.appPrityazhenie.logic.objects.response.GetPostsResponse;
 import org.buzzar.appPrityazhenie.logic.objects.Photo;
 import org.buzzar.appPrityazhenie.logic.objects.Post;
 import org.buzzar.appPrityazhenie.activities.PostDetailsActivity;
+import org.buzzar.appPrityazhenie.activities.PostDetailsActivityEvent;
 import org.buzzar.appPrityazhenie.R;
 import org.buzzar.appPrityazhenie.logic.ui.MeteorFragmentBase;
 import org.buzzar.appPrityazhenie.services.SimpleLocationService;
@@ -53,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 
 public class NearbyPostsFragment extends MeteorFragmentBase {
@@ -83,8 +86,12 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
+                if (true) {
+                    getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivityEvent.class).putExtra(PostDetailsActivityEvent.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
 
-                getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
+                } else {
+                    getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
+                }
             }
         });
 

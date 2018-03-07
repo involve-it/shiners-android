@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Shiners</string>
+    <string name="app_name">Gravity</string>
 
     <string name="message_na">…</string>
 
@@ -76,7 +76,7 @@
     </string-array>
 
     <string-array name="post_categories">
-        <item>Job market</item>
+        <item>Events</item>
         <item>Need or provide training</item>
         <item>Looking for connections</item>
         <item>Buy &amp; sell</item>
@@ -98,7 +98,7 @@
     </string-array>
 
     <string-array name="tab_titles">
-        <item>Shiners</item>
+        <item>Gravity</item>
         <item>Me</item>
         <item></item>
         <item>Messages</item>

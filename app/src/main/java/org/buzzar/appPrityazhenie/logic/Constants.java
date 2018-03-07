@@ -1,5 +1,7 @@
 package org.buzzar.appPrityazhenie.logic;
 
+import java.util.ArrayList;
+
 /**
  * Created by yury on 1/31/17.
  */
@@ -32,6 +34,8 @@ public class Constants {
         public static final String MESSAGES_SET_SEEN = "messagesSetSeen";
         public static final String REGISTER_PUSH_TOKEN = "registerPushToken";
         public static final String REGISTER_PUSH_TOKEN_RAIX = "raix:push-update";
+        public static final String GET_POST_ATTENDEE_BY_USER_ID = "getPostAttendeeById";
+        public static final String SET_POST_ATTENDEE_BY_USER_ID = "setPostAttendee";
     }
 
     public static class CollectionNames{

@@ -122,7 +122,7 @@ public class RegisterActivity extends MeteorActivityBase {
                                             @Override
                                             public void accountLoadFailed() {
                                                 progressDialog.dismiss();
-                                                Toast.makeText(RegisterActivity.this, R.string.message_registration_unsuccessful, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(RegisterActivity.this, R.string.message_registration_unsuccessful, Toast.LENGTH_LONG).show();
                                                 SettingsHandler.removeSetting(RegisterActivity.this, SettingsHandler.USER_ID);
                                             }
                                         });
@@ -131,7 +131,8 @@ public class RegisterActivity extends MeteorActivityBase {
                                     @Override
                                     public void onError(String error, String reason, String details) {
                                         progressDialog.dismiss();
-                                        Toast.makeText(RegisterActivity.this, R.string.message_registration_unsuccessful, Toast.LENGTH_SHORT).show();
+                                        String stdTxt = getString(R.string.message_registration_unsuccessful);
+                                        Toast.makeText(RegisterActivity.this,  stdTxt + ", детали: " + reason, Toast.LENGTH_LONG).show();
                                         SettingsHandler.removeSetting(RegisterActivity.this, SettingsHandler.USER_ID);
                                     }
                                 });

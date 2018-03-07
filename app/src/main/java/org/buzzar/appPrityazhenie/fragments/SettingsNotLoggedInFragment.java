@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import org.buzzar.appPrityazhenie.R;
 import org.buzzar.appPrityazhenie.activities.auth.LogInActivity;
+import org.buzzar.appPrityazhenie.activities.auth.RegisterActivity;
 import org.buzzar.appPrityazhenie.logic.analytics.AnalyticsProvider;
 import org.buzzar.appPrityazhenie.logic.Constants;
 import org.buzzar.appPrityazhenie.logic.analytics.TrackingKeys;
@@ -53,12 +54,16 @@ public class SettingsNotLoggedInFragment extends Fragment {
         return view;
     }
 
-    @OnClick({R.id.btn_login})
+    @OnClick({R.id.btn_login, R.id.btnRegister})
     public void OnClick(View view){
         switch (view.getId()){
             case R.id.btn_login:
                 getActivity().startActivityForResult(new Intent(getActivity(), LogInActivity.class), Constants.ActivityRequestCodes.LOGIN);
                 AnalyticsProvider.LogButtonClick(getActivity(), TrackingKeys.Buttons.LOGIN);
+                break;
+            case R.id.btnRegister:
+                startActivityForResult(new Intent(getActivity(), RegisterActivity.class), Constants.ActivityRequestCodes.REGISTER);
+                AnalyticsProvider.LogButtonClick(getActivity(), TrackingKeys.Buttons.REGISTER);
                 break;
         }
     }

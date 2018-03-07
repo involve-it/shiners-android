@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Constants {
     public static class Defaults{
         public static final int DEFAULT_MESSAGES_PAGE = 40;
-        public static final int DEFAULT_POSTS_PAGE = 5;//40
+        public static final int DEFAULT_POSTS_PAGE = 40;
         public static final int DEFAULT_DIALOGS_PAGE = 50;
         public static final int DEFAULT_MY_POSTS_PAGE = 5;//40;
     }
@@ -20,6 +20,7 @@ public class Constants {
 
     public static class MethodNames {
         public static final String GET_NEARBY_POSTS = "getNearbyPostsTest";
+        public static final String GET_NEARBY_POSTS_BY_CITY = "getNearbyPostsByCityAndLocation";
         public static final String GET_MY_POSTS = "getMyPosts";
         public static final String GET_POST = "getPost";
         public static final String DELETE_POST = "deletePost";
@@ -53,8 +54,8 @@ public class Constants {
     }
 
     public static class Urls{
-//        public static final String BASE_URL = "http://192.168.43.21:3000";
-//        public static final String METEOR_URL = "ws://192.168.43.21:3000/websocket";
+//        public static final String BASE_URL = "http://172.20.10.13:3000/";
+//        public static final String METEOR_URL = "ws://172.20.10.13:3000/websocket";
 //        public static final String BASE_URL = "http://127.0.0.1:3000";
 //        public static final String METEOR_URL = "ws://127.0.0.1:3000/websocket";
 

@@ -40,6 +40,7 @@ import org.buzzar.appPrityazhenie.logic.Constants;
 import org.buzzar.appPrityazhenie.logic.Helper;
 import org.buzzar.appPrityazhenie.logic.JsonProvider;
 import org.buzzar.appPrityazhenie.logic.LocationHandler;
+import org.buzzar.appPrityazhenie.logic.objects.User;
 import org.buzzar.appPrityazhenie.logic.objects.response.GetPostsResponse;
 import org.buzzar.appPrityazhenie.logic.objects.Photo;
 import org.buzzar.appPrityazhenie.logic.objects.Post;
@@ -173,6 +174,15 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
     }
 
     public void getNearbyPosts(final boolean loadMore){
+        User currentUser = AccountHandler.getCurrentUser();
+        String city = null;
+        String userId = null;
+        if (currentUser != null && currentUser._id != null) {
+         userId = currentUser._id;
+        }
+        if (currentUser != null && currentUser.profile != null) {
+            city = currentUser.profile.city;
+        }
         if (!loading && LocationHandler.getLatestReportedLocation() != null) {
             loading = true;
             final PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
@@ -186,12 +196,18 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
             map.put("lat", currentLocation.getLatitude());
             map.put("lng", currentLocation.getLongitude());
             map.put("radius", 10000);
+            if (city != null) {
+                map.put("city", city);
+            }
+            if (userId != null) {
+                map.put("userId", userId);
+            }
             if (loadMore){
                 map.put("skip", count);
             }
             map.put("take", Constants.Defaults.DEFAULT_POSTS_PAGE);
 
-            callMeteorMethod(Constants.MethodNames.GET_NEARBY_POSTS, new Object[]{map}, new ResultListener() {
+            callMeteorMethod(Constants.MethodNames.GET_NEARBY_POSTS_BY_CITY, new Object[]{map}, new ResultListener() {
                 @Override
                 public void onSuccess(String result) {
                     //Log.d(TAG, result);

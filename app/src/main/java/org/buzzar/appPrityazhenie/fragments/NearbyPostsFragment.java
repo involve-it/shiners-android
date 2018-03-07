@@ -1,4 +1,4 @@
-package org.buzzar.appnative.fragments;
+package org.buzzar.appPrityazhenie.fragments;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;

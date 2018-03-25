@@ -44,7 +44,6 @@ public class NewPostActivity extends NewPostBaseActivity {
         setContentView(R.layout.activity_new_post_title);
         setActivityDefaults(true);
         String test[]=getResources().getStringArray(R.array.post_categories);
-        spCategory.setEnabled(false);
         spCategory.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
         String role = AccountHandler.getRole();
         if (role.equals("user")) {
@@ -97,6 +96,12 @@ public class NewPostActivity extends NewPostBaseActivity {
     protected Intent getNextStepIntent() {
         if (mPost.type.compareTo("events") == 0) {
             return new Intent(NewPostActivity.this, WhereEventActivity.class);
+        } else if(mPost.type.compareTo("dating") == 0){
+            return new Intent(NewPostActivity.this, WhereActivity.class);
+
+        } else if(mPost.type.compareTo("sales") == 0){
+            return new Intent(NewPostActivity.this, WhereActivity.class);
+
         } else {
             return new Intent(NewPostActivity.this, WhereActivity.class);
         }

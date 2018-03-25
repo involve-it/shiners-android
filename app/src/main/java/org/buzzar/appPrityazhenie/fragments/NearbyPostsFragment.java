@@ -87,8 +87,12 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
-                if (true) {
+                String type = adapter.getItem(position).type;
+                if (type.compareTo(Constants.PostTypes.EVENTS) == 0) {
                     getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivityEvent.class).putExtra(PostDetailsActivityEvent.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
+                } else if (type.compareTo(Constants.PostTypes.DATING) == 0) {
+
+                } else if (type.compareTo(Constants.PostTypes.SALES) == 0) {
 
                 } else {
                     getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
@@ -348,6 +352,7 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
                 if (viewType == VIEW_TYPE_POST) {
                     convertView = li.inflate(R.layout.fragment_posts_adap, parent, false);
                     viewHolder.titleView = (TextView) convertView.findViewById(R.id.textView2);
+                    viewHolder.postTypeView = (TextView) convertView.findViewById(R.id.txtPostType);
                     viewHolder.descView = (TextView) convertView.findViewById(R.id.textView3);
                     viewHolder.dateView = (TextView) convertView.findViewById(R.id.textView);
                     viewHolder.distanceView = (TextView) convertView.findViewById(R.id.textView4);
@@ -377,6 +382,7 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
                 }
 
                 viewHolder.titleView.setText(post.details.title);
+                viewHolder.postTypeView.setText(post.type);
                 if (post.details.description != null) {
                     viewHolder.descView.setText(Html.fromHtml(post.details.description));
                 } else {
@@ -412,6 +418,7 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
 
         private class ViewHolder{
             private TextView titleView;
+            private TextView postTypeView;
             private TextView descView;
             private TextView dateView;
             private TextView distanceView;

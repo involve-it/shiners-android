@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,7 +38,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
 import org.buzzar.appPrityazhenie.R;
-import org.buzzar.appPrityazhenie.R;
 import org.buzzar.appPrityazhenie.logic.AccountHandler;
 import org.buzzar.appPrityazhenie.logic.Constants;
 import org.buzzar.appPrityazhenie.logic.Helper;
@@ -47,12 +45,10 @@ import org.buzzar.appPrityazhenie.logic.JsonProvider;
 import org.buzzar.appPrityazhenie.logic.LocationHandler;
 import org.buzzar.appPrityazhenie.logic.analytics.AnalyticsProvider;
 import org.buzzar.appPrityazhenie.logic.analytics.TrackingKeys;
-import org.buzzar.appPrityazhenie.logic.objects.Message;
 import org.buzzar.appPrityazhenie.logic.objects.MessageToSend;
 import org.buzzar.appPrityazhenie.logic.objects.Post;
 import org.buzzar.appPrityazhenie.logic.objects.User;
 import org.buzzar.appPrityazhenie.logic.objects.response.GetPostResponse;
-import org.buzzar.appPrityazhenie.logic.objects.response.ResponseBase;
 import org.buzzar.appPrityazhenie.logic.objects.response.SendMessageResponse;
 import org.buzzar.appPrityazhenie.logic.ui.MeteorActivityBase;
 import org.buzzar.appPrityazhenie.services.SimpleLocationService;
@@ -62,7 +58,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import im.delight.android.ddp.ResultListener;
 
-public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMapReadyCallback {
+public class PostDetailsActivityDating extends MeteorActivityBase implements OnMapReadyCallback {
 
     public static final String EXTRA_POST = "shiners:PostDetailsActivity.EXTRA_POST";
 
@@ -98,8 +94,6 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
     TextView txtUserFullName;
     @BindView(R.id.imgUserPhoto)
     ImageView imgUserPhoto;
-    @BindView(R.id.btnAttend)
-    Button btnAttend;
     @BindView(R.id.btnCall)
     Button btnCall;
     @BindView(R.id.btnMessage)
@@ -131,7 +125,7 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_details_event);
+        setContentView(R.layout.activity_post_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -172,12 +166,6 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
             }
         }
 
-        btnAttend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setAttend();
-            }
-        });
         btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,7 +177,7 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
             public void onClick(View v) {
                 User currentUser = AccountHandler.getCurrentUser();
                 if (currentUser == null){
-                    new AlertDialog.Builder(PostDetailsActivityEvent.this).setIcon(android.R.drawable.ic_dialog_alert)
+                    new AlertDialog.Builder(PostDetailsActivityDating.this).setIcon(android.R.drawable.ic_dialog_alert)
                             .setTitle(R.string.msg_not_logged_in)
                             .setMessage(R.string.msg_please_log_in_to_send_message)
                             .setPositiveButton(R.string.msg_log_in, new DialogInterface.OnClickListener() {
@@ -205,13 +193,13 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
                             .show();
                 } else {
                     showSendMessageDialog();
-                    AnalyticsProvider.LogButtonClick(PostDetailsActivityEvent.this, TrackingKeys.Buttons.POST_DETAILS_SEND_MESSAGE_DIALOG);
+                    AnalyticsProvider.LogButtonClick(PostDetailsActivityDating.this, TrackingKeys.Buttons.POST_DETAILS_SEND_MESSAGE_DIALOG);
                 }
             }
         });
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMaps);
-        supportMapFragment.getMapAsync(PostDetailsActivityEvent.this);
+        supportMapFragment.getMapAsync(PostDetailsActivityDating.this);
     }
 
     private void showSendMessageDialog(){
@@ -223,8 +211,8 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
                  .setPositiveButton(R.string.btn_label_send, new DialogInterface.OnClickListener() {
                      @Override
                      public void onClick(final DialogInterface dialog, int which) {
-                         AnalyticsProvider.LogButtonClick(PostDetailsActivityEvent.this, TrackingKeys.Buttons.POST_DETAILS_SEND_MESSAGE);
-                         final ProgressDialog progressDialog = new ProgressDialog(PostDetailsActivityEvent.this);
+                         AnalyticsProvider.LogButtonClick(PostDetailsActivityDating.this, TrackingKeys.Buttons.POST_DETAILS_SEND_MESSAGE);
+                         final ProgressDialog progressDialog = new ProgressDialog(PostDetailsActivityDating.this);
                          progressDialog.setMessage(getString(R.string.msg_sending_message));
                          progressDialog.setCancelable(false);
                          progressDialog.show();
@@ -243,9 +231,9 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
                                      public void run() {
                                          progressDialog.dismiss();
                                          if (response.success){
-                                             Toast.makeText(PostDetailsActivityEvent.this, R.string.msg_message_sent, Toast.LENGTH_SHORT).show();
+                                             Toast.makeText(PostDetailsActivityDating.this, R.string.msg_message_sent, Toast.LENGTH_SHORT).show();
                                          } else {
-                                             Toast.makeText(PostDetailsActivityEvent.this, R.string.msg_error_while_sending_message, Toast.LENGTH_SHORT).show();
+                                             Toast.makeText(PostDetailsActivityDating.this, R.string.msg_error_while_sending_message, Toast.LENGTH_SHORT).show();
                                          }
                                      }
                                  });
@@ -253,7 +241,7 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
 
                              @Override
                              public void onError(String error, String reason, String details) {
-                                 Toast.makeText(PostDetailsActivityEvent.this, R.string.msg_error_while_sending_message, Toast.LENGTH_SHORT).show();
+                                 Toast.makeText(PostDetailsActivityDating.this, R.string.msg_error_while_sending_message, Toast.LENGTH_SHORT).show();
                                  progressDialog.dismiss();
                              }
                          });
@@ -271,7 +259,7 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 1);
                 } else {
-                    Toast.makeText(PostDetailsActivityEvent.this, R.string.toast_unable_to_make_call, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostDetailsActivityDating.this, R.string.toast_unable_to_make_call, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Intent intent = new Intent(Intent.ACTION_CALL);
@@ -280,33 +268,13 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
             }
         }
     }
-    private void setAttend() {
-        User currentUser = AccountHandler.getCurrentUser();
-
-        if (post._id != null && currentUser != null && currentUser._id != null) {
-
-            callMeteorMethod(Constants.MethodNames.SET_POST_ATTENDEE_BY_USER_ID, new Object[]{ currentUser._id, post._id }, new ResultListener() {
-                @Override
-                public void onSuccess(String result) {
-                    Toast.makeText(PostDetailsActivityEvent.this, "Вы подписаны на это событие", Toast.LENGTH_SHORT).show();
-
-                }
-
-                @Override
-                public void onError(String error, String reason, String details) {
-                    Toast.makeText(PostDetailsActivityEvent.this, "Ошибка при подписке на событие", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 1 && (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)) {
             callPhone();
         } else {
-            Toast.makeText(PostDetailsActivityEvent.this, R.string.toast_unable_to_make_call, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostDetailsActivityDating.this, R.string.toast_unable_to_make_call, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -324,7 +292,7 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
         textTitle.setText(post.details.title);
         //Photo
         if(post.details.photos.size() > 0)
-            Picasso.with(PostDetailsActivityEvent.this)
+            Picasso.with(PostDetailsActivityDating.this)
                 .load(post.details.photos.get(0).data)
                 .fit()
                 .centerCrop()
@@ -338,9 +306,7 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
         //Text Photo Locations
         textVisible.setText(String.valueOf(post.stats.seenTotal));
         textViewType.setText(String.valueOf(post.type));
-        if (post.details.locations.size() > 0) {
-            textLocation.setText(post.details.locations.get(0).name);
-        }
+        textLocation.setText(post.details.locations.get(0).name);
         if (post.details.description != null) {
             locationDesc.setText(Html.fromHtml(post.details.description));
         }
@@ -355,7 +321,6 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
             User currentUser = AccountHandler.getCurrentUser();
             if (post.user._id != null && currentUser != null && post.user._id.equals(currentUser._id)){
                 cardUser.setVisibility(View.GONE);
-                btnAttend.setEnabled(false);
             } else {
                 txtUserFullName.setText(post.user.getFullName());
                 if (post.user.image != null && post.user.image.getImageUrl() != null) {
@@ -369,32 +334,6 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
         } else {
             cardUser.setVisibility(View.GONE);
         }
-
-        // set btn "attend event" accordingly:
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                User currentUser = AccountHandler.getCurrentUser();
-                if (post._id != null && currentUser != null && currentUser._id != null) {
-                    callMeteorMethod(Constants.MethodNames.GET_POST_ATTENDEE_BY_USER_ID, new Object[]{ currentUser._id, post._id }, new ResultListener() {
-                        @Override
-                        public void onSuccess(String result) {
-                            if (result == "true") {
-                                btnAttend.setText("Вы подписаны");
-                                btnAttend.setEnabled(false);
-                            }
-                        }
-
-                        @Override
-                        public void onError(String error, String reason, String details) {
-                            Toast.makeText(PostDetailsActivityEvent.this, "Ошибка запроса подписки на событие", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-                }
-            }
-
-        });
     }
 
     @Override
@@ -413,7 +352,7 @@ public class PostDetailsActivityEvent extends MeteorActivityBase implements OnMa
     }
 
     private  void updateMap(){
-        if (post != null && googleMap != null && post.details.locations.size() > 0) {
+        if (post != null && googleMap != null) {
             LatLng latLng = new LatLng(post.details.locations.get(0).coords.lat, post.details.locations.get(0).coords.lng);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
             googleMap.addMarker(new MarkerOptions()

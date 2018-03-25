@@ -134,7 +134,14 @@ public class WhenActivity extends NewPostBaseActivity implements View.OnClickLis
                 mSelectedDate.add(Calendar.YEAR, 1);
                 break;
         }
-
+        // mark somehow selected icon:
+        findViewById(R.id.activity_new_post_when_btn_1d).setAlpha(1f);
+        findViewById(R.id.activity_new_post_when_btn_2d).setAlpha(1f);
+        findViewById(R.id.activity_new_post_when_btn_1w).setAlpha(1f);
+        findViewById(R.id.activity_new_post_when_btn_2w).setAlpha(1f);
+        findViewById(R.id.activity_new_post_when_btn_1m).setAlpha(1f);
+        findViewById(R.id.activity_new_post_when_btn_1y).setAlpha(1f);
+        v.setAlpha(0.3f);
         populateUi();
     }
 

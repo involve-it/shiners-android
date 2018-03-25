@@ -26,8 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.buzzar.appPrityazhenie.activities.PostDetailsActivity;
+import org.buzzar.appPrityazhenie.activities.PostDetailsActivityEvent;
 import org.buzzar.appPrityazhenie.activities.newpost.NewPostActivity;
 import org.buzzar.appPrityazhenie.R;
+import org.buzzar.appPrityazhenie.activities.newpost.WhereActivity;
+import org.buzzar.appPrityazhenie.activities.newpost.WhereEventActivity;
 import org.buzzar.appPrityazhenie.logic.Constants;
 import org.buzzar.appPrityazhenie.logic.Helper;
 import org.buzzar.appPrityazhenie.logic.JsonProvider;
@@ -305,7 +308,16 @@ public class MeFragment extends MeteorFragmentBase implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MyPostsArrayAdapter adapter = (MyPostsArrayAdapter) listView.getAdapter();
-        startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
+        String type = adapter.getItem(position).type;
+        if (type.compareTo(Constants.PostTypes.EVENTS) == 0) {
+            startActivity(new Intent(getActivity(), PostDetailsActivityEvent.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
+        } else if(type.compareTo(Constants.PostTypes.DATING) == 0){
+            startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
+        } else if(type.compareTo(Constants.PostTypes.SALES) == 0){
+            startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
+        } else {
+            startActivity(new Intent(getActivity(), PostDetailsActivity.class).putExtra(PostDetailsActivity.EXTRA_POST, (Parcelable) adapter.getItem(position)));
+        }
     }
 
     private class MyPostsArrayAdapter extends ArrayAdapter<Post>{

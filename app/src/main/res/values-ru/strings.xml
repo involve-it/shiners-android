@@ -78,12 +78,8 @@
 
     <string-array name="post_categories">
         <item>События</item>
-        <item>Работа</item>
-        <item>Связи и знакомства</item>
-        <item>Покупка и продажа</item>
-        <item>Рынок жилья</item>
-        <item>Услуги</item>
-        <item>Помощь</item>
+        <item>Знакомства</item>
+        <item>Скидки</item>
     </string-array>
 
     <string-array name="tab_titles">
@@ -115,7 +111,7 @@
     <string name="lets_begin">Давайте начнем</string>
     <string name="sign_up_to_create_post">Войдите, чтобы создать пост</string>
     <string name="dont_have_an_account">Не зарегистрированы?</string>
-    <string name="tap_here_to_login">Нажмите здесь, чтобы войти</string>
+    <string name="tap_here_to_login">Нажмите, чтобы войти</string>
 
     <string name="about_us">О нас</string>
     <string name="contact_us">Связаться с нами</string>
@@ -128,8 +124,9 @@
     <string name="category">Категория</string>
     <string name="trainings">Тренинги</string>
     <string name="location">Местоположение</string>
-    <string name="tap_here_to_give_post_a_title">Нажмите здесь, чтобы создать заголовок</string>
+    <string name="tap_here_to_give_post_a_title">Нажмите, чтобы создать заголовок</string>
     <string name="optional_provide_more_details">Детали (не обязательное)</string>
+    <string name="optional_post_link">Полезная ссылка</string>
     <string name="new_post_header">Новый пост</string>
     <string name="phone">Телефон</string>
     <string name="not_set">Не указан</string>

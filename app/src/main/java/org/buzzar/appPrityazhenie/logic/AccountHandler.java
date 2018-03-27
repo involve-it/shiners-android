@@ -68,10 +68,10 @@ public class AccountHandler {
 
     public static String getRole(){
         String result;
-        if (currentUser.profile.type==null){
+        if (currentUser.profile.role == null){
             result="user";
         }else{
-            result = currentUser.profile.type;
+            result = currentUser.profile.role;
         }
         return result;
     }

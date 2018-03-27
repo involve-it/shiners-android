@@ -1,6 +1,7 @@
 package org.buzzar.appPrityazhenie.activities.settings;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import org.buzzar.appPrityazhenie.R;
+import org.buzzar.appPrityazhenie.logic.AmazonUploadAsyncTask;
 import org.buzzar.appPrityazhenie.logic.AccountHandler;
 import org.buzzar.appPrityazhenie.logic.Constants;
 import org.buzzar.appPrityazhenie.logic.JsonProvider;
@@ -24,9 +26,12 @@ import org.buzzar.appPrityazhenie.logic.objects.User;
 import org.buzzar.appPrityazhenie.logic.objects.response.ResponseBase;
 import org.buzzar.appPrityazhenie.logic.ui.MeteorActivityBase;
 
-import butterknife.BindView;
-import im.delight.android.ddp.ResultListener;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+import im.delight.android.ddp.ResultListener;
 
 public class MyProfileActivity extends MeteorActivityBase {
     public static final String EXTRA_USER = "org.buzzar.app.MyProfileActivity.EXTRA_USER";
@@ -263,5 +268,33 @@ public class MyProfileActivity extends MeteorActivityBase {
         }
 
         lblUsername.setText(user.username);
+    }
+
+    @OnClick(R.id.userImageView)
+    public void onClick() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, Constants.ActivityRequestCodes.NEW_POST_PHOTO);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.ActivityRequestCodes.NEW_POST_PHOTO && resultCode == RESULT_OK){
+            try {
+                InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
+                new AmazonUploadAsyncTask(this.getContentResolver().getType(data.getData()), MyProfileActivity.this, new PhotoUploadCallback()).execute(inputStream);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private class PhotoUploadCallback implements AmazonUploadAsyncTask.Callback {
+        @Override
+        public void callingBack(String url) {
+            user.image.data = url;
+            user.image.imageUrl = url;
+            fillProfile();
+        }
     }
 }

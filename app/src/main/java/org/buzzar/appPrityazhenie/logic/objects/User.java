@@ -93,7 +93,7 @@ public class User implements Parcelable, Serializable {
             profileDetail = new ProfileDetail();
             this.profileDetails.add(profileDetail);
         }
-        profileDetail.key = key;
+        profileDetail.key = value;
         profileDetail.value = value;
     }
 
@@ -201,8 +201,8 @@ public class User implements Parcelable, Serializable {
         public String inviteCode;
         @SerializedName("city")
         public String city;
-        @SerializedName("type")
-        public String type;
+        @SerializedName("role")
+        public String role;
 
         UserProfile(){}
 
@@ -210,7 +210,7 @@ public class User implements Parcelable, Serializable {
             phone = in.readString();
             inviteCode = in.readString();
             city = in.readString();
-            type = in.readString();
+            role = in.readString();
         }
 
         public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
@@ -231,7 +231,7 @@ public class User implements Parcelable, Serializable {
             parcel.writeString(phone);
             parcel.writeString(inviteCode);
             parcel.writeString(city);
-            parcel.writeString(type);
+            parcel.writeString(role);
         }
     }
 

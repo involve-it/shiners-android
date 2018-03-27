@@ -184,7 +184,7 @@
     <string name="activity_new_post_event_when_btn_choose_date">Выберите дату</string>
     <string name="activity_new_post_event_when_btn_choose_time">Выберите время</string>
     <string name="new_post_photo_error_upload">Возникла ошибка при загрузке фото</string>
-    <string name="message">Сообщение</string>
+    <string name="message">Задать вопрос</string>
     <string name="msg_not_connected">Похоже, что у вас отсутствует соединение с Интернетом. Пожалуйста, попробуйте позже.</string>
     <string name="title_oops">Ошибка</string>
     <string name="txt_ok">ОК</string>

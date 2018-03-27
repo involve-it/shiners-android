@@ -185,7 +185,7 @@
     <string name="my_profile_txt_vk" translatable="false">VK</string>
     <string name="my_profile_txt_telegram" translatable="false">Telegram</string>
     <string name="my_profile_txt_facebook" translatable="false">Facebook</string>
-    <string name="message">Message</string>
+    <string name="message">Ask question</string>
     <string name="msg_not_connected">Seems like you are not connected to Internet. Please try again later.</string>
     <string name="title_oops">Oops</string>
     <string name="txt_ok">OK</string>

@@ -53,6 +53,15 @@ public class MyProfileActivity extends MeteorActivityBase {
     @BindView(R.id.userSkype)
     EditText userSkype;
 
+    @BindView(R.id.userVk)
+    EditText userVk;
+
+    @BindView(R.id.userTelegram)
+    EditText userTelegram;
+
+    @BindView(R.id.userFacebook)
+    EditText userFacebook;
+
     private boolean isCurrentUser(){
         return this.user != null && AccountHandler.getCurrentUser() != null && AccountHandler.getCurrentUser()._id.equals(this.user._id);
     }
@@ -86,6 +95,8 @@ public class MyProfileActivity extends MeteorActivityBase {
         userLastName.setEnabled(enabled);
         userPhone.setEnabled(enabled);
         userSkype.setEnabled(enabled);
+        userVk.setEnabled(enabled);
+        userTelegram.setEnabled(enabled);
     }
 
     @Override
@@ -136,6 +147,27 @@ public class MyProfileActivity extends MeteorActivityBase {
             user.deleteProfileDetail(User.ProfileDetail.SKYPE);
         } else {
             user.setProfileDetail(User.ProfileDetail.SKYPE, value);
+        }
+
+        value = userVk.getText().toString().trim();
+        if (value.isEmpty()){
+            user.deleteProfileDetail(User.ProfileDetail.VK);
+        } else {
+            user.setProfileDetail(User.ProfileDetail.VK, value);
+        }
+
+        value = userTelegram.getText().toString().trim();
+        if (value.isEmpty()){
+            user.deleteProfileDetail(User.ProfileDetail.TELEGRAM);
+        } else {
+            user.setProfileDetail(User.ProfileDetail.TELEGRAM, value);
+        }
+
+        value = userFacebook.getText().toString().trim();
+        if (value.isEmpty()){
+            user.deleteProfileDetail(User.ProfileDetail.FACEBOOK);
+        } else {
+            user.setProfileDetail(User.ProfileDetail.FACEBOOK, value);
         }
 
         callMeteorMethod(Constants.MethodNames.EDIT_USER, new Object[]{user}, new ResultListener() {
@@ -205,6 +237,18 @@ public class MyProfileActivity extends MeteorActivityBase {
                 }
                 case User.ProfileDetail.SKYPE: {
                     userSkype.setText(detail.value);
+                    break;
+                }
+                case User.ProfileDetail.VK: {
+                    userVk.setText(detail.value);
+                    break;
+                }
+                case User.ProfileDetail.TELEGRAM: {
+                    userTelegram.setText(detail.value);
+                    break;
+                }
+                case User.ProfileDetail.FACEBOOK: {
+                    userFacebook.setText(detail.value);
                     break;
                 }
                 case User.ProfileDetail.PHONE: {

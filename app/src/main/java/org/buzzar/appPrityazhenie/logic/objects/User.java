@@ -93,6 +93,7 @@ public class User implements Parcelable, Serializable {
             profileDetail = new ProfileDetail();
             this.profileDetails.add(profileDetail);
         }
+        profileDetail.key = key;
         profileDetail.value = value;
     }
 
@@ -241,6 +242,7 @@ public class User implements Parcelable, Serializable {
         public static final String PHONE = "phone";
         public static final String SKYPE = "skype";
         public static final String VK = "vk";
+        public static final String TELEGRAM = "telegram";
         public static final String TWITTER = "twitter";
         public static final String FACEBOOK ="facebook";
 

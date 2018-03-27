@@ -182,6 +182,9 @@
     <string name="how_does_it_look_like">How does it look like?</string>
     <string name="my_profile_txt_email" translatable="false">Email</string>
     <string name="my_profile_txt_skype" translatable="false">Skype</string>
+    <string name="my_profile_txt_vk" translatable="false">VK</string>
+    <string name="my_profile_txt_telegram" translatable="false">Telegram</string>
+    <string name="my_profile_txt_facebook" translatable="false">Facebook</string>
     <string name="message">Message</string>
     <string name="msg_not_connected">Seems like you are not connected to Internet. Please try again later.</string>
     <string name="title_oops">Oops</string>

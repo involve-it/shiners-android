@@ -93,17 +93,55 @@
                 android:inputType="phone"/>
 
             <TextView
+                android:visibility="invisible"
                 android:text="@string/my_profile_txt_skype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:ellipsize="end"/>
             <EditText
+                android:visibility="invisible"
                 android:id="@+id/userSkype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textEmailAddress" />
+            <TextView
+                android:text="@string/my_profile_txt_vk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+            <EditText
+                android:id="@+id/userVk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textUri" />
+            <TextView
+                android:text="@string/my_profile_txt_telegram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+            <EditText
+                android:id="@+id/userTelegram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textUri" />
+            <TextView
+                android:text="@string/my_profile_txt_facebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+            <EditText
+                android:id="@+id/userFacebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textUri" />
         </LinearLayout>
     </LinearLayout>
 

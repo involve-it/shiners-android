@@ -71,7 +71,7 @@
         <item>Удалить</item>
     </string-array>
 
-    <string-array name="new_post_photos_menu">
+    <string-array ame="new_post_photos_menu">
         <item>Сделать основным фото</item>
         <item>Удалить фото</item>
     </string-array>
@@ -80,6 +80,12 @@
         <item>События</item>
         <item>Знакомства</item>
         <item>Скидки</item>
+    </string-array>
+
+    <string-array name="post_categories_short" translatable="false">
+        <item>событие</item>
+        <item>знакомство</item>
+        <item>скидка</item>
     </string-array>
 
     <string-array name="tab_titles">

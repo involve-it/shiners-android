@@ -88,7 +88,8 @@ public class NearbyPostsFragment extends MeteorFragmentBase {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PostsArrayAdapter adapter = (PostsArrayAdapter) listView.getAdapter();
                 String type = adapter.getItem(position).type;
-                if (type.compareTo(Constants.PostTypes.EVENTS) == 0) {
+
+                if (type == null || type.compareTo(Constants.PostTypes.EVENTS) == 0) {
                     getActivity().startActivityForResult(new Intent(getActivity(), PostDetailsActivityEvent.class).putExtra(PostDetailsActivityEvent.EXTRA_POST, (Parcelable) adapter.getItem(position)), Constants.ActivityRequestCodes.NEARBY_POST_DETAILS);
                 } else if (type.compareTo(Constants.PostTypes.DATING) == 0) {
 

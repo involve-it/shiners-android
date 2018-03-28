@@ -262,7 +262,12 @@ public class MyProfileActivity extends MeteorActivityBase {
                 }
             }
         }
-
+        // weird bug, take care later (why city, phone etc not in 'profileDetails':
+        if (user.profile != null ) {
+                if (user.profile.phone != null ) {
+                    userPhone.setText(user.profile.phone);
+                }
+        }
         if (user.emails != null && user.emails.size() > 0){
             userEmail.setText(user.emails.get(0).address);
         }

@@ -90,11 +90,9 @@ public class User implements Parcelable, Serializable {
         }
         ProfileDetail profileDetail = getProfileDetail(key);
         if (profileDetail == null){
-            profileDetail = new ProfileDetail();
+            profileDetail = new ProfileDetail(key, value);
             this.profileDetails.add(profileDetail);
         }
-        profileDetail.key = value;
-        profileDetail.value = value;
     }
 
     public ProfileDetail getProfileDetail(String key){
@@ -253,7 +251,10 @@ public class User implements Parcelable, Serializable {
         public String value;
         public String policy;
 
-        public ProfileDetail(){}
+        public ProfileDetail(String key, String value){
+            this.key = key;
+            this.value = value;
+        }
 
         protected ProfileDetail(Parcel in) {
             _id = in.readString();

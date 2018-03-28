@@ -201,8 +201,8 @@ public class User implements Parcelable, Serializable {
         public String inviteCode;
         @SerializedName("city")
         public String city;
-        @SerializedName("role")
-        public String role;
+        @SerializedName("type")
+        public String type;
 
         UserProfile(){}
 
@@ -210,7 +210,7 @@ public class User implements Parcelable, Serializable {
             phone = in.readString();
             inviteCode = in.readString();
             city = in.readString();
-            role = in.readString();
+            type = in.readString();
         }
 
         public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
@@ -231,7 +231,7 @@ public class User implements Parcelable, Serializable {
             parcel.writeString(phone);
             parcel.writeString(inviteCode);
             parcel.writeString(city);
-            parcel.writeString(role);
+            parcel.writeString(type);
         }
     }
 

@@ -45,8 +45,8 @@ public class NewPostActivity extends NewPostBaseActivity {
         setActivityDefaults(true);
         String test[]=getResources().getStringArray(R.array.post_categories);
         spCategory.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,test));
-        String role = AccountHandler.getRole();
-        if (role.equals("user")) {
+        String type = AccountHandler.getRole();
+        if (type.equals("user")) {
             new AlertDialog.Builder(this).setMessage(R.string.message_temporarily_block).setTitle(R.string.title_temporarily_block)
                     .setPositiveButton(R.string.txt_ok, new OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {

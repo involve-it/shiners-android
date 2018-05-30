@@ -158,7 +158,7 @@ public class PhotoActivity extends NewPostBaseActivity implements AdapterView.On
         String mContentType;
 
         AmazonUploadAsyncTask(String contentType){
-            
+
         }
 
         @Override

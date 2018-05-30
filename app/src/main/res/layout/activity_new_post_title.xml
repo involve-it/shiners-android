@@ -11,17 +11,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Тип Создаваемого Поста" />
+        android:text="Категория" />
 
     <Spinner
         android:id="@+id/activity_new_post_spinner_category"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="50dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Название Поста" />
+        android:text="Название" />
 
     <EditText
         android:layout_width="match_parent"
@@ -45,5 +45,18 @@
         android:inputType="textMultiLine"
         android:hint="@string/optional_provide_more_details"
         android:id="@+id/activity_new_post_txt_description"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Действующая ссылка (необязательое)" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:gravity="top"
+        android:lines="2"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:hint="@string/optional_post_link"
+        android:id="@+id/activity_new_post_txt_link"/>
 
 </LinearLayout>

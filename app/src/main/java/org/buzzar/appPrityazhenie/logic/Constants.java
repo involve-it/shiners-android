@@ -54,13 +54,12 @@ public class Constants {
     }
 
     public static class Urls{
-//        public static final String BASE_URL = "http://172.20.10.13:3000/";
-//        public static final String METEOR_URL = "ws://172.20.10.13:3000/websocket";
+//        public static final String BASE_URL = "http://192.168.0.15:3000/";
+//        public static final String METEOR_URL = "ws://192.168.0.15:3000/websocket";
+
 //        public static final String BASE_URL = "http://127.0.0.1:3000";
 //        public static final String METEOR_URL = "ws://127.0.0.1:3000/websocket";
 
-        //        public static final String BASE_URL = "https://shiners.mobi";
-//        public static final String METEOR_URL = "wss://shiners.mobi/websocket";
         public static final String BASE_URL = "https://shiners.mobi";
         public static final String METEOR_URL = "wss://shiners.mobi/websocket";
     }
@@ -74,5 +73,12 @@ public class Constants {
         public static final int NEW_POST_PHOTO = 4;
         public static final int REGISTER = 5;
         public static final int PROFILE = 6;
+
+
+    }
+    public  static class PostTypes {
+        public static final String EVENTS = "events";
+        public static final String DATING = "dating";
+        public static final String SALES = "sales";
     }
 }

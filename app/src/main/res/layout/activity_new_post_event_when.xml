@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/activity_new_post_when_txt_time"
-            android:text="Весь день"
+            android:text="-- | --"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

@@ -1,6 +1,7 @@
 package org.buzzar.appPrityazhenie.activities.settings;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import org.buzzar.appPrityazhenie.R;
+import org.buzzar.appPrityazhenie.logic.AmazonUploadAsyncTask;
 import org.buzzar.appPrityazhenie.logic.AccountHandler;
 import org.buzzar.appPrityazhenie.logic.Constants;
 import org.buzzar.appPrityazhenie.logic.JsonProvider;
@@ -24,9 +26,12 @@ import org.buzzar.appPrityazhenie.logic.objects.User;
 import org.buzzar.appPrityazhenie.logic.objects.response.ResponseBase;
 import org.buzzar.appPrityazhenie.logic.ui.MeteorActivityBase;
 
-import butterknife.BindView;
-import im.delight.android.ddp.ResultListener;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+import im.delight.android.ddp.ResultListener;
 
 public class MyProfileActivity extends MeteorActivityBase {
     public static final String EXTRA_USER = "org.buzzar.app.MyProfileActivity.EXTRA_USER";
@@ -52,6 +57,15 @@ public class MyProfileActivity extends MeteorActivityBase {
 
     @BindView(R.id.userSkype)
     EditText userSkype;
+
+    @BindView(R.id.userVk)
+    EditText userVk;
+
+    @BindView(R.id.userTelegram)
+    EditText userTelegram;
+
+    @BindView(R.id.userFacebook)
+    EditText userFacebook;
 
     private boolean isCurrentUser(){
         return this.user != null && AccountHandler.getCurrentUser() != null && AccountHandler.getCurrentUser()._id.equals(this.user._id);
@@ -86,6 +100,8 @@ public class MyProfileActivity extends MeteorActivityBase {
         userLastName.setEnabled(enabled);
         userPhone.setEnabled(enabled);
         userSkype.setEnabled(enabled);
+        userVk.setEnabled(enabled);
+        userTelegram.setEnabled(enabled);
     }
 
     @Override
@@ -136,6 +152,27 @@ public class MyProfileActivity extends MeteorActivityBase {
             user.deleteProfileDetail(User.ProfileDetail.SKYPE);
         } else {
             user.setProfileDetail(User.ProfileDetail.SKYPE, value);
+        }
+
+        value = userVk.getText().toString().trim();
+        if (value.isEmpty()){
+            user.deleteProfileDetail(User.ProfileDetail.VK);
+        } else {
+            user.setProfileDetail(User.ProfileDetail.VK, value);
+        }
+
+        value = userTelegram.getText().toString().trim();
+        if (value.isEmpty()){
+            user.deleteProfileDetail(User.ProfileDetail.TELEGRAM);
+        } else {
+            user.setProfileDetail(User.ProfileDetail.TELEGRAM, value);
+        }
+
+        value = userFacebook.getText().toString().trim();
+        if (value.isEmpty()){
+            user.deleteProfileDetail(User.ProfileDetail.FACEBOOK);
+        } else {
+            user.setProfileDetail(User.ProfileDetail.FACEBOOK, value);
         }
 
         callMeteorMethod(Constants.MethodNames.EDIT_USER, new Object[]{user}, new ResultListener() {
@@ -207,17 +244,62 @@ public class MyProfileActivity extends MeteorActivityBase {
                     userSkype.setText(detail.value);
                     break;
                 }
+                case User.ProfileDetail.VK: {
+                    userVk.setText(detail.value);
+                    break;
+                }
+                case User.ProfileDetail.TELEGRAM: {
+                    userTelegram.setText(detail.value);
+                    break;
+                }
+                case User.ProfileDetail.FACEBOOK: {
+                    userFacebook.setText(detail.value);
+                    break;
+                }
                 case User.ProfileDetail.PHONE: {
                     userPhone.setText(detail.value);
                     break;
                 }
             }
         }
-
+        // weird bug, take care later (why city, phone etc not in 'profileDetails':
+        if (user.profile != null ) {
+                if (user.profile.phone != null ) {
+                    userPhone.setText(user.profile.phone);
+                }
+        }
         if (user.emails != null && user.emails.size() > 0){
             userEmail.setText(user.emails.get(0).address);
         }
 
         lblUsername.setText(user.username);
+    }
+
+    @OnClick(R.id.userImageView)
+    public void onClick() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, Constants.ActivityRequestCodes.NEW_POST_PHOTO);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.ActivityRequestCodes.NEW_POST_PHOTO && resultCode == RESULT_OK){
+            try {
+                InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
+                new AmazonUploadAsyncTask(this.getContentResolver().getType(data.getData()), MyProfileActivity.this, new PhotoUploadCallback()).execute(inputStream);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private class PhotoUploadCallback implements AmazonUploadAsyncTask.Callback {
+        @Override
+        public void callingBack(String url) {
+            user.image.data = url;
+            user.image.imageUrl = url;
+            fillProfile();
+        }
     }
 }

@@ -71,19 +71,21 @@
         <item>Удалить</item>
     </string-array>
 
-    <string-array name="new_post_photos_menu">
+    <string-array ame="new_post_photos_menu">
         <item>Сделать основным фото</item>
         <item>Удалить фото</item>
     </string-array>
 
     <string-array name="post_categories">
         <item>События</item>
-        <item>Работа</item>
-        <item>Связи и знакомства</item>
-        <item>Покупка и продажа</item>
-        <item>Рынок жилья</item>
-        <item>Услуги</item>
-        <item>Помощь</item>
+        <item>Знакомства</item>
+        <item>Скидки</item>
+    </string-array>
+
+    <string-array name="post_categories_short" translatable="false">
+        <item>событие</item>
+        <item>знакомство</item>
+        <item>скидка</item>
     </string-array>
 
     <string-array name="tab_titles">
@@ -115,11 +117,14 @@
     <string name="lets_begin">Давайте начнем</string>
     <string name="sign_up_to_create_post">Войдите, чтобы создать пост</string>
     <string name="dont_have_an_account">Не зарегистрированы?</string>
-    <string name="tap_here_to_login">Нажмите здесь, чтобы войти</string>
+    <string name="tap_here_to_login">Нажмите, чтобы войти</string>
 
     <string name="about_us">О нас</string>
     <string name="contact_us">Связаться с нами</string>
     <string name="my_profile">Мой профиль</string>
+    <string name="my_profile_txt_vk" translatable="false">ВК</string>
+    <string name="my_profile_txt_telegram" translatable="false">Телеграм</string>
+    <string name="my_profile_txt_facebook" translatable="false">Facebook</string>
     <string name="notify_me_of_nearby_events">Оповещать меня о событиях рядом</string>
     <string name="invisible_mode">Режим невидимки</string>
     <string name="log_out">Выйти</string>
@@ -128,8 +133,9 @@
     <string name="category">Категория</string>
     <string name="trainings">Тренинги</string>
     <string name="location">Местоположение</string>
-    <string name="tap_here_to_give_post_a_title">Нажмите здесь, чтобы создать заголовок</string>
+    <string name="tap_here_to_give_post_a_title">Нажмите, чтобы создать заголовок</string>
     <string name="optional_provide_more_details">Детали (не обязательное)</string>
+    <string name="optional_post_link">Полезная ссылка</string>
     <string name="new_post_header">Новый пост</string>
     <string name="phone">Телефон</string>
     <string name="not_set">Не указан</string>
@@ -178,7 +184,7 @@
     <string name="activity_new_post_event_when_btn_choose_date">Выберите дату</string>
     <string name="activity_new_post_event_when_btn_choose_time">Выберите время</string>
     <string name="new_post_photo_error_upload">Возникла ошибка при загрузке фото</string>
-    <string name="message">Сообщение</string>
+    <string name="message">Задать вопрос</string>
     <string name="msg_not_connected">Похоже, что у вас отсутствует соединение с Интернетом. Пожалуйста, попробуйте позже.</string>
     <string name="title_oops">Ошибка</string>
     <string name="txt_ok">ОК</string>

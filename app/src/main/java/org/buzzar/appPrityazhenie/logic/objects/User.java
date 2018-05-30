@@ -90,10 +90,9 @@ public class User implements Parcelable, Serializable {
         }
         ProfileDetail profileDetail = getProfileDetail(key);
         if (profileDetail == null){
-            profileDetail = new ProfileDetail();
+            profileDetail = new ProfileDetail(key, value);
             this.profileDetails.add(profileDetail);
         }
-        profileDetail.value = value;
     }
 
     public ProfileDetail getProfileDetail(String key){
@@ -200,8 +199,8 @@ public class User implements Parcelable, Serializable {
         public String inviteCode;
         @SerializedName("city")
         public String city;
-        @SerializedName("role")
-        public String role;
+        @SerializedName("type")
+        public String type;
 
         UserProfile(){}
 
@@ -209,7 +208,7 @@ public class User implements Parcelable, Serializable {
             phone = in.readString();
             inviteCode = in.readString();
             city = in.readString();
-            role = in.readString();
+            type = in.readString();
         }
 
         public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
@@ -230,7 +229,7 @@ public class User implements Parcelable, Serializable {
             parcel.writeString(phone);
             parcel.writeString(inviteCode);
             parcel.writeString(city);
-            parcel.writeString(role);
+            parcel.writeString(type);
         }
     }
 
@@ -241,6 +240,7 @@ public class User implements Parcelable, Serializable {
         public static final String PHONE = "phone";
         public static final String SKYPE = "skype";
         public static final String VK = "vk";
+        public static final String TELEGRAM = "telegram";
         public static final String TWITTER = "twitter";
         public static final String FACEBOOK ="facebook";
 
@@ -251,7 +251,10 @@ public class User implements Parcelable, Serializable {
         public String value;
         public String policy;
 
-        public ProfileDetail(){}
+        public ProfileDetail(String key, String value){
+            this.key = key;
+            this.value = value;
+        }
 
         protected ProfileDetail(Parcel in) {
             _id = in.readString();

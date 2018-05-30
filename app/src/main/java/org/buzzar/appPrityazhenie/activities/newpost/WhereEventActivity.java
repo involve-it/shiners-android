@@ -142,6 +142,12 @@ public class WhereEventActivity extends NewPostBaseActivity implements OnMapRead
         if (mStaticLocationMarker != null) {
             location.name = mStaticLocationMarker.getTitle();
         }
+        if (staticLatLng == null) {
+            Location currentLocation = LocationHandler.getLatestReportedLocation();
+                if (currentLocation != null && mGoogleMap != null) {
+                    staticLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                }
+        }
         if (staticLatLng != null) {
             location.coords.lat = staticLatLng.latitude;
             location.coords.lng = staticLatLng.longitude;

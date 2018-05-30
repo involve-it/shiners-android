@@ -46,7 +46,7 @@
     <string name="label_current_location">Current location</string>
 
     <string name="tab_title_posts">Posts</string>
-    <string name="tab_title_me">Me</string>
+    <string name="tab_title_me">My posts</string>
     <string name="tab_title_messages">Messages</string>
     <string name="tab_title_settings">Settings</string>
 
@@ -77,29 +77,19 @@
 
     <string-array name="post_categories">
         <item>Events</item>
-        <item>Need or provide training</item>
-        <item>Looking for connections</item>
-        <item>Buy &amp; sell</item>
-        <item>Housing market</item>
-        <item>Local events</item>
-        <item>Need or provide service</item>
-        <item>Need or give help</item>
+        <item>Dating</item>
+        <item>Sales</item>
     </string-array>
     
     <string-array name="post_categories_short" translatable="false">
         <item>events</item>
-        <item>jobs</item>
-        <item>trainings</item>
-        <item>connect</item>
-        <item>trade</item>
-        <item>housing</item>
-        <item>services</item>
-        <item>help</item>
+        <item>dating</item>
+        <item>sales</item>
     </string-array>
 
     <string-array name="tab_titles">
         <item>Gravity</item>
-        <item>Me</item>
+        <item>My Posts</item>
         <item></item>
         <item>Messages</item>
         <item>Settings</item>
@@ -141,6 +131,7 @@
     <string name="location">Location</string>
     <string name="tap_here_to_give_post_a_title">Tap here to give post a title</string>
     <string name="optional_provide_more_details">Optional: Provide more details</string>
+    <string name="optional_post_link">Useful link</string>
     <string name="new_post_header">New Post</string>
     <string name="activity_where_lbl_acquiring_location">Acquiring location...</string>
     <string name="activity_where_lbl_select_location">Select location:</string>
@@ -191,7 +182,10 @@
     <string name="how_does_it_look_like">How does it look like?</string>
     <string name="my_profile_txt_email" translatable="false">Email</string>
     <string name="my_profile_txt_skype" translatable="false">Skype</string>
-    <string name="message">Message</string>
+    <string name="my_profile_txt_vk" translatable="false">VK</string>
+    <string name="my_profile_txt_telegram" translatable="false">Telegram</string>
+    <string name="my_profile_txt_facebook" translatable="false">Facebook</string>
+    <string name="message">Ask question</string>
     <string name="msg_not_connected">Seems like you are not connected to Internet. Please try again later.</string>
     <string name="title_oops">Oops</string>
     <string name="txt_ok">OK</string>

@@ -147,7 +147,15 @@ public class WhereActivity extends NewPostBaseActivity implements OnMapReadyCall
 
     @Override
     protected Intent getNextStepIntent() {
-        return new Intent(this, WhenActivity.class);
+        if (mPost.type.compareTo("events") == 0) {
+            return new Intent(this, WhenEventActivity.class);
+        } else if(mPost.type.compareTo("dating") == 0){
+            return new Intent(this, WhenActivity.class);
+        } else if(mPost.type.compareTo("sales") == 0){
+            return new Intent(this, WhenActivity.class);
+        } else {
+            return new Intent(this, WhenActivity.class);
+        }
     }
 
     @Override
